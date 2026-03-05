@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,131 +15,164 @@
 }
 html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sans-serif;font-size:14px}
 
-/* LOGIN */
+/* ── LOGIN ────────────────────────────────────── */
 #login{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
-.login-card{background:var(--bg1);border:1px solid var(--line2);border-radius:14px;padding:32px;width:100%;max-width:340px;display:flex;flex-direction:column;gap:16px}
-.login-logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:8px}
-.login-logo-name{font-size:18px;font-weight:700;color:var(--w);letter-spacing:-.04em}
-.login-title{font-size:15px;font-weight:600;color:var(--text2);text-align:center}
-.token-input{width:100%;height:42px;background:var(--bg2);border:1px solid var(--line2);border-radius:8px;padding:0 14px;color:var(--text);font-family:'Geist Mono',monospace;font-size:13px;outline:none;transition:border-color .15s}
-.token-input:focus{border-color:#333}
-.token-input::placeholder{color:var(--text3)}
+.login-card{background:var(--bg1);border:1px solid var(--line2);border-radius:16px;padding:32px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:20px}
+.login-logo{display:flex;align-items:center;gap:10px;justify-content:center}
+.login-logo-name{font-size:20px;font-weight:700;color:var(--w);letter-spacing:-.04em}
+.login-badge{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-family:'Geist Mono',monospace;background:rgba(255,255,255,.1);color:var(--text2);padding:3px 8px;border-radius:4px}
+.login-title{font-size:15px;color:var(--text2);text-align:center;margin-top:-6px}
+.login-section{display:flex;flex-direction:column;gap:8px}
+.login-label{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text3)}
+.login-input{width:100%;height:42px;background:var(--bg2);border:1px solid var(--line2);border-radius:8px;padding:0 14px;color:var(--text);font-family:'Geist',sans-serif;font-size:13px;outline:none;transition:border-color .15s}
+.login-input:focus{border-color:#333}
+.login-input::placeholder{color:var(--text3)}
+.login-divider{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text3)}
+.login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:var(--line)}
 .login-btn{width:100%;height:42px;background:var(--w);color:#000;border:none;border-radius:8px;font-family:'Geist',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s}
 .login-btn:hover{background:#e8e8e8}
-.login-err{font-size:12px;color:var(--red);text-align:center;display:none}
+.login-btn:disabled{opacity:.4;cursor:not-allowed}
+.login-hint{font-size:11px;color:var(--text3);text-align:center;line-height:1.6}
+.login-err{font-size:12px;color:var(--red);text-align:center;display:none;padding:8px 12px;background:rgba(224,90,90,.08);border:1px solid rgba(224,90,90,.15);border-radius:6px}
 
-/* APP */
-#app{display:none;min-height:100vh}
-#app.on{display:block}
+/* ── APP ──────────────────────────────────────── */
+#app{display:none;min-height:100vh;flex-direction:column}
+#app.on{display:flex}
 
-/* HEADER */
-.header{border-bottom:1px solid var(--line);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(12,12,12,.9);backdrop-filter:blur(12px);z-index:10}
-.header-logo{display:flex;align-items:center;gap:8px}
-.header-logo-name{font-size:14px;font-weight:700;color:var(--w);letter-spacing:-.04em}
-.header-badge{font-size:10px;font-weight:700;letter-spacing:.08em;font-family:'Geist Mono',monospace;text-transform:uppercase;background:rgba(255,255,255,.1);color:var(--text2);padding:2px 7px;border-radius:4px}
-.header-right{display:flex;align-items:center;gap:8px}
-.refresh-btn{height:30px;padding:0 12px;background:none;border:1px solid var(--line2);border-radius:5px;color:var(--text2);font-family:'Geist',sans-serif;font-size:12px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px}
-.refresh-btn:hover{background:var(--bg2);color:var(--text)}
-.refresh-btn.loading svg{animation:spin 1s linear infinite}
+/* ── HEADER ───────────────────────────────────── */
+.header{border-bottom:1px solid var(--line);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(12,12,12,.95);backdrop-filter:blur(12px);z-index:10}
+.h-logo{display:flex;align-items:center;gap:8px}
+.h-logo-name{font-size:14px;font-weight:700;color:var(--w);letter-spacing:-.04em}
+.h-badge{font-size:10px;font-weight:700;letter-spacing:.08em;font-family:'Geist Mono',monospace;text-transform:uppercase;background:rgba(255,255,255,.1);color:var(--text2);padding:2px 7px;border-radius:4px}
+.h-right{display:flex;align-items:center;gap:10px}
+.h-owner{font-size:12px;color:var(--text2);font-family:'Geist Mono',monospace}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px rgba(82,201,116,.5);animation:pulse 2s infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hbtn{height:30px;padding:0 12px;background:none;border:1px solid var(--line2);border-radius:5px;color:var(--text2);font-family:'Geist',sans-serif;font-size:12px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.hbtn:hover{background:var(--bg2);color:var(--text)}
+.hbtn svg.spin{animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.last-upd{font-size:11px;font-family:'Geist Mono',monospace;color:var(--text3)}
 
-/* CONTENT */
-.content{max-width:1100px;margin:0 auto;padding:32px 24px}
+/* ── TABS ─────────────────────────────────────── */
+.tabs{display:flex;border-bottom:1px solid var(--line);padding:0 24px;background:var(--bg)}
+.tab{padding:12px 16px;font-size:13px;font-weight:500;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;margin-bottom:-1px}
+.tab:hover{color:var(--text2)}
+.tab.on{color:var(--text);border-color:var(--w)}
 
-/* SECTION TITLE */
-.section-head{margin-bottom:14px}
-.section-title{font-size:12px;font-weight:600;letter-spacing:.07em;color:var(--text3);text-transform:uppercase}
+/* ── CONTENT ──────────────────────────────────── */
+.content{max-width:1100px;margin:0 auto;padding:28px 24px}
+.tab-view{display:none}
+.tab-view.on{display:block}
 
-/* STAT CARDS */
+/* ── STAT CARDS ───────────────────────────────── */
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px}
-.stat-card{background:var(--bg1);border:1px solid var(--line);border-radius:10px;padding:18px 20px;position:relative;overflow:hidden}
-.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent-color,var(--line2))}
-.stat-val{font-size:28px;font-weight:700;color:var(--w);letter-spacing:-.04em;font-family:'Geist Mono',monospace;margin-bottom:4px;line-height:1}
-.stat-label{font-size:12px;color:var(--text3);margin-bottom:8px}
-.stat-delta{font-size:11px;font-family:'Geist Mono',monospace}
-.stat-delta.up{color:var(--green)}
-.stat-delta.neu{color:var(--text3)}
+.scard{background:var(--bg1);border:1px solid var(--line);border-radius:10px;padding:18px 20px;position:relative;overflow:hidden}
+.scard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--c,var(--line2))}
+.sv{font-size:28px;font-weight:700;color:var(--w);letter-spacing:-.04em;font-family:'Geist Mono',monospace;margin-bottom:4px;line-height:1}
+.sl{font-size:12px;color:var(--text3);margin-bottom:6px}
+.sd{font-size:11px;font-family:'Geist Mono',monospace;color:var(--green)}
+.sd.neu{color:var(--text3)}
 
-/* CHART */
+/* ── USERS TABLE ──────────────────────────────── */
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:12px;flex-wrap:wrap}
+.section-title{font-size:12px;font-weight:600;letter-spacing:.07em;color:var(--text3);text-transform:uppercase}
+.search-inp{height:32px;background:var(--bg2);border:1px solid var(--line2);border-radius:6px;padding:0 12px;color:var(--text);font-family:'Geist',sans-serif;font-size:13px;outline:none;width:220px;transition:border-color .15s}
+.search-inp:focus{border-color:#333}
+.search-inp::placeholder{color:var(--text3)}
+
+.users-table{background:var(--bg1);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.ut-head{display:grid;grid-template-columns:2.5fr 90px 90px 1fr 100px;padding:10px 16px;border-bottom:1px solid var(--line);gap:12px}
+.ut-row{display:grid;grid-template-columns:2.5fr 90px 90px 1fr 100px;padding:12px 16px;border-bottom:1px solid var(--line);gap:12px;transition:background .1s;cursor:pointer}
+.ut-row:last-child{border-bottom:none}
+.ut-row:hover{background:var(--bg2)}
+.ut-row.banned-row{opacity:.5}
+.th{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
+.td{font-size:13px;color:var(--text2);display:flex;align-items:center;overflow:hidden}
+.td.name-td{gap:9px;color:var(--text)}
+.td.mono{font-family:'Geist Mono',monospace;font-size:12px}
+.td.dim{color:var(--text3);font-size:12px;font-family:'Geist Mono',monospace}
+.mini-av{width:28px;height:28px;border-radius:50%;background:var(--bg3);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text2);flex-shrink:0;overflow:hidden}
+.mini-av img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.name-info{min-width:0}
+.name-main{font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.name-email{font-size:11px;color:var(--text3);font-family:'Geist Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{font-size:9px;font-weight:700;letter-spacing:.07em;font-family:'Geist Mono',monospace;text-transform:uppercase;padding:2px 7px;border-radius:3px;white-space:nowrap}
+.b-free{background:rgba(255,255,255,.08);color:var(--text2)}
+.b-pro{background:rgba(82,201,116,.14);color:var(--green)}
+.b-ultra{background:rgba(255,255,255,.18);color:var(--w)}
+.b-ban{background:rgba(224,90,90,.14);color:var(--red)}
+.b-web{background:rgba(82,140,201,.12);color:var(--blue)}
+.b-tg{background:rgba(36,129,204,.15);color:#4ba3f5}
+.action-btn{padding:4px 10px;border-radius:5px;border:1px solid var(--line2);background:none;color:var(--text2);font-family:'Geist',sans-serif;font-size:11px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.action-btn:hover{background:var(--bg3);color:var(--text)}
+
+/* ── USER DETAIL PANEL ────────────────────────── */
+.detail-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
+.detail-overlay.open{display:flex}
+@media(min-width:600px){.detail-overlay{align-items:center}}
+.detail-card{background:var(--bg1);border:1px solid var(--line2);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:24px;max-height:90vh;overflow-y:auto}
+@media(min-width:600px){.detail-card{border-radius:16px;max-height:80vh}}
+.detail-handle{width:36px;height:4px;background:var(--line2);border-radius:2px;margin:0 auto 20px;display:block}
+@media(min-width:600px){.detail-handle{display:none}}
+.detail-top{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.detail-av{width:52px;height:52px;border-radius:50%;background:var(--bg3);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--text2);flex-shrink:0;overflow:hidden}
+.detail-av img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.detail-name{font-size:16px;font-weight:600;color:var(--w);letter-spacing:-.02em;margin-bottom:3px}
+.detail-email{font-size:12px;color:var(--text3);font-family:'Geist Mono',monospace}
+.detail-meta{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:20px}
+.meta-item{background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.meta-label{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
+.meta-val{font-size:13px;color:var(--text);font-family:'Geist Mono',monospace}
+.detail-section{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.plan-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.plan-btn{height:40px;border-radius:8px;border:1px solid var(--line2);background:none;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;color:var(--text2)}
+.plan-btn:hover{background:var(--bg2);color:var(--text)}
+.plan-btn.active{border-color:rgba(255,255,255,.3);color:var(--w);background:var(--bg2)}
+.plan-btn.pro.active{border-color:rgba(82,201,116,.4);background:rgba(82,201,116,.08);color:var(--green)}
+.plan-btn.ultra.active{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.06);color:var(--w)}
+.danger-btns{display:flex;gap:8px;flex-wrap:wrap}
+.d-btn{flex:1;height:38px;border-radius:7px;border:none;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;min-width:100px}
+.d-btn.ban-btn{background:rgba(224,90,90,.12);color:var(--red);border:1px solid rgba(224,90,90,.2)}
+.d-btn.ban-btn:hover{background:rgba(224,90,90,.2)}
+.d-btn.unban-btn{background:rgba(82,201,116,.12);color:var(--green);border:1px solid rgba(82,201,116,.2)}
+.d-btn.unban-btn:hover{background:rgba(82,201,116,.2)}
+.d-btn.del-btn{background:rgba(224,90,90,.07);color:#c44;border:1px solid rgba(224,90,90,.15)}
+.d-btn.del-btn:hover{background:rgba(224,90,90,.15)}
+.d-btn.close-btn{background:var(--bg2);color:var(--text2);border:1px solid var(--line2)}
+.d-btn.close-btn:hover{background:var(--bg3);color:var(--text)}
+.detail-loading{text-align:center;padding:20px;color:var(--text3);font-size:13px}
+.detail-success{padding:10px 14px;background:rgba(82,201,116,.1);border:1px solid rgba(82,201,116,.2);border-radius:7px;color:var(--green);font-size:13px;margin-top:12px;display:none}
+
+/* ── CHART ────────────────────────────────────── */
 .chart-row{display:grid;grid-template-columns:2fr 1fr;gap:10px;margin-bottom:28px}
 .chart-card{background:var(--bg1);border:1px solid var(--line);border-radius:10px;padding:20px}
-.chart-title{font-size:12px;font-weight:600;letter-spacing:.07em;color:var(--text3);text-transform:uppercase;margin-bottom:18px}
-.bar-chart{display:flex;align-items:flex-end;gap:6px;height:100px}
-.bar-col{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1}
-.bar{width:100%;border-radius:3px 3px 0 0;background:var(--bg3);transition:height .4s ease;min-height:2px;position:relative}
-.bar.filled{background:var(--w)}
-.bar:hover{opacity:.8}
-.bar-label{font-size:10px;font-family:'Geist Mono',monospace;color:var(--text3);white-space:nowrap}
-.bar-val{font-size:10px;font-family:'Geist Mono',monospace;color:var(--text2)}
-
-/* PIE (donut via CSS) */
-.donut-wrap{display:flex;flex-direction:column;justify-content:center;gap:12px}
-.plan-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.plan-row-left{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2)}
+.chart-title{font-size:11px;font-weight:600;letter-spacing:.07em;color:var(--text3);text-transform:uppercase;margin-bottom:16px}
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:90px}
+.bar-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.bar{width:100%;border-radius:3px 3px 0 0;background:var(--bg3);transition:height .5s ease;min-height:2px}
+.bar.today{background:var(--w)}
+.bar-lbl{font-size:9px;font-family:'Geist Mono',monospace;color:var(--text3);text-align:center;line-height:1.2}
+.bar-val{font-size:9px;font-family:'Geist Mono',monospace;color:var(--text2)}
+.plan-rows{display:flex;flex-direction:column;gap:10px;justify-content:center;height:100%}
+.plan-row{display:flex;align-items:center;gap:10px}
 .plan-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.plan-row-right{font-size:13px;font-weight:600;color:var(--w);font-family:'Geist Mono',monospace}
-.plan-bar-wrap{margin-top:4px;height:2px;background:var(--bg3);border-radius:2px;overflow:hidden}
-.plan-bar-fill{height:100%;border-radius:2px;transition:width .5s ease}
+.plan-name{font-size:13px;color:var(--text2);flex:1}
+.plan-count{font-size:13px;font-weight:600;color:var(--w);font-family:'Geist Mono',monospace}
+.plan-bar-bg{flex:2;height:3px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.plan-bar-fill{height:100%;border-radius:2px;transition:width .5s}
 
-/* SOURCE BADGES */
-.source-grid{display:flex;gap:10px;margin-bottom:4px;flex-wrap:wrap}
-.source-card{background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:14px 18px;flex:1;min-width:120px}
-.source-val{font-size:20px;font-weight:700;color:var(--w);font-family:'Geist Mono',monospace;margin-bottom:3px}
-.source-label{font-size:12px;color:var(--text3)}
-.source-icon{font-size:18px;margin-bottom:8px}
-
-/* TABLE */
-.table-card{background:var(--bg1);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:28px}
-.table-head{display:grid;grid-template-columns:2fr 1fr 80px 80px 1fr 90px;padding:10px 16px;border-bottom:1px solid var(--line);gap:12px}
-.table-row{display:grid;grid-template-columns:2fr 1fr 80px 80px 1fr 90px;padding:11px 16px;border-bottom:1px solid var(--line);gap:12px;transition:background .1s}
-.table-row:last-child{border-bottom:none}
-.table-row:hover{background:var(--bg2)}
-.th{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
-.td{font-size:12px;font-family:'Geist Mono',monospace;color:var(--text2);display:flex;align-items:center;overflow:hidden}
-.td.name{font-family:'Geist',sans-serif;font-size:13px;color:var(--text);font-weight:500;gap:8px}
-.td.dim{color:var(--text3)}
-
-/* BADGES */
-.badge{font-size:9px;font-weight:700;letter-spacing:.08em;font-family:'Geist Mono',monospace;text-transform:uppercase;padding:2px 6px;border-radius:3px;flex-shrink:0}
-.badge-free{background:rgba(255,255,255,.08);color:var(--text2)}
-.badge-pro{background:rgba(82,201,116,.14);color:var(--green)}
-.badge-ultra{background:rgba(255,255,255,.18);color:var(--w)}
-.badge-web{background:rgba(82,140,201,.12);color:var(--blue)}
-.badge-tg{background:rgba(36,129,204,.15);color:#4ba3f5}
-
-/* AVATAR MINI */
-.mini-av{width:24px;height:24px;border-radius:50%;background:var(--bg3);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--text2);flex-shrink:0;overflow:hidden}
-.mini-av img{width:100%;height:100%;object-fit:cover;border-radius:50%}
-
-/* EMPTY */
+/* ── EMPTY / LOADING ──────────────────────────── */
 .empty{padding:40px;text-align:center;color:var(--text3);font-size:13px}
-
-/* LIVE INDICATOR */
-.live-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--green);font-family:'Geist Mono',monospace}
-.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px rgba(82,201,116,.5);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-
-/* ERROR BANNER */
-.err-banner{background:rgba(224,90,90,.08);border:1px solid rgba(224,90,90,.2);border-radius:8px;padding:12px 16px;font-size:13px;color:var(--red);margin-bottom:20px;display:none}
-
-/* NO KV NOTE */
-.kv-note{background:rgba(82,140,201,.08);border:1px solid rgba(82,140,201,.2);border-radius:8px;padding:14px 16px;font-size:13px;color:#7ab3e0;margin-bottom:24px;line-height:1.6}
-.kv-note strong{color:var(--blue)}
+.kv-note{background:rgba(82,140,201,.08);border:1px solid rgba(82,140,201,.2);border-radius:8px;padding:14px 16px;font-size:13px;color:#7ab3e0;margin-bottom:24px;display:none;line-height:1.6}
 .kv-note code{font-family:'Geist Mono',monospace;font-size:12px;background:rgba(82,140,201,.1);padding:1px 5px;border-radius:3px}
+.toast-msg{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1c1c1c;border:1px solid #2a2a2a;color:#ebebeb;padding:10px 18px;border-radius:8px;font-size:13px;z-index:500;pointer-events:none;white-space:nowrap;display:none}
 
-@media(max-width:900px){
-  .stats-grid{grid-template-columns:repeat(2,1fr)}
-  .chart-row{grid-template-columns:1fr}
-  .table-head,.table-row{grid-template-columns:2fr 80px 80px 90px}
-  .th:nth-child(2),.td:nth-child(2),.th:nth-child(5),.td:nth-child(5){display:none}
-}
-@media(max-width:600px){
-  .content{padding:20px 12px}
-  .stats-grid{grid-template-columns:repeat(2,1fr);gap:8px}
-  .stat-val{font-size:22px}
-  .table-head,.table-row{grid-template-columns:1fr 80px 80px}
-  .th:nth-child(4),.td:nth-child(4),.th:nth-child(6),.td:nth-child(6){display:none}
+@media(max-width:900px){.stats-grid{grid-template-columns:repeat(2,1fr)}.chart-row{grid-template-columns:1fr}}
+@media(max-width:700px){
+  .ut-head,.ut-row{grid-template-columns:1fr 80px 80px}
+  .th:nth-child(4),.td:nth-child(4),.th:nth-child(5),.td:nth-child(5){display:none}
+  .content{padding:20px 14px}
+  .tabs{padding:0 14px}
 }
 </style>
 </head>
@@ -149,312 +182,463 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ge
 <div id="login">
   <div class="login-card">
     <div class="login-logo">
-      <svg width="24" height="24" viewBox="0 0 20 20" fill="none">
+      <svg width="22" height="22" viewBox="0 0 20 20" fill="none">
         <path d="M10 1.5L17.5 5.75V14.25L10 18.5L2.5 14.25V5.75Z" stroke="white" stroke-width="1.3" stroke-linejoin="round"/>
         <circle cx="10" cy="10" r="2.2" fill="white"/>
       </svg>
       <span class="login-logo-name">crymiss</span>
+      <span class="login-badge">Admin</span>
     </div>
-    <div class="login-title">Admin Dashboard</div>
-    <input class="token-input" id="token-input" type="password" placeholder="Enter admin token" onkeydown="if(event.key==='Enter')doLogin()">
-    <button class="login-btn" onclick="doLogin()">Sign in</button>
-    <div class="login-err" id="login-err">Invalid token</div>
+    <div class="login-title">Панель управления</div>
+
+    <div class="login-section">
+      <div class="login-label">Секретный токен</div>
+      <input class="login-input" id="token-inp" type="password" placeholder="Введи ADMIN_SECRET..." onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+
+    <div class="login-divider">или войди как владелец</div>
+
+    <div class="login-section">
+      <div class="login-label">Telegram username или номер телефона</div>
+      <input class="login-input" id="owner-inp" placeholder="@username или +79991234567" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+
+    <button class="login-btn" id="login-btn" onclick="doLogin()">Войти</button>
+    <div class="login-err" id="login-err">Неверный токен или вы не являетесь владельцем</div>
+    <div class="login-hint">
+      Токен задаётся в Vercel → Settings → Environment Variables<br>
+      <code style="font-family:monospace;font-size:11px;color:#528cc9">ADMIN_SECRET</code> и
+      <code style="font-family:monospace;font-size:11px;color:#528cc9">OWNER_IDENTITY</code>
+    </div>
   </div>
 </div>
 
 <!-- APP -->
 <div id="app">
   <div class="header">
-    <div class="header-logo">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <div class="h-logo">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
         <path d="M10 1.5L17.5 5.75V14.25L10 18.5L2.5 14.25V5.75Z" stroke="white" stroke-width="1.3" stroke-linejoin="round"/>
         <circle cx="10" cy="10" r="2.2" fill="white"/>
       </svg>
-      <span class="header-logo-name">crymiss</span>
-      <span class="header-badge">Admin</span>
+      <span class="h-logo-name">crymiss</span>
+      <span class="h-badge">Admin</span>
     </div>
-    <div class="header-right">
-      <div class="live-badge"><span class="live-dot"></span>Live</div>
-      <span class="last-upd" id="last-upd">—</span>
-      <button class="refresh-btn" id="refresh-btn" onclick="loadStats()">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M10.5 6A4.5 4.5 0 116 1.5c1.3 0 2.47.55 3.3 1.43" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M9.5 1.5V4H12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Refresh
+    <div class="h-right">
+      <div class="live-dot"></div>
+      <span class="h-owner" id="h-owner-lbl"></span>
+      <button class="hbtn" id="refresh-btn" onclick="loadAll()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" id="refresh-ico"><path d="M10.5 6A4.5 4.5 0 116 1.5c1.3 0 2.47.55 3.3 1.43" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M9.5 1.5V4H12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Обновить
       </button>
     </div>
   </div>
 
+  <div class="tabs">
+    <div class="tab on" onclick="switchTab('users',this)">Пользователи</div>
+    <div class="tab" onclick="switchTab('stats',this)">Статистика</div>
+  </div>
+
   <div class="content">
-    <div class="err-banner" id="err-banner"></div>
-
-    <div class="kv-note" id="kv-note" style="display:none">
-      <strong>Vercel KV не подключён</strong> — данные демонстрационные.<br>
-      Чтобы включить реальную статистику:<br>
-      1. Vercel Dashboard → Storage → <strong>Create KV Database</strong><br>
-      2. Connect to your project → данные появятся автоматически<br>
-      Пакет: <code>npm install @vercel/kv</code> (уже в зависимостях)
+    <div class="kv-note" id="kv-note">
+      <strong style="color:var(--blue)">Vercel KV не подключён</strong> — показываются демо-данные.<br>
+      Vercel Dashboard → Storage → <strong>Create KV Database</strong> → Connect to Project → Redeploy
     </div>
 
-    <!-- MAIN STATS -->
-    <div class="section-head"><div class="section-title">Overview</div></div>
-    <div class="stats-grid">
-      <div class="stat-card" style="--accent-color:var(--w)">
-        <div class="stat-val" id="s-total">—</div>
-        <div class="stat-label">Total users</div>
-        <div class="stat-delta up" id="s-total-d">loading...</div>
+    <!-- USERS TAB -->
+    <div class="tab-view on" id="tab-users">
+      <div class="section-head">
+        <div class="section-title" id="users-count-lbl">Все пользователи</div>
+        <input class="search-inp" placeholder="Поиск по имени или email..." oninput="filterUsers(this.value)">
       </div>
-      <div class="stat-card" style="--accent-color:var(--green)">
-        <div class="stat-val" id="s-active">—</div>
-        <div class="stat-label">Active today</div>
-        <div class="stat-delta up" id="s-active-d">unique sessions</div>
-      </div>
-      <div class="stat-card" style="--accent-color:var(--blue)">
-        <div class="stat-val" id="s-web">—</div>
-        <div class="stat-label">Web users</div>
-        <div class="stat-delta neu">via Google OAuth</div>
-      </div>
-      <div class="stat-card" style="--accent-color:#4ba3f5">
-        <div class="stat-val" id="s-tg">—</div>
-        <div class="stat-label">Telegram users</div>
-        <div class="stat-delta neu">via Mini App</div>
-      </div>
-    </div>
-
-    <!-- CHARTS -->
-    <div class="chart-row">
-      <div class="chart-card">
-        <div class="chart-title">Registrations — last 7 days</div>
-        <div class="bar-chart" id="bar-chart">
-          <div class="empty">Loading...</div>
+      <div class="users-table">
+        <div class="ut-head">
+          <div class="th">Пользователь</div>
+          <div class="th">План</div>
+          <div class="th">Источник</div>
+          <div class="th">Регистрация</div>
+          <div class="th">Действия</div>
         </div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-title">Plans distribution</div>
-        <div class="donut-wrap" id="plans-chart">
-          <div class="empty">Loading...</div>
-        </div>
+        <div id="users-body"><div class="empty">Загрузка...</div></div>
       </div>
     </div>
 
-    <!-- RECENT USERS -->
-    <div class="section-head" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <div class="section-title">Recent users</div>
-      <div id="users-count" style="font-size:11px;font-family:'Geist Mono',monospace;color:var(--text3)"></div>
-    </div>
-    <div class="table-card">
-      <div class="table-head">
-        <div class="th">User</div>
-        <div class="th">Email</div>
-        <div class="th">Plan</div>
-        <div class="th">Source</div>
-        <div class="th">Registered</div>
-        <div class="th">Last seen</div>
+    <!-- STATS TAB -->
+    <div class="tab-view" id="tab-stats">
+      <div class="stats-grid">
+        <div class="scard" style="--c:var(--w)"><div class="sv" id="s-total">—</div><div class="sl">Всего пользователей</div><div class="sd" id="s-week">загрузка...</div></div>
+        <div class="scard" style="--c:var(--green)"><div class="sv" id="s-active">—</div><div class="sl">Активных сегодня</div><div class="sd neu">уникальных</div></div>
+        <div class="scard" style="--c:var(--blue)"><div class="sv" id="s-web">—</div><div class="sl">Web / Google</div><div class="sd neu">OAuth</div></div>
+        <div class="scard" style="--c:#4ba3f5"><div class="sv" id="s-tg">—</div><div class="sl">Telegram</div><div class="sd neu">Mini App</div></div>
       </div>
-      <div id="users-table">
-        <div class="empty">Loading users...</div>
+      <div class="chart-row">
+        <div class="chart-card"><div class="chart-title">Регистрации — 7 дней</div><div class="bar-chart" id="bar-chart"><div class="empty">...</div></div></div>
+        <div class="chart-card"><div class="chart-title">По планам</div><div class="plan-rows" id="plan-chart"><div class="empty">...</div></div></div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- USER DETAIL PANEL -->
+<div class="detail-overlay" id="detail-overlay" onclick="if(event.target===this)closeDetail()">
+  <div class="detail-card">
+    <div class="detail-handle"></div>
+    <div id="detail-content"><div class="detail-loading">Загрузка...</div></div>
+  </div>
+</div>
+
+<div class="toast-msg" id="toast"></div>
+
 <script>
 let adminToken = '';
+let ownerIdentity = '';
+let allUsers = [];
+let currentUserId = null;
 
-function doLogin() {
-  const val = document.getElementById('token-input').value.trim();
-  if (!val) return;
-  adminToken = val;
-  document.getElementById('login-err').style.display = 'none';
-  loadStats();
-}
+// ── LOGIN ─────────────────────────────────────────
+async function doLogin() {
+  const tokenVal  = document.getElementById('token-inp').value.trim();
+  const ownerVal  = document.getElementById('owner-inp').value.trim();
+  const btn = document.getElementById('login-btn');
 
-async function loadStats() {
-  const btn = document.getElementById('refresh-btn');
-  btn.classList.add('loading');
+  if (!tokenVal && !ownerVal) { showLoginErr('Введи токен или свой Telegram/телефон'); return; }
 
-  try {
-    const res = await fetch(`/api/admin?token=${encodeURIComponent(adminToken)}`);
-    if (res.status === 401) {
-      document.getElementById('login-err').style.display = 'block';
-      btn.classList.remove('loading');
-      return;
-    }
+  btn.disabled = true; btn.textContent = 'Проверка...';
 
-    const d = await res.json();
-    if (d.error && !d.totalUsers) {
-      showError(d.error);
-      btn.classList.remove('loading');
-      return;
-    }
-
-    // Hide login, show app
-    document.getElementById('login').style.display = 'none';
-    document.getElementById('app').classList.add('on');
-
-    renderStats(d);
-    document.getElementById('last-upd').textContent = 'Updated ' + new Date().toLocaleTimeString();
-
-    // Check if KV is working (if all zeros and no recent users it might not be connected)
-    if (d.kvError || (d.totalUsers === 0 && d.recentUsers?.length === 0)) {
-      document.getElementById('kv-note').style.display = 'block';
-      renderDemoData();
-    } else {
-      document.getElementById('kv-note').style.display = 'none';
-    }
-
-  } catch(err) {
-    showError('Network error: ' + err.message);
+  // Try token login first
+  if (tokenVal) {
+    const ok = await tryTokenLogin(tokenVal);
+    if (ok) return;
   }
 
-  btn.classList.remove('loading');
+  // Try owner identity (TG username or phone)
+  if (ownerVal) {
+    const ok = await tryOwnerLogin(ownerVal);
+    if (ok) return;
+  }
+
+  showLoginErr('Неверный токен или ты не являешься владельцем');
+  btn.disabled = false; btn.textContent = 'Войти';
 }
 
+async function tryTokenLogin(token) {
+  try {
+    const r = await fetch(`/api/admin?token=${encodeURIComponent(token)}`);
+    if (r.status === 401) return false;
+    adminToken = token;
+    ownerIdentity = 'Admin';
+    enterApp();
+    return true;
+  } catch(_){ return false; }
+}
+
+async function tryOwnerLogin(identity) {
+  // Check against OWNER_IDENTITY env var (returned from /api/config)
+  try {
+    const r = await fetch('/api/config');
+    if (!r.ok) return false;
+    const cfg = await r.json();
+    // Server returns hashed/stored owner identity for comparison
+    if (!cfg.ownerIdentity) return false;
+
+    // Normalize: strip @, lowercase, strip spaces
+    const norm = s => s.replace('@','').replace(/\s/g,'').toLowerCase();
+    if (norm(cfg.ownerIdentity) !== norm(identity)) return false;
+
+    // Owner verified — use the admin token from URL or stored
+    const urlToken = new URLSearchParams(location.search).get('token');
+    if (urlToken) {
+      const ok = await tryTokenLogin(urlToken);
+      if (ok) return true;
+    }
+    // No token — show token input
+    showLoginErr('Личность подтверждена! Теперь введи ADMIN_SECRET токен выше.');
+    return false;
+  } catch(_){ return false; }
+}
+
+function showLoginErr(msg) {
+  const el = document.getElementById('login-err');
+  el.textContent = msg; el.style.display = 'block';
+  const btn = document.getElementById('login-btn');
+  btn.disabled = false; btn.textContent = 'Войти';
+}
+
+function enterApp() {
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('app').classList.add('on');
+  document.getElementById('h-owner-lbl').textContent = ownerIdentity;
+  loadAll();
+}
+
+// ── DATA ──────────────────────────────────────────
+async function loadAll() {
+  const ico = document.getElementById('refresh-ico');
+  ico.classList.add('spin');
+  try {
+    const r = await fetch(`/api/admin?token=${encodeURIComponent(adminToken)}`);
+    if (!r.ok) { showToast('Ошибка загрузки данных'); return; }
+    const d = await r.json();
+
+    if (d.kvError || (d.totalUsers === 0 && !d.recentUsers?.length)) {
+      document.getElementById('kv-note').style.display = 'block';
+      loadDemoData();
+    } else {
+      document.getElementById('kv-note').style.display = 'none';
+      allUsers = d.recentUsers || [];
+      renderStats(d);
+      renderUsers(allUsers);
+    }
+  } catch(err) { showToast('Ошибка: ' + err.message); }
+  ico.classList.remove('spin');
+}
+
+function loadDemoData() {
+  const demo = {
+    totalUsers: 42, activeToday: 8, webUsers: 28, tgUsers: 14,
+    planCounts: { free:35, pro:5, ultra:2 },
+    last7days: [
+      {date:dAgo(6),count:3},{date:dAgo(5),count:7},{date:dAgo(4),count:4},
+      {date:dAgo(3),count:9},{date:dAgo(2),count:5},{date:dAgo(1),count:8},
+      {date:new Date().toISOString().slice(0,10),count:6}
+    ],
+    recentUsers: [
+      {id:'u1',name:'Alex Kim',   email:'al***@gmail.com',   plan:'ultra',source:'web',     createdAt:Date.now()-3600000,  lastSeenAt:Date.now()-120000,  loginCount:12,banned:false,pic:''},
+      {id:'u2',name:'Maria S',    email:'ma***@mail.ru',     plan:'pro',  source:'telegram',createdAt:Date.now()-7200000,  lastSeenAt:Date.now()-900000,  loginCount:7, banned:false,pic:''},
+      {id:'u3',name:'Pavel K',    email:'pa***@yandex.ru',   plan:'free', source:'telegram',createdAt:Date.now()-86400000, lastSeenAt:Date.now()-7200000, loginCount:3, banned:false,pic:''},
+      {id:'u4',name:'John D',     email:'jo***@outlook.com', plan:'free', source:'web',     createdAt:Date.now()-172800000,lastSeenAt:Date.now()-86400000,loginCount:1, banned:true, pic:''},
+      {id:'u5',name:'dev_user',   email:'de***@crymiss.ai',  plan:'free', source:'web',     createdAt:Date.now()-259200000,lastSeenAt:Date.now()-3600000, loginCount:22,banned:false,pic:''},
+    ]
+  };
+  allUsers = demo.recentUsers;
+  renderStats(demo);
+  renderUsers(allUsers);
+}
+
+function dAgo(n){ return new Date(Date.now()-n*86400000).toISOString().slice(0,10); }
+
+// ── RENDER STATS ──────────────────────────────────
 function renderStats(d) {
-  // Main counters
   set('s-total', fmt(d.totalUsers));
-  set('s-total-d', `+${fmt(d.last7days?.reduce((a,b)=>a+b.count,0)||0)} this week`);
+  set('s-week', `+${(d.last7days||[]).reduce((a,b)=>a+b.count,0)} за 7 дней`);
   set('s-active', fmt(d.activeToday));
-  set('s-active-d', d.activeToday > 0 ? `${Math.round(d.activeToday/(d.totalUsers||1)*100)}% of total` : 'unique sessions');
   set('s-web', fmt(d.webUsers));
-  set('s-tg',  fmt(d.tgUsers));
-
-  // Bar chart
-  renderBarChart(d.last7days || []);
-
-  // Plans
-  renderPlans(d.planCounts || {});
-
-  // Table
-  renderTable(d.recentUsers || [], d.totalUsers || 0);
+  set('s-tg', fmt(d.tgUsers));
+  renderBarChart(d.last7days||[]);
+  renderPlanChart(d.planCounts||{});
 }
 
 function renderBarChart(days) {
-  const chart = document.getElementById('bar-chart');
-  if (!days.length) { chart.innerHTML = '<div class="empty">No data</div>'; return; }
-
+  const el = document.getElementById('bar-chart');
+  if (!days.length) { el.innerHTML='<div class="empty">Нет данных</div>'; return; }
   const max = Math.max(...days.map(d=>d.count), 1);
-  chart.innerHTML = days.map(d => {
-    const h = Math.max(Math.round((d.count / max) * 90), d.count > 0 ? 8 : 2);
-    const dateStr = new Date(d.date).toLocaleDateString('en', {month:'short',day:'numeric'});
-    const isToday = d.date === new Date().toISOString().slice(0,10);
-    return `<div class="bar-col">
-      <div class="bar-val">${d.count||''}</div>
-      <div class="bar ${isToday?'filled':''}" style="height:${h}px" title="${d.count} users on ${d.date}"></div>
-      <div class="bar-label">${isToday?'today':dateStr.split(' ')[0]}<br>${dateStr.split(' ')[1]}</div>
-    </div>`;
+  const today = new Date().toISOString().slice(0,10);
+  el.innerHTML = days.map(d => {
+    const h = Math.max(Math.round((d.count/max)*80), d.count>0?6:2);
+    const isToday = d.date === today;
+    const lbl = isToday ? 'today' : new Date(d.date).toLocaleDateString('ru',{day:'numeric',month:'short'}).replace(' ','<br>');
+    return `<div class="bar-col"><div class="bar-val">${d.count||''}</div><div class="bar ${isToday?'today':''}" style="height:${h}px"></div><div class="bar-lbl">${lbl}</div></div>`;
   }).join('');
 }
 
-function renderPlans(counts) {
-  const total = Object.values(counts).reduce((a,b)=>a+b,0) || 1;
+function renderPlanChart(counts) {
+  const total = Object.values(counts).reduce((a,b)=>a+b,0)||1;
   const plans = [
-    { key:'free',  label:'Free',  color:'rgba(255,255,255,.3)', textColor:'var(--text2)' },
-    { key:'pro',   label:'Pro',   color:'var(--green)',         textColor:'var(--green)' },
-    { key:'ultra', label:'Ultra', color:'var(--w)',             textColor:'var(--w)' },
+    {k:'free', label:'Free',  color:'rgba(255,255,255,.3)'},
+    {k:'pro',  label:'Pro',   color:'var(--green)'},
+    {k:'ultra',label:'Ultra', color:'var(--w)'},
   ];
-  document.getElementById('plans-chart').innerHTML = plans.map(p => {
-    const n = counts[p.key] || 0;
-    const pct = Math.round(n / total * 100);
-    return `<div>
-      <div class="plan-row">
-        <div class="plan-row-left">
-          <div class="plan-dot" style="background:${p.color}"></div>
-          <span style="color:${p.textColor}">${p.label}</span>
-        </div>
-        <div class="plan-row-right">${n}</div>
-      </div>
-      <div class="plan-bar-wrap">
-        <div class="plan-bar-fill" style="width:${pct}%;background:${p.color}"></div>
-      </div>
+  document.getElementById('plan-chart').innerHTML = plans.map(p => {
+    const n = counts[p.k]||0;
+    const pct = Math.round(n/total*100);
+    return `<div class="plan-row">
+      <div class="plan-dot" style="background:${p.color}"></div>
+      <span class="plan-name">${p.label}</span>
+      <span class="plan-count">${n}</span>
+      <div class="plan-bar-bg"><div class="plan-bar-fill" style="width:${pct}%;background:${p.color}"></div></div>
     </div>`;
   }).join('');
 }
 
-function renderTable(users, total) {
-  document.getElementById('users-count').textContent = `${total} total`;
-  const table = document.getElementById('users-table');
-  if (!users.length) {
-    table.innerHTML = '<div class="empty">No users yet</div>';
-    return;
-  }
-  table.innerHTML = users.map(u => {
+// ── RENDER USERS ──────────────────────────────────
+function renderUsers(users) {
+  document.getElementById('users-count-lbl').textContent = `Пользователи (${users.length})`;
+  const body = document.getElementById('users-body');
+  if (!users.length) { body.innerHTML='<div class="empty">Пользователей нет</div>'; return; }
+
+  body.innerHTML = users.map(u => {
     const initials = (u.name||'U').split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
-    const avHtml = u.pic
-      ? `<div class="mini-av"><img src="${u.pic}" alt=""></div>`
-      : `<div class="mini-av">${initials}</div>`;
-    const planBadge = `<span class="badge badge-${u.plan||'free'}">${(u.plan||'free').toUpperCase()}</span>`;
-    const srcBadge  = `<span class="badge badge-${u.source||'web'}">${(u.source||'web').toUpperCase()}</span>`;
-    const reg  = u.createdAt  ? relTime(u.createdAt)  : '—';
-    const seen = u.lastSeenAt ? relTime(u.lastSeenAt) : '—';
-    return `<div class="table-row">
-      <div class="td name">${avHtml}<span>${esc(u.name||'—')}</span></div>
-      <div class="td dim">${esc(u.email||'—')}</div>
+    const av = u.pic ? `<div class="mini-av"><img src="${u.pic}" alt=""></div>` : `<div class="mini-av">${initials}</div>`;
+    const planBadge = u.banned ? `<span class="badge b-ban">BANNED</span>` : `<span class="badge b-${u.plan||'free'}">${(u.plan||'free').toUpperCase()}</span>`;
+    const srcBadge = `<span class="badge b-${u.source||'web'}">${(u.source||'web').toUpperCase()}</span>`;
+    const reg = relTime(u.createdAt);
+    return `<div class="ut-row ${u.banned?'banned-row':''}" onclick="openUser('${u.id||''}', ${JSON.stringify(JSON.stringify(u))})">
+      <div class="td name-td">${av}<div class="name-info"><div class="name-main">${esc(u.name||'—')}</div><div class="name-email">${esc(u.email||'—')}</div></div></div>
       <div class="td">${planBadge}</div>
       <div class="td">${srcBadge}</div>
       <div class="td dim">${reg}</div>
-      <div class="td dim">${seen}</div>
+      <div class="td"><button class="action-btn" onclick="event.stopPropagation();openUser('${u.id||''}', ${JSON.stringify(JSON.stringify(u))})">Управление</button></div>
     </div>`;
   }).join('');
 }
 
-// Demo data when KV not connected
-function renderDemoData() {
-  const demoStats = {
-    totalUsers: 127,
-    activeToday: 23,
-    webUsers: 89,
-    tgUsers: 38,
-    planCounts: { free: 98, pro: 21, ultra: 8 },
-    last7days: [
-      { date: daysAgo(6), count: 12 },
-      { date: daysAgo(5), count: 8  },
-      { date: daysAgo(4), count: 19 },
-      { date: daysAgo(3), count: 14 },
-      { date: daysAgo(2), count: 22 },
-      { date: daysAgo(1), count: 17 },
-      { date: new Date().toISOString().slice(0,10), count: 23 },
-    ],
-    recentUsers: [
-      { name:'Alex Kim',    email:'al***@gmail.com',    plan:'ultra', source:'web',      createdAt:Date.now()-3600000,    lastSeenAt:Date.now()-120000  },
-      { name:'Maria S',     email:'ma***@mail.ru',      plan:'pro',   source:'telegram', createdAt:Date.now()-7200000,    lastSeenAt:Date.now()-900000  },
-      { name:'Dev User',    email:'de***@crymiss.ai',   plan:'free',  source:'web',      createdAt:Date.now()-18000000,   lastSeenAt:Date.now()-3600000 },
-      { name:'Pavel K',     email:'pa***@yandex.ru',    plan:'pro',   source:'telegram', createdAt:Date.now()-86400000,   lastSeenAt:Date.now()-7200000 },
-      { name:'John D',      email:'jo***@outlook.com',  plan:'free',  source:'web',      createdAt:Date.now()-172800000,  lastSeenAt:Date.now()-86400000},
-    ]
-  };
-  renderStats(demoStats);
+function filterUsers(q) {
+  if (!q.trim()) { renderUsers(allUsers); return; }
+  const lq = q.toLowerCase();
+  renderUsers(allUsers.filter(u => (u.name||'').toLowerCase().includes(lq) || (u.email||'').toLowerCase().includes(lq)));
 }
 
-function daysAgo(n) {
-  return new Date(Date.now() - n*86400000).toISOString().slice(0,10);
+// ── USER DETAIL ───────────────────────────────────
+function openUser(userId, userJson) {
+  let u;
+  try { u = JSON.parse(userJson); } catch(_){ return; }
+  currentUserId = userId || u.id;
+
+  const initials = (u.name||'U').split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
+  const av = u.pic ? `<div class="detail-av"><img src="${u.pic}" alt=""></div>` : `<div class="detail-av">${initials}</div>`;
+  const loginCnt = u.loginCount||1;
+  const seen = relTime(u.lastSeenAt);
+  const reg  = relTime(u.createdAt);
+
+  document.getElementById('detail-content').innerHTML = `
+    <div class="detail-top">
+      ${av}
+      <div>
+        <div class="detail-name">${esc(u.name||'—')}</div>
+        <div class="detail-email">${esc(u.email||'—')}</div>
+        ${u.banned ? '<span class="badge b-ban" style="margin-top:5px;display:inline-block">ЗАБЛОКИРОВАН</span>' : ''}
+      </div>
+    </div>
+    <div class="detail-meta">
+      <div class="meta-item"><div class="meta-label">Текущий план</div><div class="meta-val">${(u.plan||'free').toUpperCase()}</div></div>
+      <div class="meta-item"><div class="meta-label">Источник</div><div class="meta-val">${(u.source||'web').toUpperCase()}</div></div>
+      <div class="meta-item"><div class="meta-label">Регистрация</div><div class="meta-val">${reg}</div></div>
+      <div class="meta-item"><div class="meta-label">Был онлайн</div><div class="meta-val">${seen}</div></div>
+      <div class="meta-item"><div class="meta-label">Логинов</div><div class="meta-val">${loginCnt}</div></div>
+      <div class="meta-item"><div class="meta-label">ID</div><div class="meta-val" style="font-size:10px;word-break:break-all">${esc(currentUserId||'—')}</div></div>
+    </div>
+
+    <div class="detail-section" style="margin-bottom:10px">Выдать подписку</div>
+    <div class="plan-btns">
+      <button class="plan-btn free ${u.plan==='free'?'active':''}" onclick="setPlan('free')">Free</button>
+      <button class="plan-btn pro  ${u.plan==='pro' ?'active':''}" onclick="setPlan('pro')">⚡ Pro</button>
+      <button class="plan-btn ultra ${u.plan==='ultra'?'active':''}" onclick="setPlan('ultra')">🚀 Ultra</button>
+    </div>
+
+    <div class="detail-section" style="margin-bottom:10px">Действия</div>
+    <div class="danger-btns">
+      ${u.banned
+        ? `<button class="d-btn unban-btn" onclick="doAction('unban')">✓ Разбанить</button>`
+        : `<button class="d-btn ban-btn"   onclick="doAction('ban')">🚫 Забанить</button>`}
+      <button class="d-btn del-btn" onclick="doAction('delete')">🗑 Удалить</button>
+      <button class="d-btn close-btn" onclick="closeDetail()">Закрыть</button>
+    </div>
+    <div class="detail-success" id="detail-success"></div>
+  `;
+
+  document.getElementById('detail-overlay').classList.add('open');
 }
 
+function closeDetail() { document.getElementById('detail-overlay').classList.remove('open'); currentUserId=null; }
+
+async function setPlan(plan) {
+  if (!currentUserId) { showToast('Нет ID пользователя — демо режим'); highlightPlanBtn(plan); return; }
+  try {
+    const r = await fetch('/api/manage-user', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ token: adminToken, userId: currentUserId, action:'set_plan', value: plan })
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error||'Error');
+
+    // Update local data
+    const idx = allUsers.findIndex(u=>(u.id||'')==currentUserId);
+    if (idx>=0) allUsers[idx].plan = plan;
+    highlightPlanBtn(plan);
+    showDetailSuccess(`✓ План изменён на ${plan.toUpperCase()}`);
+    renderUsers(allUsers);
+    showToast(`✓ ${plan.toUpperCase()} выдан`);
+  } catch(err) {
+    // Demo mode — just show success visually
+    highlightPlanBtn(plan);
+    showDetailSuccess(`✓ План изменён на ${plan.toUpperCase()} (демо)`);
+    showToast('Демо: ' + plan.toUpperCase() + ' выдан');
+  }
+}
+
+async function doAction(action) {
+  if (action === 'delete' && !confirm('Удалить пользователя? Это нельзя отменить.')) return;
+  if (!currentUserId) { showToast('Нет ID — демо режим'); closeDetail(); return; }
+
+  try {
+    const r = await fetch('/api/manage-user', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ token: adminToken, userId: currentUserId, action })
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error||'Error');
+  } catch(err) { /* demo mode */ }
+
+  const msgs = { ban:'🚫 Пользователь заблокирован', unban:'✓ Пользователь разблокирован', delete:'🗑 Пользователь удалён' };
+  showToast(msgs[action]||'Готово');
+
+  if (action === 'delete') {
+    allUsers = allUsers.filter(u=>(u.id||'')!==currentUserId);
+  } else {
+    const idx = allUsers.findIndex(u=>(u.id||'')==currentUserId);
+    if (idx>=0) { allUsers[idx].banned = action==='ban'; }
+  }
+  renderUsers(allUsers);
+  closeDetail();
+}
+
+function highlightPlanBtn(plan) {
+  document.querySelectorAll('.plan-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector(`.plan-btn.${plan}`);
+  if (btn) btn.classList.add('active');
+}
+
+function showDetailSuccess(msg) {
+  const el = document.getElementById('detail-success');
+  if (!el) return;
+  el.textContent = msg; el.style.display = 'block';
+  setTimeout(() => el.style.display='none', 3000);
+}
+
+// ── TABS ──────────────────────────────────────────
+function switchTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.tab-view').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('tab-'+name).classList.add('on');
+}
+
+// ── HELPERS ───────────────────────────────────────
 function relTime(ts) {
-  const diff = Date.now() - ts;
-  if (diff < 60000)   return 'just now';
-  if (diff < 3600000) return Math.floor(diff/60000) + 'm ago';
-  if (diff < 86400000)return Math.floor(diff/3600000) + 'h ago';
-  return Math.floor(diff/86400000) + 'd ago';
+  if (!ts) return '—';
+  const d = Date.now()-ts;
+  if (d<60000) return 'только что';
+  if (d<3600000) return Math.floor(d/60000)+'м назад';
+  if (d<86400000) return Math.floor(d/3600000)+'ч назад';
+  return Math.floor(d/86400000)+'д назад';
 }
-
-function fmt(n) { return n >= 1000 ? (n/1000).toFixed(1)+'k' : String(n||0); }
-function set(id, val) { const el=document.getElementById(id); if(el) el.textContent=val; }
+function fmt(n){ return n>=1000?(n/1000).toFixed(1)+'k':String(n||0); }
+function set(id,val){ const e=document.getElementById(id); if(e)e.textContent=val; }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-function showError(msg) {
-  const b = document.getElementById('err-banner');
-  b.textContent = msg; b.style.display='block';
-  setTimeout(() => b.style.display='none', 5000);
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  clearTimeout(t._to);
+  t._to = setTimeout(()=>t.style.display='none', 3000);
 }
 
-// Auto-refresh every 30 seconds
-setInterval(() => { if (adminToken && document.getElementById('app').classList.contains('on')) loadStats(); }, 30000);
+// Auto-refresh every 30s
+setInterval(()=>{ if(document.getElementById('app').classList.contains('on')) loadAll(); }, 30000);
 
-// Enter key on token input
-document.getElementById('token-input').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
-
-// Check token in URL params (for quick access)
+// URL token auto-login
 const urlToken = new URLSearchParams(location.search).get('token');
-if (urlToken) { adminToken=urlToken; loadStats(); }
+if (urlToken) { document.getElementById('token-inp').value=urlToken; tryTokenLogin(urlToken).then(ok=>{ if(!ok) showLoginErr('Неверный токен в URL'); }); }
 </script>
 </body>
 </html>

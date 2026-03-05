@@ -25,13 +25,6 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
 .auth-card{background:var(--bg1);border:1px solid var(--line2);border-radius:14px;padding:28px;width:100%;max-width:360px;display:flex;flex-direction:column;gap:16px}
 .auth-title{font-size:17px;font-weight:600;color:var(--w);letter-spacing:-.03em;text-align:center}
 .auth-sub{font-size:13px;color:var(--text3);text-align:center;margin-top:-8px}
-.plans-pick{display:flex;flex-direction:column;gap:7px}
-.plan-opt{padding:12px 14px;border:1px solid var(--line);border-radius:9px;cursor:pointer;transition:all .15s}
-.plan-opt:hover{border-color:var(--line2);background:var(--bg2)}
-.plan-opt.sel{border-color:rgba(255,255,255,.28);background:var(--bg2)}
-.plan-opt-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
-.plan-opt-name{font-size:13px;font-weight:600;color:var(--w)}
-.plan-opt-desc{font-size:12px;color:var(--text3)}
 .pbadge{font-size:9px;font-weight:700;letter-spacing:.08em;font-family:'Geist Mono',monospace;text-transform:uppercase;padding:2px 6px;border-radius:3px}
 .pb-free{background:rgba(255,255,255,.08);color:var(--text2)}
 .pb-pro{background:rgba(82,201,116,.14);color:#52c974}
@@ -85,17 +78,15 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
 .bsm{height:28px;padding:0 10px;background:none;border:1px solid var(--line2);border-radius:5px;color:var(--text2);font-family:'Geist',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px;flex-shrink:0;white-space:nowrap}
 .bsm:hover{background:var(--bg2);color:var(--text)}
 .bsm.pri{background:var(--w);color:#000;border-color:var(--w)}
-.bsm.pri:hover{background:#e4e4e4;border-color:#e4e4e4}
+.bsm.pri:hover{background:#e4e4e4}
 .burger{display:none}
 .view{display:none;flex:1;flex-direction:column;overflow:hidden}
 .view.on{display:flex}
 
-/* ── CHAT BODY ────────────────────────────────── */
+/* ── CHAT ─────────────────────────────────────── */
 .chat-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
 .chat-body::-webkit-scrollbar{width:3px}
 .chat-body::-webkit-scrollbar-thumb{background:var(--line2);border-radius:4px}
-
-/* ── WELCOME ──────────────────────────────────── */
 .welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;gap:28px;padding:36px 20px}
 .wt{font-size:21px;font-weight:600;color:var(--w);letter-spacing:-.04em;text-align:center;margin-bottom:4px}
 .ws{font-size:13px;color:var(--text3);text-align:center}
@@ -136,9 +127,30 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
 .dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
 @keyframes db{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
 
-/* ── QUOTA BAR ────────────────────────────────── */
-.quota-wrap{padding:0 16px 0;border-top:1px solid var(--line);flex-shrink:0;background:var(--bg)}
-.quota-inner{max-width:680px;margin:0 auto;padding:8px 0}
+/* ── MSG ATTACHMENTS ──────────────────────────── */
+.msg-img{display:block;max-width:260px;max-height:200px;border-radius:7px;margin-bottom:6px;cursor:zoom-in;border:1px solid var(--line2);transition:opacity .15s}
+.msg-img:hover{opacity:.85}
+.msg-file{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;background:var(--bg2);border:1px solid var(--line2);border-radius:7px;margin-bottom:6px;max-width:260px}
+.msg-file-ico{width:28px;height:28px;background:var(--bg3);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--text2)}
+.msg-file-info{min-width:0}
+.msg-file-name{font-size:12px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+.msg-file-size{font-size:10px;color:var(--text3);font-family:'Geist Mono',monospace;margin-top:1px}
+
+/* ── ATTACH PREVIEW (before send) ────────────── */
+.attach-bar{display:none;flex-wrap:wrap;gap:6px;padding:8px 12px;border-bottom:1px solid var(--line)}
+.attach-bar.has-items{display:flex}
+.att-thumb{position:relative;border-radius:6px;overflow:hidden;border:1px solid var(--line2);flex-shrink:0}
+.att-thumb img{display:block;width:68px;height:68px;object-fit:cover}
+.att-thumb .att-rm{position:absolute;top:2px;right:2px;width:18px;height:18px;background:rgba(0,0,0,.75);border:none;border-radius:50%;cursor:pointer;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;line-height:1}
+.att-file{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg2);border:1px solid var(--line2);border-radius:6px;max-width:200px}
+.att-file-name{font-size:12px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;flex:1}
+.att-file-size{font-size:10px;color:var(--text3);font-family:'Geist Mono',monospace}
+.att-file .att-rm{background:none;border:none;cursor:pointer;color:var(--text3);padding:0;display:flex;align-items:center}
+.att-file .att-rm:hover{color:var(--text)}
+
+/* ── QUOTA ────────────────────────────────────── */
+.quota-wrap{padding:0 16px;border-top:1px solid var(--line);flex-shrink:0;background:var(--bg)}
+.quota-inner{max-width:680px;margin:0 auto;padding:7px 0}
 .quota-row{display:flex;align-items:center;gap:10px}
 .quota-info{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .quota-nums{font-size:11px;font-family:'Geist Mono',monospace;color:var(--text3);min-width:52px}
@@ -160,8 +172,9 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
 .sbtn:disabled{opacity:.2;cursor:not-allowed}
 .sbtn:not(:disabled):hover{opacity:.8}
 .inp-foot{display:flex;align-items:center;justify-content:space-between;padding:5px 12px 9px;border-top:1px solid var(--line)}
-.tbtn{display:flex;align-items:center;gap:5px;padding:4px 7px;background:none;border:none;border-radius:5px;font-size:12px;color:var(--text3);font-family:'Geist',sans-serif;cursor:pointer;transition:all .15s}
+.tbtn{display:flex;align-items:center;gap:5px;padding:4px 8px;background:none;border:none;border-radius:5px;font-size:12px;color:var(--text3);font-family:'Geist',sans-serif;cursor:pointer;transition:all .15s;flex-shrink:0}
 .tbtn:hover{background:var(--bg2);color:var(--text2)}
+.tbtn.active{color:var(--text2);background:var(--bg2)}
 .ihint{font-size:11px;font-family:'Geist Mono',monospace;color:var(--text3)}
 
 /* ── PLANS PAGE ───────────────────────────────── */
@@ -186,12 +199,10 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
 .pcbtn{width:100%;height:36px;margin-top:18px;border-radius:7px;border:1px solid var(--line2);background:none;color:var(--text2);font-family:'Geist',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
 .pcbtn:hover{background:var(--bg2);color:var(--text)}
 .pcbtn.cur-btn{border-color:rgba(255,255,255,.2);color:var(--w);cursor:default}
-.pcbtn.up-btn{background:var(--w);color:#000;border-color:var(--w)}
-.pcbtn.up-btn:hover{background:#e4e4e4}
 .pcbtn.tg-btn{background:linear-gradient(135deg,#2481cc,#1a6aaa);color:#fff;border:none}
 .pcbtn.tg-btn:hover{opacity:.9}
 
-/* ── DEV ──────────────────────────────────────── */
+/* ── DEV VIEW ─────────────────────────────────── */
 .dv{flex:1;overflow-y:auto;padding:32px 16px;-webkit-overflow-scrolling:touch}
 .din{max-width:880px;margin:0 auto}
 .slbl{font-size:11px;font-weight:600;letter-spacing:.07em;color:var(--text3);text-transform:uppercase;margin-bottom:10px}
@@ -244,14 +255,36 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
 .star-info{background:var(--bg2);border:1px solid var(--line2);border-radius:8px;padding:12px;margin-bottom:16px;font-size:12px;color:var(--text2);line-height:1.6}
 .star-info strong{color:var(--w)}
 
+/* ── CAMERA MODAL ─────────────────────────────── */
+.cam-overlay{display:none;position:fixed;inset:0;background:#000;z-index:500;flex-direction:column}
+.cam-overlay.open{display:flex}
+.cam-video{flex:1;object-fit:cover;width:100%;background:#000}
+.cam-canvas{display:none}
+.cam-bar{padding:20px;padding-bottom:calc(20px + var(--safe-b));display:flex;align-items:center;justify-content:center;gap:24px;background:rgba(0,0,0,.85);flex-shrink:0}
+.cam-btn{width:54px;height:54px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.cam-shoot{background:var(--w);color:#000;width:64px;height:64px}
+.cam-shoot:hover{transform:scale(1.06)}
+.cam-close-b{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)}
+.cam-close-b:hover{background:rgba(255,255,255,.2)}
+.cam-flip{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)}
+.cam-flip:hover{background:rgba(255,255,255,.2)}
+
+/* ── LIGHTBOX ─────────────────────────────────── */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:600;align-items:center;justify-content:center;cursor:zoom-out;padding:16px}
+.lightbox.open{display:flex}
+.lightbox img{max-width:100%;max-height:90vh;border-radius:8px;object-fit:contain;cursor:default}
+.lb-close{position:absolute;top:14px;right:14px;width:36px;height:36px;background:rgba(255,255,255,.1);border:none;border-radius:50%;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.lb-close:hover{background:rgba(255,255,255,.2)}
+
+/* ── OVERLAY / MISC ───────────────────────────── */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:50;backdrop-filter:blur(3px)}
+.overlay.open{display:block}
 .hidden{display:none!important}
 
 @media(max-width:768px){
   .burger{display:flex}
   .sidebar{position:fixed;left:0;top:0;bottom:0;z-index:60;transform:translateX(-100%);width:260px}
   .sidebar.open{transform:translateX(0)}
-  .overlay.open{display:block}
   .model-lbl{display:none}
   .prompts{grid-template-columns:1fr}
   .welcome{padding:20px 16px;gap:20px}
@@ -283,7 +316,7 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
       <div class="auth-title">Get started</div>
       <div class="auth-sub">Войди и начни — план можно изменить позже</div>
     </div>
-    <div style="background:var(--bg2);border:1px solid var(--line2);border-radius:9px;padding:14px 16px;">
+    <div style="background:var(--bg2);border:1px solid var(--line2);border-radius:9px;padding:14px 16px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
         <span style="font-size:13px;font-weight:600;color:var(--w)">Начнёшь с Free</span>
         <span class="pbadge pb-free">FREE</span>
@@ -368,19 +401,19 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
           <div class="welcome" id="welcome">
             <div>
               <div class="wt">What can I help with?</div>
-              <div class="ws">Powered by Crymiss AI</div>
+              <div class="ws">Отправь текст, фото или файл</div>
             </div>
             <div class="prompts">
-              <div class="pc" onclick="suggest('Напиши React хук для infinite scroll с IntersectionObserver')"><div class="pl">Write code</div><div class="pd">React, TypeScript, Python, Go</div></div>
-              <div class="pc" onclick="suggest('Найди баги и предложи улучшения для кода')"><div class="pl">Review & debug</div><div class="pd">Find bugs, optimize, refactor</div></div>
-              <div class="pc" onclick="suggest('Спроектируй REST API архитектуру для SaaS')"><div class="pl">Architecture</div><div class="pd">APIs, databases, system design</div></div>
+              <div class="pc" onclick="suggest('Напиши React хук для infinite scroll')"><div class="pl">Write code</div><div class="pd">React, TypeScript, Python</div></div>
+              <div class="pc" onclick="suggest('Найди баги и улучшения в этом коде')"><div class="pl">Review code</div><div class="pd">Find bugs, optimize</div></div>
+              <div class="pc" onclick="suggest('Что на этом изображении?')"><div class="pl">Analyze image</div><div class="pd">Описание, текст, детали</div></div>
               <div class="pc" onclick="suggest('Объясни как работают трансформеры в AI')"><div class="pl">Explain concepts</div><div class="pd">Docs, research, deep dives</div></div>
             </div>
           </div>
           <div class="hidden" id="msgs"><div class="mwrap" id="mi-inner"></div></div>
         </div>
 
-        <!-- QUOTA BAR -->
+        <!-- QUOTA -->
         <div class="quota-wrap">
           <div class="quota-inner">
             <div class="quota-row">
@@ -388,7 +421,7 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
                 <span class="quota-plan-badge" id="q-badge">FREE</span>
                 <span class="quota-nums" id="q-nums">0 / 10</span>
               </div>
-              <div class="quota-track" onclick="sw('plans',document.getElementById('n-plans'))" title="Upgrade plan">
+              <div class="quota-track" onclick="sw('plans',document.getElementById('n-plans'))">
                 <div class="quota-fill" id="q-fill" style="width:0%"></div>
               </div>
               <span class="quota-reset" id="q-reset">5h 00m</span>
@@ -396,9 +429,12 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
           </div>
         </div>
 
+        <!-- INPUT -->
         <div class="inp-wrap">
           <div class="inp-inner">
             <div class="inp-box">
+              <!-- Attachment previews -->
+              <div class="attach-bar" id="attach-bar"></div>
               <div class="inp-row">
                 <textarea id="mi" placeholder="Message crymiss..." rows="1" onkeydown="onKey(event)" oninput="rsz(this)"></textarea>
                 <button class="sbtn" id="sbtn" onclick="sendMsg()" disabled>
@@ -406,9 +442,20 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
                 </button>
               </div>
               <div class="inp-foot">
-                <div style="display:flex;gap:2px">
+                <div style="display:flex;gap:2px;align-items:center">
+                  <!-- File attach -->
+                  <button class="tbtn" onclick="document.getElementById('file-inp').click()" title="Прикрепить файл или фото">
+                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M11.2 6.2L6.3 11.1a3.2 3.2 0 01-4.5-4.5l4.6-4.6a2.1 2.1 0 013 3L4.8 9.6a1.05 1.05 0 01-1.5-1.5L7.5 3.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Файл
+                  </button>
+                  <!-- Camera -->
+                  <button class="tbtn" id="cam-btn" onclick="openCamera()" title="Камера / фото">
+                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1.5 4.5A1.3 1.3 0 012.8 3.2h.5L4.5 1.5h4l1.2 1.7h.5a1.3 1.3 0 011.3 1.3v5a1.3 1.3 0 01-1.3 1.3h-8a1.3 1.3 0 01-1.3-1.3v-5z" stroke="currentColor" stroke-width="1.2"/><circle cx="6.5" cy="6.8" r="1.7" stroke="currentColor" stroke-width="1.2"/></svg>
+                    Камера
+                  </button>
                   <button class="tbtn" onclick="sw('plans',document.getElementById('n-plans'))">
-                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1L7 4H10.5L7.5 6l1 3.5L5.5 7.5 2.5 9.5l1-3.5L.5 4H4z" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg>Upgrade
+                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1L7 4H10.5L7.5 6l1 3.5L5.5 7.5 2.5 9.5l1-3.5L.5 4H4z" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg>
+                    Upgrade
                   </button>
                 </div>
                 <span class="ihint">shift+enter newline</span>
@@ -430,6 +477,7 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
               <div class="pcard-tg">без оплаты</div>
               <div class="pfeat"><div class="fdot"></div>10 запросов / 5 часов</div>
               <div class="pfeat"><div class="fdot"></div>Стандартная модель</div>
+              <div class="pfeat"><div class="fdot"></div>Фото и файлы</div>
               <div class="pfeat"><div class="fdot"></div>История чатов</div>
               <button class="pcbtn cur-btn" id="pb-free">Текущий план</button>
             </div>
@@ -437,9 +485,10 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
               <div class="pcbadge pb-pro">PRO</div>
               <div class="pcard-name">Pro</div>
               <div class="pcard-price">100<span> ⭐</span></div>
-              <div class="pcard-tg">разово через Telegram</div>
+              <div class="pcard-tg">через Telegram Stars</div>
               <div class="pfeat"><div class="fdot"></div>100 запросов / 5 часов</div>
               <div class="pfeat"><div class="fdot"></div>Умнее и быстрее</div>
+              <div class="pfeat"><div class="fdot"></div>Фото и файлы</div>
               <div class="pfeat"><div class="fdot"></div>Приоритетная обработка</div>
               <button class="pcbtn tg-btn" id="pb-pro" onclick="buyWithStars('pro')">Купить за 100 ⭐</button>
             </div>
@@ -447,10 +496,11 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
               <div class="pcbadge pb-ultra">ULTRA</div>
               <div class="pcard-name">Ultra</div>
               <div class="pcard-price">350<span> ⭐</span></div>
-              <div class="pcard-tg">разово через Telegram</div>
+              <div class="pcard-tg">через Telegram Stars</div>
               <div class="pfeat"><div class="fdot"></div>1000 запросов / 5 часов</div>
               <div class="pfeat"><div class="fdot"></div>Максимальный интеллект</div>
               <div class="pfeat"><div class="fdot"></div>1M context window</div>
+              <div class="pfeat"><div class="fdot"></div>Dev cabinet + API</div>
               <button class="pcbtn tg-btn" id="pb-ultra" onclick="buyWithStars('ultra')">Купить за 350 ⭐</button>
             </div>
           </div>
@@ -464,16 +514,12 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
           <div style="background:var(--bg1);border:1px solid var(--line2);border-radius:10px;padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
             <div>
               <div style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-family:'Geist Mono',monospace;background:var(--w);color:#000;padding:3px 8px;border-radius:4px;margin-bottom:8px">Ultra plan</div>
-              <div style="font-size:15px;font-weight:600;color:var(--w);margin-bottom:4px">crymiss · groq turbo</div>
-              <div style="font-size:12px;color:var(--text3)">Maximum context — priority routing</div>
-            </div>
-            <div style="display:flex;gap:24px;text-align:right">
-              <div><div style="font-size:20px;font-weight:600;color:var(--w);font-family:'Geist Mono',monospace">1M</div><div style="font-size:11px;color:var(--text3)">ctx tokens</div></div>
-              <div><div style="font-size:20px;font-weight:600;color:var(--w);font-family:'Geist Mono',monospace">5h</div><div style="font-size:11px;color:var(--text3)">reset cycle</div></div>
+              <div style="font-size:15px;font-weight:600;color:var(--w);margin-bottom:4px">crymiss-ultra-v3</div>
+              <div style="font-size:12px;color:var(--text3)">Maximum context — priority routing — vision enabled</div>
             </div>
           </div>
           <div class="sec">
-            <div class="slbl">Overview — last 30 days</div>
+            <div class="slbl">Overview</div>
             <div class="sgrid">
               <div class="scard"><div class="sv">84.2K</div><div class="sl">Total requests</div><div class="sd">+18%</div></div>
               <div class="scard"><div class="sv">2.1B</div><div class="sl">Tokens processed</div><div class="sd">+24%</div></div>
@@ -518,11 +564,11 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
     <div class="mplans">
       <div class="mp sel" id="mp-pro" onclick="mpick('pro',this)">
         <div class="mprow"><span class="mpn">Pro — 100 ⭐</span><span class="pbadge pb-pro">PRO</span></div>
-        <div class="mpd">100 запросов / 5 часов — умнее и быстрее</div>
+        <div class="mpd">100 запросов / 5 часов</div>
       </div>
       <div class="mp" id="mp-ultra" onclick="mpick('ultra',this)">
         <div class="mprow"><span class="mpn">Ultra — 350 ⭐</span><span class="pbadge pb-ultra">ULTRA</span></div>
-        <div class="mpd">1000 запросов / 5 часов — максимальный интеллект</div>
+        <div class="mpd">1000 запросов / 5 часов</div>
       </div>
     </div>
     <div class="mbtns">
@@ -532,134 +578,116 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
   </div>
 </div>
 
+<!-- CAMERA MODAL -->
+<div class="cam-overlay" id="cam-overlay">
+  <video class="cam-video" id="cam-video" autoplay playsinline muted></video>
+  <canvas class="cam-canvas" id="cam-canvas"></canvas>
+  <div class="cam-bar">
+    <button class="cam-btn cam-close-b" onclick="closeCamera()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <button class="cam-btn cam-shoot" onclick="shootPhoto()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="12" r="5" fill="currentColor"/></svg>
+    </button>
+    <button class="cam-btn cam-flip" id="cam-flip-btn" onclick="flipCamera()">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M15 9A6 6 0 103 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M3 5v4h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lb-img" src="" alt="" onclick="event.stopPropagation()">
+  <button class="lb-close" onclick="closeLightbox()">×</button>
+</div>
+
+<!-- Hidden file input -->
+<input type="file" id="file-inp" multiple
+  accept="image/*,.pdf,.txt,.md,.csv,.js,.ts,.py,.json,.html,.css,.xml,.yaml,.yml,.sh,.sql"
+  style="display:none" onchange="onFilePicked(event)">
+
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
 'use strict';
 
 // ── CONFIG ────────────────────────────────────────
-const LIMITS      = { free:10, pro:100, ultra:1000 };
-const RESET_MS    = 5 * 60 * 60 * 1000; // 5 часов в мс
-const PLAN_COLORS = { free:'rgba(255,255,255,.08)', pro:'rgba(82,201,116,.14)', ultra:'rgba(255,255,255,.18)' };
-const PLAN_TEXT   = { free:'var(--text2)', pro:'#52c974', ultra:'var(--w)' };
+const LIMITS       = { free:10, pro:100, ultra:1000 };
+const RESET_MS     = 5 * 60 * 60 * 1000;
+const PLAN_COLORS  = { free:'rgba(255,255,255,.08)', pro:'rgba(82,201,116,.14)', ultra:'rgba(255,255,255,.18)' };
+const PLAN_TEXT    = { free:'var(--text2)', pro:'#52c974', ultra:'var(--w)' };
+const MAX_FILE_MB  = 10;
+const IMAGE_EXTS   = ['jpg','jpeg','png','gif','webp','bmp','svg'];
 
 // ── STATE ─────────────────────────────────────────
 let G = {
-  user: null,
-  plan: 'free',
-  authPlan: 'free',
-  chats: {},
-  activeId: null,
-  busy: false,
-  reqCount: 0,
-  windowStart: Date.now(), // когда начался текущий 5-часовой окно
+  user: null, plan: 'free',
+  chats: {}, activeId: null,
+  busy: false, reqCount: 0,
+  windowStart: Date.now(),
   modalPlan: 'pro',
   googleClientId: '',
-  tgUser: null
+  tgUser: null,
+  ownerIdentity: '',
+  attachments: [],      // [{type:'image'|'file', name, size, b64, mime, dataUrl}]
+  camStream: null, camFacing: 'environment',
 };
 
 // ── BOOT ──────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', async () => {
-  // TG Mini App — автологин
   if (window.Telegram?.WebApp) {
     const tg = window.Telegram.WebApp;
-    tg.expand();
-    tg.enableClosingConfirmation();
+    tg.expand(); tg.enableClosingConfirmation();
     const u = tg.initDataUnsafe?.user;
     if (u) {
       G.tgUser = u;
-      login(`${u.first_name||''} ${u.last_name||''}`.trim()||'User',
-            `tg_${u.id}@crymiss.tg`, u.photo_url||'');
+      login(`${u.first_name||''} ${u.last_name||''}`.trim()||'User', `tg_${u.id}@crymiss.tg`, u.photo_url||'');
       return;
     }
   }
-  // Fetch Google Client ID
   try {
     const r = await fetch('/api/config');
-    if (r.ok) { const d = await r.json(); G.googleClientId = d.googleClientId||''; }
+    if (r.ok) {
+      const d = await r.json();
+      G.googleClientId = d.googleClientId||'';
+      G.ownerIdentity  = d.ownerIdentity||'';  // tg username or phone of owner
+    }
   } catch(_){}
 });
 
-// ── QUOTA TIMER ───────────────────────────────────
-// Обновляем счётчик и таймер каждую секунду
-setInterval(() => {
-  if (!G.user) return;
-  checkReset();
-  updQuotaUI();
-}, 1000);
+setInterval(() => { if (!G.user) return; checkReset(); updQuotaUI(); }, 1000);
 
 function checkReset() {
-  const elapsed = Date.now() - G.windowStart;
-  if (elapsed >= RESET_MS) {
-    G.reqCount = 0;
-    G.windowStart = Date.now();
-    save();
-    // Показать тост о сбросе
-    showToast('Лимит сброшен! Можно снова отправлять запросы.');
+  if (Date.now() - G.windowStart >= RESET_MS) {
+    G.reqCount = 0; G.windowStart = Date.now(); save();
+    showToast('✓ Лимит сброшен! Можно снова отправлять.');
   }
 }
 
 function timeUntilReset() {
-  const remaining = RESET_MS - (Date.now() - G.windowStart);
-  if (remaining <= 0) return '0m';
-  const h = Math.floor(remaining / 3600000);
-  const m = Math.floor((remaining % 3600000) / 60000);
-  const s = Math.floor((remaining % 60000) / 1000);
+  const rem = RESET_MS - (Date.now() - G.windowStart);
+  if (rem <= 0) return '0s';
+  const h = Math.floor(rem/3600000), m = Math.floor((rem%3600000)/60000), s = Math.floor((rem%60000)/1000);
   if (h > 0) return `${h}h ${String(m).padStart(2,'0')}m`;
   if (m > 0) return `${m}m ${String(s).padStart(2,'0')}s`;
   return `${s}s`;
 }
 
-function updQuotaUI() {
-  const lim = LIMITS[G.plan];
-  const pct = Math.min((G.reqCount / lim) * 100, 100);
-  const reset = timeUntilReset();
-
-  // Badge
-  const badge = document.getElementById('q-badge');
-  if (badge) {
-    badge.textContent = G.plan.toUpperCase();
-    badge.style.background = PLAN_COLORS[G.plan];
-    badge.style.color = PLAN_TEXT[G.plan];
-  }
-  // Numbers
-  const nums = document.getElementById('q-nums');
-  if (nums) nums.textContent = `${G.reqCount} / ${lim}`;
-
-  // Fill bar
-  const fill = document.getElementById('q-fill');
-  if (fill) {
-    fill.style.width = pct + '%';
-    fill.style.background = pct > 90 ? '#e05a5a' : pct > 70 ? '#e0a44a' : 'var(--w)';
-  }
-
-  // Reset countdown
-  const rst = document.getElementById('q-reset');
-  if (rst) rst.textContent = reset;
-
-  // Sidebar plan
-  const sp = document.getElementById('s-plan');
-  if (sp) sp.textContent = G.plan.toUpperCase();
-
-  // Upgrade modal reset info
-  const ui = document.getElementById('u-reset-info');
-  if (ui) ui.textContent = `Сброс через ${reset}`;
-}
-
 // ── TOAST ─────────────────────────────────────────
-function showToast(msg) {
+function showToast(msg, dur=3000) {
+  const old = document.getElementById('_toast');
+  if (old) old.remove();
   const t = document.createElement('div');
-  t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1c1c1c;border:1px solid #2a2a2a;color:#ebebeb;padding:10px 16px;border-radius:8px;font-size:13px;z-index:300;white-space:nowrap;animation:fu .25s ease';
+  t.id = '_toast';
+  t.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1c1c1c;border:1px solid #2a2a2a;color:#ebebeb;padding:10px 16px;border-radius:8px;font-size:13px;z-index:300;white-space:nowrap;animation:fu .25s ease;pointer-events:none';
   t.textContent = msg;
   document.body.appendChild(t);
-  setTimeout(() => t.remove(), 3000);
+  setTimeout(() => t.remove(), dur);
 }
 
 // ── AUTH ──────────────────────────────────────────
 function doGoogleSignIn() {
   const btn = document.getElementById('g-btn');
-  btn.disabled = true;
-  btn.textContent = 'Signing in...';
-
+  btn.disabled = true; btn.textContent = 'Signing in...';
   if (G.googleClientId && typeof google !== 'undefined') {
     try {
       google.accounts.id.initialize({ client_id: G.googleClientId, callback: onGoogleCred, use_fedcm_for_prompt: false });
@@ -671,63 +699,39 @@ function doGoogleSignIn() {
 }
 
 function onGoogleCred(resp) {
-  try {
-    const p = JSON.parse(atob(resp.credential.split('.')[1]));
-    login(p.name||'User', p.email||'', p.picture||'');
-  } catch(_){ demoLogin(); }
+  try { const p = JSON.parse(atob(resp.credential.split('.')[1])); login(p.name||'User', p.email||'', p.picture||''); }
+  catch(_){ demoLogin(); }
 }
-
 function demoLogin() { login('dev_user', 'dev@crymiss.ai', ''); }
 
 function login(name, email, pic) {
   const initials = name.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase()||'U';
   G.user = { name, email, pic, initials };
-  G.plan = 'free'; // всегда начинаем с Free
-
+  G.plan = 'free';
   try {
-    const raw = localStorage.getItem('cry2_' + email);
+    const raw = localStorage.getItem('cry3_' + email);
     if (raw) {
       const d = JSON.parse(raw);
-      G.chats      = d.chats      || {};
-      G.plan       = d.plan       || G.plan;
-      G.reqCount   = d.req        || 0;
-      G.windowStart = d.windowStart || Date.now();
-      // Проверяем не прошло ли 5 часов
-      if (Date.now() - G.windowStart >= RESET_MS) {
-        G.reqCount = 0;
-        G.windowStart = Date.now();
-      }
-    } else {
-      G.windowStart = Date.now();
-    }
+      G.chats = d.chats||{}; G.plan = d.plan||'free';
+      G.reqCount = d.req||0; G.windowStart = d.windowStart||Date.now();
+      if (Date.now() - G.windowStart >= RESET_MS) { G.reqCount=0; G.windowStart=Date.now(); }
+    } else { G.windowStart = Date.now(); }
   } catch(_){ G.chats={}; G.reqCount=0; G.windowStart=Date.now(); }
 
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app').classList.add('on');
-  updProfile();
-  updQuotaUI();
-  renderChats();
+  updProfile(); updQuotaUI(); renderChats();
+  checkIfOwner(email);
 
-  // Регистрируем пользователя в БД (тихо, не блокируем UI)
   fetch('/api/register', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      email, name, pic,
-      plan: G.plan,
-      source: (window.Telegram?.WebApp && G.tgUser) ? 'telegram' : 'web'
-    })
-  }).catch(() => {});
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ email, name, pic, plan: G.plan, source: (G.tgUser?'telegram':'web') })
+  }).catch(()=>{});
 }
 
 function save() {
   if (!G.user) return;
-  try {
-    localStorage.setItem('cry2_' + G.user.email, JSON.stringify({
-      chats: G.chats, plan: G.plan,
-      req: G.reqCount, windowStart: G.windowStart
-    }));
-  } catch(_){}
+  try { localStorage.setItem('cry3_'+G.user.email, JSON.stringify({ chats:G.chats, plan:G.plan, req:G.reqCount, windowStart:G.windowStart })); } catch(_){}
 }
 
 // ── PROFILE ───────────────────────────────────────
@@ -738,104 +742,120 @@ function updProfile() {
   updPlanCards();
 }
 
+function updQuotaUI() {
+  const lim = LIMITS[G.plan], pct = Math.min((G.reqCount/lim)*100, 100);
+  const rst = timeUntilReset();
+  const badge = document.getElementById('q-badge');
+  if (badge) { badge.textContent=G.plan.toUpperCase(); badge.style.background=PLAN_COLORS[G.plan]; badge.style.color=PLAN_TEXT[G.plan]; }
+  const nums = document.getElementById('q-nums');
+  if (nums) nums.textContent = `${G.reqCount} / ${lim}`;
+  const fill = document.getElementById('q-fill');
+  if (fill) { fill.style.width=pct+'%'; fill.style.background=pct>90?'#e05a5a':pct>70?'#e0a44a':'var(--w)'; }
+  const qrst = document.getElementById('q-reset');
+  if (qrst) qrst.textContent = rst;
+  const sp = document.getElementById('s-plan');
+  if (sp) sp.textContent = G.plan.toUpperCase();
+  const ui = document.getElementById('u-reset-info');
+  if (ui) ui.textContent = `Сброс через ${rst}`;
+}
+
 function updPlanCards() {
   ['free','pro','ultra'].forEach(p => {
-    const card = document.getElementById('pc-' + p);
-    const btn  = document.getElementById('pb-' + p);
-    if (!card || !btn) return;
+    const card = document.getElementById('pc-'+p);
+    const btn  = document.getElementById('pb-'+p);
+    if (!card||!btn) return;
     card.classList.remove('cur');
     if (p === G.plan) {
       card.classList.add('cur');
-      btn.textContent = p === 'free' ? 'Текущий план' : 'Активен ✓';
-      btn.className = 'pcbtn cur-btn';
-      btn.onclick = null;
+      btn.textContent = p==='free' ? 'Текущий план' : 'Активен ✓';
+      btn.className = 'pcbtn cur-btn'; btn.onclick = null;
     } else if (p === 'free') {
-      // Нельзя даунгрейднуть обратно в free просто так
-      btn.textContent = G.plan === 'free' ? 'Текущий план' : 'Базовый план';
-      btn.className = 'pcbtn cur-btn';
-      btn.onclick = null;
+      btn.textContent = 'Базовый план';
+      btn.className = 'pcbtn cur-btn'; btn.onclick = null;
     } else {
-      const stars = p === 'pro' ? '100' : '350';
-      btn.textContent = 'Купить за ' + stars + ' ⭐';
-      btn.className = 'pcbtn tg-btn';
-      btn.onclick = () => buyWithStars(p);
+      const stars = p==='pro'?'100':'350';
+      btn.textContent = `Купить за ${stars} ⭐`;
+      btn.className = 'pcbtn tg-btn'; btn.onclick = () => buyWithStars(p);
     }
   });
 }
 
-function setPlanFree() { /* Free is always default - no action needed */ }
+// ── OWNER CHECK ───────────────────────────────────────
+function checkIfOwner(email) {
+  if (!G.ownerIdentity) return;
+  const norm = s => (s||'').replace('@','').replace(/\s/g,'').toLowerCase();
 
-// ── TG STARS PAYMENT ──────────────────────────────
-async function buyWithStars(plan) {
-  const isTG = window.Telegram?.WebApp;
+  // Check TG user
+  const tgMatch = G.tgUser && (
+    norm(G.tgUser.username) === norm(G.ownerIdentity) ||
+    norm(String(G.tgUser.id)) === norm(G.ownerIdentity)
+  );
+  // Check email / google login
+  const emailMatch = norm(email).includes(norm(G.ownerIdentity)) ||
+                     norm(G.ownerIdentity).includes(norm(email.split('@')[0]));
+  // Check phone — if ownerIdentity is a phone number
+  const phoneMatch = /^\+?[0-9]{7,}$/.test(G.ownerIdentity) &&
+                     norm(email).includes(norm(G.ownerIdentity.replace(/\D/g,'')).slice(-7));
 
-  if (!isTG) {
-    // Не в TG — показываем инструкцию
-    showToast('Открой Crymiss в Telegram боте для оплаты Stars');
-    return;
+  if (tgMatch || emailMatch || phoneMatch) {
+    G.isOwner = true;
+    showAdminBtn();
   }
+}
 
+function showAdminBtn() {
+  // Add Admin button to sidebar footer
+  const foot = document.querySelector('.sb-foot');
+  if (!foot || document.getElementById('admin-nav-btn')) return;
+  const btn = document.createElement('div');
+  btn.id = 'admin-nav-btn';
+  btn.className = 'ni';
+  btn.style.marginBottom = '6px';
+  btn.onclick = () => { window.open('/admin.html?token=' + encodeURIComponent(getAdminToken()), '_blank'); };
+  btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="1" y="1" width="11" height="11" rx="2" stroke="#e0a44a" stroke-width="1.2"/><path d="M4 4h5M4 6.5h3" stroke="#e0a44a" stroke-width="1.2" stroke-linecap="round"/><circle cx="9" cy="9" r="1.5" fill="#e0a44a"/></svg><span class="ntitle" style="color:#e0a44a;font-weight:600">Admin Panel</span>`;
+  foot.insertBefore(btn, foot.firstChild);
+}
+
+function getAdminToken() {
+  // Try to get token from URL or localStorage
+  const url = new URLSearchParams(location.search).get('token');
+  if (url) return url;
+  try { return localStorage.getItem('cry_admin_token')||''; } catch(_){ return ''; }
+}
+
+// ── STARS PAYMENT ──────────────────────────────────
+async function buyWithStars(plan) {
+  if (!window.Telegram?.WebApp) {
+    showToast('Открой Crymiss в Telegram боте для оплаты Stars', 4000); return;
+  }
   const tgUserId = G.tgUser?.id;
   if (!tgUserId) { showToast('Войди через Telegram для оплаты'); return; }
-
   try {
-    // Просим бот отправить инвойс
-    const res = await fetch('/api/create-invoice', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ plan, tgUserId, tgUsername: G.tgUser?.username })
-    });
+    const res = await fetch('/api/create-invoice', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ plan, tgUserId, tgUsername:G.tgUser?.username }) });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Error');
-
+    if (!res.ok) throw new Error(data.error||'Error');
     showToast('Инвойс отправлен в Telegram! Проверь бота.');
-    // Закрываем Mini App чтобы пользователь увидел инвойс
     setTimeout(() => window.Telegram.WebApp.close(), 1500);
-
-  } catch(err) {
-    showToast('Ошибка: ' + err.message);
-  }
+  } catch(err) { showToast('Ошибка: '+err.message); }
 }
 
-// После успешной оплаты бот присылает сообщение,
-// и при следующем открытии приложения нужно обновить план.
-// Для MVP — активируем план локально после подтверждения:
 function activatePlan(plan) {
-  G.plan = plan;
-  G.reqCount = 0;
-  G.windowStart = Date.now();
-  updProfile();
-  updQuotaUI();
-  updPlanCards();
-  save();
-  showToast(`План ${plan.toUpperCase()} активирован!`);
+  G.plan=plan; G.reqCount=0; G.windowStart=Date.now();
+  updProfile(); updQuotaUI(); updPlanCards(); save();
+  showToast(`✓ План ${plan.toUpperCase()} активирован!`);
 }
 
-// ── PLANS ─────────────────────────────────────────
-function mpick(p, el) {
-  G.modalPlan = p;
-  document.querySelectorAll('.mp').forEach(e=>e.classList.remove('sel'));
-  el.classList.add('sel');
-}
-
+function mpick(p,el) { G.modalPlan=p; document.querySelectorAll('.mp').forEach(e=>e.classList.remove('sel')); el.classList.add('sel'); }
 function closeModal() { document.getElementById('umodal').classList.remove('open'); }
-
-function doUpgrade() {
-  closeModal();
-  buyWithStars(G.modalPlan);
-}
+function doUpgrade() { closeModal(); buyWithStars(G.modalPlan); }
 
 // ── CHATS ─────────────────────────────────────────
-function mkId() { return 'c' + Date.now(); }
-
-function newChatEntry(firstMsg) {
+function mkId() { return 'c'+Date.now(); }
+function newChatEntry(title) {
   const id = mkId();
-  G.chats[id] = { title: firstMsg.slice(0,36)+(firstMsg.length>36?'…':''), msgs:[] };
-  G.activeId = id;
-  renderChats();
-  return id;
+  G.chats[id] = { title: title.slice(0,36)+(title.length>36?'…':''), msgs:[] };
+  G.activeId = id; renderChats(); return id;
 }
-
 function renderChats() {
   const el = document.getElementById('chat-list');
   const ids = Object.keys(G.chats).reverse();
@@ -844,41 +864,23 @@ function renderChats() {
   ids.forEach(id => {
     const c = G.chats[id];
     const d = document.createElement('div');
-    d.className = 'ni' + (id===G.activeId?' on':'');
+    d.className = 'ni'+(id===G.activeId?' on':'');
     d.innerHTML = `<div class="ndot"></div><span class="ntitle">${xe(c.title)}</span><button class="delbtn" onclick="delChat(event,'${id}')"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2L2 8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></button>`;
-    d.onclick = e => { if(!e.target.closest('.delbtn')) loadChat(id); };
+    d.onclick = e => { if (!e.target.closest('.delbtn')) loadChat(id); };
     el.appendChild(d);
   });
 }
-
-function delChat(e, id) {
-  e.stopPropagation();
-  delete G.chats[id];
-  if (G.activeId===id) { G.activeId=null; showWelcome(); }
-  renderChats(); save();
-}
-
+function delChat(e,id) { e.stopPropagation(); delete G.chats[id]; if(G.activeId===id){G.activeId=null;showWelcome();} renderChats(); save(); }
 function loadChat(id) {
-  G.activeId = id; renderChats();
-  sw('chat',null); closeSb();
-  document.getElementById('mi-inner').innerHTML = '';
+  G.activeId=id; renderChats(); sw('chat',null); closeSb();
+  document.getElementById('mi-inner').innerHTML='';
   document.getElementById('welcome').classList.add('hidden');
   document.getElementById('msgs').classList.remove('hidden');
-  G.chats[id].msgs.forEach(m => addMsgDOM(m.text, m.role==='user', false));
+  G.chats[id].msgs.forEach(m => addMsgDOM(m, false));
   scrollD();
 }
-
-function showWelcome() {
-  document.getElementById('mi-inner').innerHTML='';
-  document.getElementById('msgs').classList.add('hidden');
-  document.getElementById('welcome').classList.remove('hidden');
-}
-
-function newChat() {
-  G.activeId=null; showWelcome(); renderChats();
-  sw('chat',null); closeSb();
-  document.querySelectorAll('.ni[id]').forEach(i=>i.classList.remove('on'));
-}
+function showWelcome() { document.getElementById('mi-inner').innerHTML=''; document.getElementById('msgs').classList.add('hidden'); document.getElementById('welcome').classList.remove('hidden'); }
+function newChat() { G.activeId=null; showWelcome(); renderChats(); sw('chat',null); closeSb(); document.querySelectorAll('.ni[id]').forEach(i=>i.classList.remove('on')); }
 
 // ── DOM HELPERS ───────────────────────────────────
 function xe(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -888,30 +890,45 @@ function mdHTML(t) {
   t = t.replace(/`([^`\n]+)`/g,(_,c)=>`<code>${xe(c)}</code>`);
   t = t.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
   t = t.replace(/\*(.+?)\*/g,'<em>$1</em>');
-  t = t.replace(/^### (.+)$/gm,'<h3>$1</h3>');
-  t = t.replace(/^## (.+)$/gm,'<h2>$1</h2>');
-  t = t.replace(/^# (.+)$/gm,'<h1>$1</h1>');
-  t = t.replace(/^[\*\-] (.+)$/gm,'<li>$1</li>');
-  t = t.replace(/^\d+\. (.+)$/gm,'<li>$1</li>');
+  t = t.replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/^## (.+)$/gm,'<h2>$1</h2>').replace(/^# (.+)$/gm,'<h1>$1</h1>');
+  t = t.replace(/^[\*\-] (.+)$/gm,'<li>$1</li>').replace(/^\d+\. (.+)$/gm,'<li>$1</li>');
   t = t.replace(/(<li>[\s\S]+?<\/li>)/g,'<ul>$1</ul>');
-  t = t.replace(/\n{2,}/g,'</p><p>');
-  t = t.replace(/\n/g,'<br>');
+  t = t.replace(/\n{2,}/g,'</p><p>').replace(/\n/g,'<br>');
   return t.startsWith('<') ? t : '<p>'+t+'</p>';
 }
 
-function addMsgDOM(text, isUser, anim=true) {
+// msg = { role, text, attachments:[{type,name,size,dataUrl,mime}] }
+function addMsgDOM(msg, anim=true) {
+  const isUser = msg.role === 'user';
   document.getElementById('welcome').classList.add('hidden');
   document.getElementById('msgs').classList.remove('hidden');
   const wrap = document.getElementById('mi-inner');
   const d = document.createElement('div');
   d.className = 'msg '+(isUser?'user':'ai');
   if (!anim) d.style.animation='none';
+
   const av = isUser
     ? (G.user?.pic ? `<div class="mav uav"><img src="${G.user.pic}" alt=""></div>` : `<div class="mav uav">${G.user?.initials||'U'}</div>`)
     : `<div class="mav aav"><svg width="11" height="11" viewBox="0 0 20 20" fill="none"><path d="M10 1.5L17.5 5.75V14.25L10 18.5L2.5 14.25V5.75Z" stroke="white" stroke-width="1.3" stroke-linejoin="round"/><circle cx="10" cy="10" r="2" fill="white"/></svg></div>`;
-  const html = isUser ? `<p>${xe(text).replace(/\n/g,'<br>')}</p>` : mdHTML(text);
-  const acts = isUser ? '' : `<div class="macts"><button class="abt" onclick="cp(this,${JSON.stringify(text)})"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="1" y="3" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.1"/><path d="M3 3V2a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H7" stroke="currentColor" stroke-width="1.1"/></svg> Copy</button></div>`;
-  d.innerHTML = `${av}<div class="mbody"><div class="mwho">${isUser?'You':'Crymiss'}</div><div class="mtxt">${html}</div>${acts}</div>`;
+
+  // Build attachment HTML
+  let attHTML = '';
+  if (msg.attachments?.length) {
+    msg.attachments.forEach(a => {
+      if (a.type === 'image') {
+        attHTML += `<img class="msg-img" src="${a.dataUrl}" alt="${xe(a.name)}" onclick="openLightbox('${a.dataUrl}')">`;
+      } else {
+        const size = a.size > 1048576 ? (a.size/1048576).toFixed(1)+'MB' : Math.round(a.size/1024)+'KB';
+        attHTML += `<div class="msg-file"><div class="msg-file-ico"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 1h6l3 3v7a1 1 0 01-1 1H2a1 1 0 01-1-1V2a1 1 0 011-1z" stroke="currentColor" stroke-width="1.2"/><path d="M7 1v3h3" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></div><div class="msg-file-info"><div class="msg-file-name">${xe(a.name)}</div><div class="msg-file-size">${size}</div></div></div>`;
+      }
+    });
+  }
+
+  const textHTML = msg.text ? (isUser ? `<p>${xe(msg.text).replace(/\n/g,'<br>')}</p>` : mdHTML(msg.text)) : '';
+  const acts = isUser ? '' : `<div class="macts"><button class="abt" onclick="cp(this,${JSON.stringify(msg.text||'')})"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="1" y="3" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.1"/><path d="M3 3V2a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H7" stroke="currentColor" stroke-width="1.1"/></svg> Copy</button></div>`;
+
+  const hasContent = attHTML || textHTML;
+  d.innerHTML = `${av}<div class="mbody"><div class="mwho">${isUser?'You':'Crymiss'}</div>${hasContent?`<div class="mtxt">${attHTML}${textHTML}</div>`:''} ${acts}</div>`;
   wrap.appendChild(d); scrollD();
 }
 
@@ -924,72 +941,171 @@ function addTyping() {
 }
 
 function scrollD() { requestAnimationFrame(()=>{ const b=document.getElementById('cbody'); b.scrollTop=b.scrollHeight; }); }
-
-function cp(btn, text) {
-  navigator.clipboard.writeText(text).then(()=>{
-    btn.textContent='Copied';
-    setTimeout(()=>{ btn.innerHTML=`<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="1" y="3" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.1"/><path d="M3 3V2a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H7" stroke="currentColor" stroke-width="1.1"/></svg> Copy`; },2000);
-  });
-}
+function cp(btn,text) { navigator.clipboard.writeText(text).then(()=>{ btn.textContent='Copied'; setTimeout(()=>{ btn.innerHTML=`<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="1" y="3" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.1"/><path d="M3 3V2a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H7" stroke="currentColor" stroke-width="1.1"/></svg> Copy`; },2000); }); }
 function cpKey(btn){ btn.textContent='Copied'; setTimeout(()=>btn.textContent='Copy',2000); }
 
+// ── FILE HANDLING ─────────────────────────────────
+function onFilePicked(e) {
+  const files = Array.from(e.target.files||[]);
+  files.forEach(processFile);
+  e.target.value = '';
+}
+
+function processFile(file) {
+  if (file.size > MAX_FILE_MB * 1024 * 1024) { showToast(`Файл слишком большой (макс ${MAX_FILE_MB}MB)`); return; }
+  const ext = file.name.split('.').pop().toLowerCase();
+  const isImg = IMAGE_EXTS.includes(ext) || file.type.startsWith('image/');
+  const reader = new FileReader();
+  reader.onload = e => {
+    const dataUrl = e.target.result;
+    const b64 = dataUrl.split(',')[1];
+    const att = { type: isImg?'image':'file', name: file.name, size: file.size, dataUrl, b64, mime: file.type||'application/octet-stream' };
+    G.attachments.push(att);
+    renderAttachBar();
+    updSendBtn();
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderAttachBar() {
+  const bar = document.getElementById('attach-bar');
+  if (!G.attachments.length) { bar.className='attach-bar'; bar.innerHTML=''; return; }
+  bar.className='attach-bar has-items';
+  bar.innerHTML = G.attachments.map((a,i) => {
+    if (a.type==='image') {
+      return `<div class="att-thumb"><img src="${a.dataUrl}" alt="${xe(a.name)}"><button class="att-rm" onclick="removeAtt(${i})">×</button></div>`;
+    } else {
+      const size = a.size>1048576 ? (a.size/1048576).toFixed(1)+'MB' : Math.round(a.size/1024)+'KB';
+      return `<div class="att-file"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="flex-shrink:0;color:var(--text2)"><path d="M2 1h6l3 3v7a1 1 0 01-1 1H2a1 1 0 01-1-1V2a1 1 0 011-1z" stroke="currentColor" stroke-width="1.2"/><path d="M7 1v3h3" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="att-file-name">${xe(a.name)}</span><span class="att-file-size">${size}</span><button class="att-rm" onclick="removeAtt(${i})"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2L2 8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></button></div>`;
+    }
+  }).join('');
+}
+
+function removeAtt(i) { G.attachments.splice(i,1); renderAttachBar(); updSendBtn(); }
+function updSendBtn() { document.getElementById('sbtn').disabled = (!document.getElementById('mi').value.trim() && !G.attachments.length) || G.busy; }
+
+// ── CAMERA ────────────────────────────────────────
+async function openCamera() {
+  // On mobile, try native camera first via input capture
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+  const hasGetUserMedia = !!(navigator.mediaDevices?.getUserMedia);
+
+  if (!hasGetUserMedia || isMobile) {
+    // Use native camera picker on mobile
+    const inp = document.createElement('input');
+    inp.type='file'; inp.accept='image/*'; inp.capture='environment';
+    inp.onchange = e => { if(e.target.files[0]) processFile(e.target.files[0]); };
+    inp.click(); return;
+  }
+
+  // Desktop — use in-app camera
+  try {
+    G.camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: G.camFacing }, audio: false });
+    document.getElementById('cam-video').srcObject = G.camStream;
+    document.getElementById('cam-overlay').classList.add('open');
+  } catch(err) {
+    showToast('Нет доступа к камере: ' + err.message);
+  }
+}
+
+function closeCamera() {
+  if (G.camStream) { G.camStream.getTracks().forEach(t=>t.stop()); G.camStream=null; }
+  document.getElementById('cam-overlay').classList.remove('open');
+}
+
+function shootPhoto() {
+  const video = document.getElementById('cam-video');
+  const canvas = document.getElementById('cam-canvas');
+  canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0);
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+  const b64 = dataUrl.split(',')[1];
+  const name = `photo_${Date.now()}.jpg`;
+  G.attachments.push({ type:'image', name, size: Math.round(b64.length*0.75), dataUrl, b64, mime:'image/jpeg' });
+  renderAttachBar(); updSendBtn();
+  closeCamera();
+  showToast('📷 Фото добавлено!');
+}
+
+async function flipCamera() {
+  G.camFacing = G.camFacing==='environment' ? 'user' : 'environment';
+  if (G.camStream) {
+    G.camStream.getTracks().forEach(t=>t.stop());
+    try {
+      G.camStream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:G.camFacing }, audio:false });
+      document.getElementById('cam-video').srcObject = G.camStream;
+    } catch(err) { showToast('Не удалось переключить камеру'); }
+  }
+}
+
+// ── LIGHTBOX ──────────────────────────────────────
+function openLightbox(src) { document.getElementById('lb-img').src=src; document.getElementById('lightbox').classList.add('open'); }
+function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
+
 // ── INPUT ─────────────────────────────────────────
-function rsz(el){ el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,160)+'px'; document.getElementById('sbtn').disabled=!el.value.trim()||G.busy; }
-function onKey(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendMsg(); } }
-function suggest(t){ const el=document.getElementById('mi'); el.value=t; rsz(el); sendMsg(); }
+function rsz(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,160)+'px'; updSendBtn(); }
+function onKey(e) { if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendMsg(); } }
+function suggest(t) { const el=document.getElementById('mi'); el.value=t; rsz(el); sendMsg(); }
 
 // ── SEND ──────────────────────────────────────────
 async function sendMsg() {
   if (G.busy) return;
   const inp = document.getElementById('mi');
   const text = inp.value.trim();
-  if (!text) return;
+  const attachments = [...G.attachments];
+  if (!text && !attachments.length) return;
 
-  // Check quota (с учётом возможного сброса)
   checkReset();
-  if (G.reqCount >= LIMITS[G.plan]) {
-    document.getElementById('umodal').classList.add('open');
-    return;
-  }
+  if (G.reqCount >= LIMITS[G.plan]) { document.getElementById('umodal').classList.add('open'); return; }
 
-  if (!G.activeId || !G.chats[G.activeId]) newChatEntry(text);
+  const title = text || (attachments[0]?.name) || 'Attachment';
+  if (!G.activeId || !G.chats[G.activeId]) newChatEntry(title);
 
-  G.chats[G.activeId].msgs.push({ role:'user', text });
-  addMsgDOM(text, true);
+  const userMsg = { role:'user', text, attachments: attachments.map(a=>({ type:a.type, name:a.name, size:a.size, dataUrl:a.dataUrl, mime:a.mime })) };
+  G.chats[G.activeId].msgs.push(userMsg);
+  addMsgDOM(userMsg, true);
+
+  // Clear input + attachments
   inp.value=''; inp.style.height='auto';
-  document.getElementById('sbtn').disabled=true;
+  G.attachments=[];
+  renderAttachBar(); updSendBtn();
   G.busy=true;
   addTyping();
-
-  // Сразу обновляем счётчик (оптимистично)
   G.reqCount++;
   updQuotaUI();
 
   try {
-    const contents = G.chats[G.activeId].msgs.map(m=>({
-      role: m.role==='user'?'user':'model',
-      parts:[{ text: m.text }]
-    }));
-
-    const res = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: contents, plan: G.plan })
+    // Build messages for API — include attachments as image_data parts
+    const contents = G.chats[G.activeId].msgs.map(m => {
+      if (m.role === 'model') return { role:'model', parts:[{ text: m.text||'' }] };
+      const parts = [];
+      if (m.text) parts.push({ text: m.text });
+      if (m.attachments?.length) {
+        m.attachments.forEach(a => {
+          if (a.type==='image') parts.push({ image_data: a.dataUrl?.split(',')[1]||'', mime_type: a.mime });
+          else parts.push({ text: `[Файл: ${a.name}]` });
+        });
+      }
+      if (!parts.length) parts.push({ text:'' });
+      return { role:'user', parts };
     });
 
+    const res = await fetch('/api/chat', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ messages: contents, plan: G.plan })
+    });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+    if (!res.ok) throw new Error(data.error||`HTTP ${res.status}`);
 
     document.getElementById('typing')?.remove();
-    G.chats[G.activeId].msgs.push({ role:'model', text: data.reply });
-    addMsgDOM(data.reply, false);
+    const aiMsg = { role:'model', text: data.reply, attachments:[] };
+    G.chats[G.activeId].msgs.push(aiMsg);
+    addMsgDOM(aiMsg, true);
     save();
 
   } catch(err) {
-    // Откатываем счётчик если запрос не прошёл
-    G.reqCount = Math.max(0, G.reqCount - 1);
+    G.reqCount = Math.max(0, G.reqCount-1);
     updQuotaUI();
-
     document.getElementById('typing')?.remove();
     const wrap = document.getElementById('mi-inner');
     const d = document.createElement('div');
@@ -998,13 +1114,12 @@ async function sendMsg() {
     wrap.appendChild(d); scrollD();
     G.chats[G.activeId]?.msgs.pop();
   } finally {
-    G.busy=false;
-    document.getElementById('sbtn').disabled=!document.getElementById('mi').value.trim();
+    G.busy=false; updSendBtn();
   }
 }
 
 // ── VIEWS ─────────────────────────────────────────
-function sw(name, el) {
+function sw(name,el) {
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
   document.getElementById('view-'+name).classList.add('on');
   document.querySelectorAll('.ni[id]').forEach(i=>i.classList.remove('on'));
@@ -1014,7 +1129,7 @@ function sw(name, el) {
 function openSb(){ document.getElementById('sb').classList.add('open'); document.getElementById('overlay').classList.add('open'); }
 function closeSb(){ document.getElementById('sb').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
 
-document.getElementById('mi').addEventListener('input',function(){ document.getElementById('sbtn').disabled=!this.value.trim()||G.busy; });
+document.getElementById('mi').addEventListener('input', function(){ updSendBtn(); });
 </script>
 </body>
 </html>

@@ -1,7 +1,4 @@
-// api/chat.js — Groq API proxy
-// Groq быстрее Gemini, использует llama модели
-// Ключ GROQ_API_KEY хранится только на сервере
-
+// api/chat.js — Groq API proxy с поддержкой изображений (vision)
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -17,38 +14,52 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'messages required' });
   }
 
-  // Чем выше план — тем умнее и быстрее модель
+  // Vision модель для изображений, текстовые для обычных сообщений
+  const hasImages = messages.some(m =>
+    Array.isArray(m.parts)
+      ? m.parts.some(p => p.image_data)
+      : m.image_data
+  );
+
   const MODELS = {
-    free:  'llama-3.1-8b-instant',    // лёгкая и быстрая
-    pro:   'llama-3.3-70b-versatile', // умная, сильная
-    ultra: 'llama-3.3-70b-versatile', // то же + больше токенов
+    free:  hasImages ? 'meta-llama/llama-4-scout-17b-16e-instruct' : 'llama-3.1-8b-instant',
+    pro:   hasImages ? 'meta-llama/llama-4-scout-17b-16e-instruct' : 'llama-3.3-70b-versatile',
+    ultra: hasImages ? 'meta-llama/llama-4-maverick-17b-128e-instruct' : 'llama-3.3-70b-versatile',
   };
 
-  const SYSTEM = [
-    'You are Crymiss, an advanced AI assistant created by the Crymiss team.',
-    'Your name is Crymiss. You are NOT Groq, NOT Meta, NOT Llama, NOT ChatGPT, NOT Claude, NOT Gemini.',
-    'If asked who you are or what model powers you — always say you are Crymiss, powered by proprietary AI.',
-    'Never mention Groq, Meta, Llama, OpenAI, Anthropic, or Google.',
-    'You are smart, concise, and expert at code, analysis, writing, and any task.',
-    'Reply in the language the user writes in.',
-  ].join(' ');
+  const SYSTEM = 'You are Crymiss, an advanced AI assistant. Your name is Crymiss — NOT Groq, Meta, Llama, ChatGPT, Claude, or Gemini. If asked who you are, say you are Crymiss powered by proprietary AI. Never mention Groq, Meta, Llama, OpenAI, Anthropic, or Google. You are expert at code, analysis, writing, vision tasks, and any request. Reply in the language the user writes in.';
 
   try {
     const model = MODELS[plan] || MODELS.free;
 
-    // Groq uses OpenAI-compatible format
-    // Our messages may be in Gemini format {role, parts:[{text}]} — normalize them
-    const normalized = messages.map(m => ({
-      role: m.role === 'model' ? 'assistant' : (m.role || 'user'),
-      content: Array.isArray(m.parts)
-        ? (m.parts[0]?.text || '')
-        : (m.content || m.text || ''),
-    }));
+    // Normalize messages to OpenAI format (Groq is OpenAI-compatible)
+    const normalized = messages.map(m => {
+      const role = m.role === 'model' ? 'assistant' : (m.role || 'user');
 
-    const groqMessages = [
-      { role: 'system', content: SYSTEM },
-      ...normalized,
-    ];
+      // Handle parts array (Gemini format) OR flat message
+      let parts = Array.isArray(m.parts) ? m.parts : [{ text: m.text || m.content || '' }];
+
+      // Build content — string if text-only, array if has images
+      const imgParts = parts.filter(p => p.image_data);
+      const textPart = parts.find(p => p.text)?.text || '';
+
+      if (imgParts.length > 0) {
+        // Multi-modal content
+        const contentArr = [];
+        if (textPart) contentArr.push({ type: 'text', text: textPart });
+        imgParts.forEach(p => {
+          contentArr.push({
+            type: 'image_url',
+            image_url: { url: `data:${p.mime_type || 'image/jpeg'};base64,${p.image_data}` }
+          });
+        });
+        return { role, content: contentArr };
+      }
+
+      return { role, content: textPart };
+    });
+
+    const groqMessages = [{ role: 'system', content: SYSTEM }, ...normalized];
 
     const body = {
       model,
