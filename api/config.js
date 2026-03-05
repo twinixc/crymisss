@@ -6,6 +6,11 @@ export default function handler(req, res) {
   res.setHeader('Cache-Control', 's-maxage=3600');
 
   return res.status(200).json({
-    googleClientId: process.env.GOOGLE_CLIENT_ID || ''
+    googleClientId: process.env.GOOGLE_CLIENT_ID || '',
+    models: {
+      free: 'llama-3.1-8b-instant',
+      pro: 'llama-3.3-70b-versatile',
+      ultra: 'llama-3.3-70b-versatile',
+    }
   });
 }

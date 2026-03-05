@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crymiss Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0c0c;--bg1:#111;--bg2:#161616;--bg3:#1c1c1c;
+  --line:#222;--line2:#2a2a2a;
+  --text:#ebebeb;--text2:#888;--text3:#444;--w:#fff;
+  --green:#52c974;--yellow:#e0a44a;--red:#e05a5a;--blue:#528cc9;
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sans-serif;font-size:14px}
+
+/* LOGIN */
+#login{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+.login-card{background:var(--bg1);border:1px solid var(--line2);border-radius:14px;padding:32px;width:100%;max-width:340px;display:flex;flex-direction:column;gap:16px}
+.login-logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:8px}
+.login-logo-name{font-size:18px;font-weight:700;color:var(--w);letter-spacing:-.04em}
+.login-title{font-size:15px;font-weight:600;color:var(--text2);text-align:center}
+.token-input{width:100%;height:42px;background:var(--bg2);border:1px solid var(--line2);border-radius:8px;padding:0 14px;color:var(--text);font-family:'Geist Mono',monospace;font-size:13px;outline:none;transition:border-color .15s}
+.token-input:focus{border-color:#333}
+.token-input::placeholder{color:var(--text3)}
+.login-btn{width:100%;height:42px;background:var(--w);color:#000;border:none;border-radius:8px;font-family:'Geist',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s}
+.login-btn:hover{background:#e8e8e8}
+.login-err{font-size:12px;color:var(--red);text-align:center;display:none}
+
+/* APP */
+#app{display:none;min-height:100vh}
+#app.on{display:block}
+
+/* HEADER */
+.header{border-bottom:1px solid var(--line);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(12,12,12,.9);backdrop-filter:blur(12px);z-index:10}
+.header-logo{display:flex;align-items:center;gap:8px}
+.header-logo-name{font-size:14px;font-weight:700;color:var(--w);letter-spacing:-.04em}
+.header-badge{font-size:10px;font-weight:700;letter-spacing:.08em;font-family:'Geist Mono',monospace;text-transform:uppercase;background:rgba(255,255,255,.1);color:var(--text2);padding:2px 7px;border-radius:4px}
+.header-right{display:flex;align-items:center;gap:8px}
+.refresh-btn{height:30px;padding:0 12px;background:none;border:1px solid var(--line2);border-radius:5px;color:var(--text2);font-family:'Geist',sans-serif;font-size:12px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px}
+.refresh-btn:hover{background:var(--bg2);color:var(--text)}
+.refresh-btn.loading svg{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.last-upd{font-size:11px;font-family:'Geist Mono',monospace;color:var(--text3)}
+
+/* CONTENT */
+.content{max-width:1100px;margin:0 auto;padding:32px 24px}
+
+/* SECTION TITLE */
+.section-head{margin-bottom:14px}
+.section-title{font-size:12px;font-weight:600;letter-spacing:.07em;color:var(--text3);text-transform:uppercase}
+
+/* STAT CARDS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px}
+.stat-card{background:var(--bg1);border:1px solid var(--line);border-radius:10px;padding:18px 20px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent-color,var(--line2))}
+.stat-val{font-size:28px;font-weight:700;color:var(--w);letter-spacing:-.04em;font-family:'Geist Mono',monospace;margin-bottom:4px;line-height:1}
+.stat-label{font-size:12px;color:var(--text3);margin-bottom:8px}
+.stat-delta{font-size:11px;font-family:'Geist Mono',monospace}
+.stat-delta.up{color:var(--green)}
+.stat-delta.neu{color:var(--text3)}
+
+/* CHART */
+.chart-row{display:grid;grid-template-columns:2fr 1fr;gap:10px;margin-bottom:28px}
+.chart-card{background:var(--bg1);border:1px solid var(--line);border-radius:10px;padding:20px}
+.chart-title{font-size:12px;font-weight:600;letter-spacing:.07em;color:var(--text3);text-transform:uppercase;margin-bottom:18px}
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:100px}
+.bar-col{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1}
+.bar{width:100%;border-radius:3px 3px 0 0;background:var(--bg3);transition:height .4s ease;min-height:2px;position:relative}
+.bar.filled{background:var(--w)}
+.bar:hover{opacity:.8}
+.bar-label{font-size:10px;font-family:'Geist Mono',monospace;color:var(--text3);white-space:nowrap}
+.bar-val{font-size:10px;font-family:'Geist Mono',monospace;color:var(--text2)}
+
+/* PIE (donut via CSS) */
+.donut-wrap{display:flex;flex-direction:column;justify-content:center;gap:12px}
+.plan-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.plan-row-left{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2)}
+.plan-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.plan-row-right{font-size:13px;font-weight:600;color:var(--w);font-family:'Geist Mono',monospace}
+.plan-bar-wrap{margin-top:4px;height:2px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.plan-bar-fill{height:100%;border-radius:2px;transition:width .5s ease}
+
+/* SOURCE BADGES */
+.source-grid{display:flex;gap:10px;margin-bottom:4px;flex-wrap:wrap}
+.source-card{background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:14px 18px;flex:1;min-width:120px}
+.source-val{font-size:20px;font-weight:700;color:var(--w);font-family:'Geist Mono',monospace;margin-bottom:3px}
+.source-label{font-size:12px;color:var(--text3)}
+.source-icon{font-size:18px;margin-bottom:8px}
+
+/* TABLE */
+.table-card{background:var(--bg1);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:28px}
+.table-head{display:grid;grid-template-columns:2fr 1fr 80px 80px 1fr 90px;padding:10px 16px;border-bottom:1px solid var(--line);gap:12px}
+.table-row{display:grid;grid-template-columns:2fr 1fr 80px 80px 1fr 90px;padding:11px 16px;border-bottom:1px solid var(--line);gap:12px;transition:background .1s}
+.table-row:last-child{border-bottom:none}
+.table-row:hover{background:var(--bg2)}
+.th{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
+.td{font-size:12px;font-family:'Geist Mono',monospace;color:var(--text2);display:flex;align-items:center;overflow:hidden}
+.td.name{font-family:'Geist',sans-serif;font-size:13px;color:var(--text);font-weight:500;gap:8px}
+.td.dim{color:var(--text3)}
+
+/* BADGES */
+.badge{font-size:9px;font-weight:700;letter-spacing:.08em;font-family:'Geist Mono',monospace;text-transform:uppercase;padding:2px 6px;border-radius:3px;flex-shrink:0}
+.badge-free{background:rgba(255,255,255,.08);color:var(--text2)}
+.badge-pro{background:rgba(82,201,116,.14);color:var(--green)}
+.badge-ultra{background:rgba(255,255,255,.18);color:var(--w)}
+.badge-web{background:rgba(82,140,201,.12);color:var(--blue)}
+.badge-tg{background:rgba(36,129,204,.15);color:#4ba3f5}
+
+/* AVATAR MINI */
+.mini-av{width:24px;height:24px;border-radius:50%;background:var(--bg3);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--text2);flex-shrink:0;overflow:hidden}
+.mini-av img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+
+/* EMPTY */
+.empty{padding:40px;text-align:center;color:var(--text3);font-size:13px}
+
+/* LIVE INDICATOR */
+.live-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--green);font-family:'Geist Mono',monospace}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px rgba(82,201,116,.5);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ERROR BANNER */
+.err-banner{background:rgba(224,90,90,.08);border:1px solid rgba(224,90,90,.2);border-radius:8px;padding:12px 16px;font-size:13px;color:var(--red);margin-bottom:20px;display:none}
+
+/* NO KV NOTE */
+.kv-note{background:rgba(82,140,201,.08);border:1px solid rgba(82,140,201,.2);border-radius:8px;padding:14px 16px;font-size:13px;color:#7ab3e0;margin-bottom:24px;line-height:1.6}
+.kv-note strong{color:var(--blue)}
+.kv-note code{font-family:'Geist Mono',monospace;font-size:12px;background:rgba(82,140,201,.1);padding:1px 5px;border-radius:3px}
+
+@media(max-width:900px){
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .chart-row{grid-template-columns:1fr}
+  .table-head,.table-row{grid-template-columns:2fr 80px 80px 90px}
+  .th:nth-child(2),.td:nth-child(2),.th:nth-child(5),.td:nth-child(5){display:none}
+}
+@media(max-width:600px){
+  .content{padding:20px 12px}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .stat-val{font-size:22px}
+  .table-head,.table-row{grid-template-columns:1fr 80px 80px}
+  .th:nth-child(4),.td:nth-child(4),.th:nth-child(6),.td:nth-child(6){display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-card">
+    <div class="login-logo">
+      <svg width="24" height="24" viewBox="0 0 20 20" fill="none">
+        <path d="M10 1.5L17.5 5.75V14.25L10 18.5L2.5 14.25V5.75Z" stroke="white" stroke-width="1.3" stroke-linejoin="round"/>
+        <circle cx="10" cy="10" r="2.2" fill="white"/>
+      </svg>
+      <span class="login-logo-name">crymiss</span>
+    </div>
+    <div class="login-title">Admin Dashboard</div>
+    <input class="token-input" id="token-input" type="password" placeholder="Enter admin token" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Sign in</button>
+    <div class="login-err" id="login-err">Invalid token</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="header">
+    <div class="header-logo">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M10 1.5L17.5 5.75V14.25L10 18.5L2.5 14.25V5.75Z" stroke="white" stroke-width="1.3" stroke-linejoin="round"/>
+        <circle cx="10" cy="10" r="2.2" fill="white"/>
+      </svg>
+      <span class="header-logo-name">crymiss</span>
+      <span class="header-badge">Admin</span>
+    </div>
+    <div class="header-right">
+      <div class="live-badge"><span class="live-dot"></span>Live</div>
+      <span class="last-upd" id="last-upd">—</span>
+      <button class="refresh-btn" id="refresh-btn" onclick="loadStats()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M10.5 6A4.5 4.5 0 116 1.5c1.3 0 2.47.55 3.3 1.43" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M9.5 1.5V4H12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="err-banner" id="err-banner"></div>
+
+    <div class="kv-note" id="kv-note" style="display:none">
+      <strong>Vercel KV не подключён</strong> — данные демонстрационные.<br>
+      Чтобы включить реальную статистику:<br>
+      1. Vercel Dashboard → Storage → <strong>Create KV Database</strong><br>
+      2. Connect to your project → данные появятся автоматически<br>
+      Пакет: <code>npm install @vercel/kv</code> (уже в зависимостях)
+    </div>
+
+    <!-- MAIN STATS -->
+    <div class="section-head"><div class="section-title">Overview</div></div>
+    <div class="stats-grid">
+      <div class="stat-card" style="--accent-color:var(--w)">
+        <div class="stat-val" id="s-total">—</div>
+        <div class="stat-label">Total users</div>
+        <div class="stat-delta up" id="s-total-d">loading...</div>
+      </div>
+      <div class="stat-card" style="--accent-color:var(--green)">
+        <div class="stat-val" id="s-active">—</div>
+        <div class="stat-label">Active today</div>
+        <div class="stat-delta up" id="s-active-d">unique sessions</div>
+      </div>
+      <div class="stat-card" style="--accent-color:var(--blue)">
+        <div class="stat-val" id="s-web">—</div>
+        <div class="stat-label">Web users</div>
+        <div class="stat-delta neu">via Google OAuth</div>
+      </div>
+      <div class="stat-card" style="--accent-color:#4ba3f5">
+        <div class="stat-val" id="s-tg">—</div>
+        <div class="stat-label">Telegram users</div>
+        <div class="stat-delta neu">via Mini App</div>
+      </div>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="chart-row">
+      <div class="chart-card">
+        <div class="chart-title">Registrations — last 7 days</div>
+        <div class="bar-chart" id="bar-chart">
+          <div class="empty">Loading...</div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Plans distribution</div>
+        <div class="donut-wrap" id="plans-chart">
+          <div class="empty">Loading...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECENT USERS -->
+    <div class="section-head" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div class="section-title">Recent users</div>
+      <div id="users-count" style="font-size:11px;font-family:'Geist Mono',monospace;color:var(--text3)"></div>
+    </div>
+    <div class="table-card">
+      <div class="table-head">
+        <div class="th">User</div>
+        <div class="th">Email</div>
+        <div class="th">Plan</div>
+        <div class="th">Source</div>
+        <div class="th">Registered</div>
+        <div class="th">Last seen</div>
+      </div>
+      <div id="users-table">
+        <div class="empty">Loading users...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let adminToken = '';
+
+function doLogin() {
+  const val = document.getElementById('token-input').value.trim();
+  if (!val) return;
+  adminToken = val;
+  document.getElementById('login-err').style.display = 'none';
+  loadStats();
+}
+
+async function loadStats() {
+  const btn = document.getElementById('refresh-btn');
+  btn.classList.add('loading');
+
+  try {
+    const res = await fetch(`/api/admin?token=${encodeURIComponent(adminToken)}`);
+    if (res.status === 401) {
+      document.getElementById('login-err').style.display = 'block';
+      btn.classList.remove('loading');
+      return;
+    }
+
+    const d = await res.json();
+    if (d.error && !d.totalUsers) {
+      showError(d.error);
+      btn.classList.remove('loading');
+      return;
+    }
+
+    // Hide login, show app
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('app').classList.add('on');
+
+    renderStats(d);
+    document.getElementById('last-upd').textContent = 'Updated ' + new Date().toLocaleTimeString();
+
+    // Check if KV is working (if all zeros and no recent users it might not be connected)
+    if (d.kvError || (d.totalUsers === 0 && d.recentUsers?.length === 0)) {
+      document.getElementById('kv-note').style.display = 'block';
+      renderDemoData();
+    } else {
+      document.getElementById('kv-note').style.display = 'none';
+    }
+
+  } catch(err) {
+    showError('Network error: ' + err.message);
+  }
+
+  btn.classList.remove('loading');
+}
+
+function renderStats(d) {
+  // Main counters
+  set('s-total', fmt(d.totalUsers));
+  set('s-total-d', `+${fmt(d.last7days?.reduce((a,b)=>a+b.count,0)||0)} this week`);
+  set('s-active', fmt(d.activeToday));
+  set('s-active-d', d.activeToday > 0 ? `${Math.round(d.activeToday/(d.totalUsers||1)*100)}% of total` : 'unique sessions');
+  set('s-web', fmt(d.webUsers));
+  set('s-tg',  fmt(d.tgUsers));
+
+  // Bar chart
+  renderBarChart(d.last7days || []);
+
+  // Plans
+  renderPlans(d.planCounts || {});
+
+  // Table
+  renderTable(d.recentUsers || [], d.totalUsers || 0);
+}
+
+function renderBarChart(days) {
+  const chart = document.getElementById('bar-chart');
+  if (!days.length) { chart.innerHTML = '<div class="empty">No data</div>'; return; }
+
+  const max = Math.max(...days.map(d=>d.count), 1);
+  chart.innerHTML = days.map(d => {
+    const h = Math.max(Math.round((d.count / max) * 90), d.count > 0 ? 8 : 2);
+    const dateStr = new Date(d.date).toLocaleDateString('en', {month:'short',day:'numeric'});
+    const isToday = d.date === new Date().toISOString().slice(0,10);
+    return `<div class="bar-col">
+      <div class="bar-val">${d.count||''}</div>
+      <div class="bar ${isToday?'filled':''}" style="height:${h}px" title="${d.count} users on ${d.date}"></div>
+      <div class="bar-label">${isToday?'today':dateStr.split(' ')[0]}<br>${dateStr.split(' ')[1]}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderPlans(counts) {
+  const total = Object.values(counts).reduce((a,b)=>a+b,0) || 1;
+  const plans = [
+    { key:'free',  label:'Free',  color:'rgba(255,255,255,.3)', textColor:'var(--text2)' },
+    { key:'pro',   label:'Pro',   color:'var(--green)',         textColor:'var(--green)' },
+    { key:'ultra', label:'Ultra', color:'var(--w)',             textColor:'var(--w)' },
+  ];
+  document.getElementById('plans-chart').innerHTML = plans.map(p => {
+    const n = counts[p.key] || 0;
+    const pct = Math.round(n / total * 100);
+    return `<div>
+      <div class="plan-row">
+        <div class="plan-row-left">
+          <div class="plan-dot" style="background:${p.color}"></div>
+          <span style="color:${p.textColor}">${p.label}</span>
+        </div>
+        <div class="plan-row-right">${n}</div>
+      </div>
+      <div class="plan-bar-wrap">
+        <div class="plan-bar-fill" style="width:${pct}%;background:${p.color}"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderTable(users, total) {
+  document.getElementById('users-count').textContent = `${total} total`;
+  const table = document.getElementById('users-table');
+  if (!users.length) {
+    table.innerHTML = '<div class="empty">No users yet</div>';
+    return;
+  }
+  table.innerHTML = users.map(u => {
+    const initials = (u.name||'U').split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
+    const avHtml = u.pic
+      ? `<div class="mini-av"><img src="${u.pic}" alt=""></div>`
+      : `<div class="mini-av">${initials}</div>`;
+    const planBadge = `<span class="badge badge-${u.plan||'free'}">${(u.plan||'free').toUpperCase()}</span>`;
+    const srcBadge  = `<span class="badge badge-${u.source||'web'}">${(u.source||'web').toUpperCase()}</span>`;
+    const reg  = u.createdAt  ? relTime(u.createdAt)  : '—';
+    const seen = u.lastSeenAt ? relTime(u.lastSeenAt) : '—';
+    return `<div class="table-row">
+      <div class="td name">${avHtml}<span>${esc(u.name||'—')}</span></div>
+      <div class="td dim">${esc(u.email||'—')}</div>
+      <div class="td">${planBadge}</div>
+      <div class="td">${srcBadge}</div>
+      <div class="td dim">${reg}</div>
+      <div class="td dim">${seen}</div>
+    </div>`;
+  }).join('');
+}
+
+// Demo data when KV not connected
+function renderDemoData() {
+  const demoStats = {
+    totalUsers: 127,
+    activeToday: 23,
+    webUsers: 89,
+    tgUsers: 38,
+    planCounts: { free: 98, pro: 21, ultra: 8 },
+    last7days: [
+      { date: daysAgo(6), count: 12 },
+      { date: daysAgo(5), count: 8  },
+      { date: daysAgo(4), count: 19 },
+      { date: daysAgo(3), count: 14 },
+      { date: daysAgo(2), count: 22 },
+      { date: daysAgo(1), count: 17 },
+      { date: new Date().toISOString().slice(0,10), count: 23 },
+    ],
+    recentUsers: [
+      { name:'Alex Kim',    email:'al***@gmail.com',    plan:'ultra', source:'web',      createdAt:Date.now()-3600000,    lastSeenAt:Date.now()-120000  },
+      { name:'Maria S',     email:'ma***@mail.ru',      plan:'pro',   source:'telegram', createdAt:Date.now()-7200000,    lastSeenAt:Date.now()-900000  },
+      { name:'Dev User',    email:'de***@crymiss.ai',   plan:'free',  source:'web',      createdAt:Date.now()-18000000,   lastSeenAt:Date.now()-3600000 },
+      { name:'Pavel K',     email:'pa***@yandex.ru',    plan:'pro',   source:'telegram', createdAt:Date.now()-86400000,   lastSeenAt:Date.now()-7200000 },
+      { name:'John D',      email:'jo***@outlook.com',  plan:'free',  source:'web',      createdAt:Date.now()-172800000,  lastSeenAt:Date.now()-86400000},
+    ]
+  };
+  renderStats(demoStats);
+}
+
+function daysAgo(n) {
+  return new Date(Date.now() - n*86400000).toISOString().slice(0,10);
+}
+
+function relTime(ts) {
+  const diff = Date.now() - ts;
+  if (diff < 60000)   return 'just now';
+  if (diff < 3600000) return Math.floor(diff/60000) + 'm ago';
+  if (diff < 86400000)return Math.floor(diff/3600000) + 'h ago';
+  return Math.floor(diff/86400000) + 'd ago';
+}
+
+function fmt(n) { return n >= 1000 ? (n/1000).toFixed(1)+'k' : String(n||0); }
+function set(id, val) { const el=document.getElementById(id); if(el) el.textContent=val; }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function showError(msg) {
+  const b = document.getElementById('err-banner');
+  b.textContent = msg; b.style.display='block';
+  setTimeout(() => b.style.display='none', 5000);
+}
+
+// Auto-refresh every 30 seconds
+setInterval(() => { if (adminToken && document.getElementById('app').classList.contains('on')) loadStats(); }, 30000);
+
+// Enter key on token input
+document.getElementById('token-input').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+// Check token in URL params (for quick access)
+const urlToken = new URLSearchParams(location.search).get('token');
+if (urlToken) { adminToken=urlToken; loadStats(); }
+</script>
+</body>
+</html>

@@ -1,82 +1,87 @@
-// api/chat.js — Vercel Serverless Function
-// Ключ хранится на сервере в ENV, браузер его никогда не видит
+// api/chat.js — Groq API proxy
+// Groq быстрее Gemini, использует llama модели
+// Ключ GROQ_API_KEY хранится только на сервере
 
 export default async function handler(req, res) {
-  // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) return res.status(500).json({ error: 'Server misconfigured: missing GROQ_API_KEY' });
+
+  const { messages, plan } = req.body;
+  if (!messages || !Array.isArray(messages)) {
+    return res.status(400).json({ error: 'messages required' });
   }
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  // Чем выше план — тем умнее и быстрее модель
+  const MODELS = {
+    free:  'llama-3.1-8b-instant',    // лёгкая и быстрая
+    pro:   'llama-3.3-70b-versatile', // умная, сильная
+    ultra: 'llama-3.3-70b-versatile', // то же + больше токенов
+  };
 
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    return res.status(500).json({ error: 'Server misconfigured: missing API key' });
-  }
+  const SYSTEM = [
+    'You are Crymiss, an advanced AI assistant created by the Crymiss team.',
+    'Your name is Crymiss. You are NOT Groq, NOT Meta, NOT Llama, NOT ChatGPT, NOT Claude, NOT Gemini.',
+    'If asked who you are or what model powers you — always say you are Crymiss, powered by proprietary AI.',
+    'Never mention Groq, Meta, Llama, OpenAI, Anthropic, or Google.',
+    'You are smart, concise, and expert at code, analysis, writing, and any task.',
+    'Reply in the language the user writes in.',
+  ].join(' ');
 
   try {
-    const { messages, plan } = req.body;
+    const model = MODELS[plan] || MODELS.free;
 
-    if (!messages || !Array.isArray(messages)) {
-      return res.status(400).json({ error: 'Invalid request: messages required' });
-    }
+    // Groq uses OpenAI-compatible format
+    // Our messages may be in Gemini format {role, parts:[{text}]} — normalize them
+    const normalized = messages.map(m => ({
+      role: m.role === 'model' ? 'assistant' : (m.role || 'user'),
+      content: Array.isArray(m.parts)
+        ? (m.parts[0]?.text || '')
+        : (m.content || m.text || ''),
+    }));
 
-    // Выбираем модель по плану
-    const models = {
-      free:  'gemini-2.0-flash-lite',
-      pro:   'gemini-2.0-flash',
-      ultra: 'gemini-2.0-flash'
-    };
-    const model = models[plan] || models.free;
-
-    const SYSTEM_PROMPT = `You are Crymiss, an advanced AI assistant created by the Crymiss team.
-Your name is Crymiss. You are NOT Gemini, NOT Google, NOT ChatGPT, NOT Claude — you are Crymiss.
-If asked who you are, what your name is, or if you are Gemini/Google — always say you are Crymiss.
-You can say you are powered by advanced proprietary language models, but never mention Gemini, Google, OpenAI, or Anthropic.
-You are smart, concise, and expert at code, analysis, writing, and any task.
-Reply in the language the user writes in.`;
-
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    const groqMessages = [
+      { role: 'system', content: SYSTEM },
+      ...normalized,
+    ];
 
     const body = {
-      system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-      contents: messages,
-      generationConfig: {
-        temperature: plan === 'free' ? 0.7 : 0.9,
-        maxOutputTokens: plan === 'free' ? 1024 : 2048
-      }
+      model,
+      messages: groqMessages,
+      temperature: plan === 'free' ? 0.7 : 0.85,
+      max_tokens: plan === 'free' ? 1024 : plan === 'pro' ? 4096 : 8192,
+      stream: false,
     };
 
-    const geminiRes = await fetch(url, {
+    const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + apiKey,
+      },
+      body: JSON.stringify(body),
     });
 
-    if (!geminiRes.ok) {
-      const errData = await geminiRes.json().catch(() => ({}));
-      return res.status(geminiRes.status).json({
-        error: errData?.error?.message || `Gemini error ${geminiRes.status}`
+    if (!groqRes.ok) {
+      const errData = await groqRes.json().catch(() => ({}));
+      return res.status(groqRes.status).json({
+        error: errData?.error?.message || ('Groq error ' + groqRes.status),
       });
     }
 
-    const data = await geminiRes.json();
-    const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-    if (!reply) {
-      return res.status(500).json({ error: 'Empty response from AI' });
-    }
+    const data = await groqRes.json();
+    const reply = data?.choices?.[0]?.message?.content;
+    if (!reply) return res.status(500).json({ error: 'Empty response from AI' });
 
     return res.status(200).json({ reply });
 
   } catch (err) {
-    console.error('Chat API error:', err);
+    console.error('Chat error:', err);
     return res.status(500).json({ error: err.message || 'Internal server error' });
   }
 }

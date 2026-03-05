@@ -10,9 +10,9 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#0c0c0c;--bg1:#111111;--bg2:#161616;--bg3:#1c1c1c;
+  --bg:#0c0c0c;--bg1:#111;--bg2:#161616;--bg3:#1c1c1c;
   --line:#222;--line2:#2a2a2a;
-  --text:#ebebeb;--text2:#888;--text3:#444;--white:#fff;
+  --text:#ebebeb;--text2:#888;--text3:#444;--w:#fff;
   --safe-b:env(safe-area-inset-bottom,0px);
 }
 html,body{height:100%;overflow:hidden;overscroll-behavior:none}
@@ -21,24 +21,22 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
 /* ── AUTH ─────────────────────────────────────── */
 #auth-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;padding:20px}
 .auth-logo{display:flex;align-items:center;gap:10px;margin-bottom:28px}
-.auth-logo-name{font-size:22px;font-weight:700;color:var(--white);letter-spacing:-.04em}
-.auth-card{background:var(--bg1);border:1px solid var(--line2);border-radius:14px;padding:28px;width:100%;max-width:360px;display:flex;flex-direction:column;gap:18px}
-.auth-title{font-size:17px;font-weight:600;color:var(--white);letter-spacing:-.03em;text-align:center}
-.auth-sub{font-size:13px;color:var(--text3);text-align:center;margin-top:-10px}
-
+.auth-logo-name{font-size:22px;font-weight:700;color:var(--w);letter-spacing:-.04em}
+.auth-card{background:var(--bg1);border:1px solid var(--line2);border-radius:14px;padding:28px;width:100%;max-width:360px;display:flex;flex-direction:column;gap:16px}
+.auth-title{font-size:17px;font-weight:600;color:var(--w);letter-spacing:-.03em;text-align:center}
+.auth-sub{font-size:13px;color:var(--text3);text-align:center;margin-top:-8px}
 .plans-pick{display:flex;flex-direction:column;gap:7px}
 .plan-opt{padding:12px 14px;border:1px solid var(--line);border-radius:9px;cursor:pointer;transition:all .15s}
 .plan-opt:hover{border-color:var(--line2);background:var(--bg2)}
 .plan-opt.sel{border-color:rgba(255,255,255,.28);background:var(--bg2)}
 .plan-opt-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
-.plan-opt-name{font-size:13px;font-weight:600;color:var(--white)}
+.plan-opt-name{font-size:13px;font-weight:600;color:var(--w)}
 .plan-opt-desc{font-size:12px;color:var(--text3)}
 .pbadge{font-size:9px;font-weight:700;letter-spacing:.08em;font-family:'Geist Mono',monospace;text-transform:uppercase;padding:2px 6px;border-radius:3px}
 .pb-free{background:rgba(255,255,255,.08);color:var(--text2)}
 .pb-pro{background:rgba(82,201,116,.14);color:#52c974}
-.pb-ultra{background:rgba(255,255,255,.18);color:var(--white)}
-
-.google-btn{display:flex;align-items:center;justify-content:center;gap:10px;height:44px;background:var(--white);color:#000;border:none;border-radius:8px;cursor:pointer;font-family:'Geist',sans-serif;font-size:14px;font-weight:600;width:100%;transition:background .15s}
+.pb-ultra{background:rgba(255,255,255,.18);color:var(--w)}
+.google-btn{display:flex;align-items:center;justify-content:center;gap:10px;height:44px;background:var(--w);color:#000;border:none;border-radius:8px;cursor:pointer;font-family:'Geist',sans-serif;font-size:14px;font-weight:600;width:100%;transition:background .15s}
 .google-btn:hover{background:#e8e8e8}
 .google-btn:disabled{opacity:.5;cursor:not-allowed}
 .auth-note{font-size:11px;color:var(--text3);text-align:center}
@@ -52,14 +50,14 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
 .sidebar{width:220px;border-right:1px solid var(--line);display:flex;flex-direction:column;flex-shrink:0;transition:transform .25s ease;background:var(--bg)}
 .sb-top{padding:13px 11px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
 .logo{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
-.logo-name{font-size:14px;font-weight:700;color:var(--white);letter-spacing:-.04em}
+.logo-name{font-size:14px;font-weight:700;color:var(--w);letter-spacing:-.04em}
 .ibt{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:6px;background:none;border:none;cursor:pointer;color:var(--text3);transition:all .15s;flex-shrink:0}
 .ibt:hover{color:var(--text2);background:var(--bg2)}
 .sb-nav{flex:1;overflow-y:auto;padding:8px}
 .sb-nav::-webkit-scrollbar{display:none}
 .nav-sec{margin-bottom:14px}
 .nav-lbl{font-size:10px;font-weight:500;letter-spacing:.08em;color:var(--text3);padding:0 6px;margin-bottom:3px;text-transform:uppercase}
-.ni{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;color:var(--text2);font-size:13px;font-weight:400;transition:all .15s;border:1px solid transparent;user-select:none}
+.ni{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;color:var(--text2);font-size:13px;transition:all .15s;border:1px solid transparent;user-select:none}
 .ni:hover{background:var(--bg2);color:var(--text)}
 .ni.on{background:var(--bg2);border-color:var(--line);color:var(--text)}
 .ni svg{flex-shrink:0;opacity:.6}.ni.on svg{opacity:1}
@@ -86,20 +84,20 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
 .tbar-r{display:flex;align-items:center;gap:6px}
 .bsm{height:28px;padding:0 10px;background:none;border:1px solid var(--line2);border-radius:5px;color:var(--text2);font-family:'Geist',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px;flex-shrink:0;white-space:nowrap}
 .bsm:hover{background:var(--bg2);color:var(--text)}
-.bsm.pri{background:var(--white);color:#000;border-color:var(--white)}
+.bsm.pri{background:var(--w);color:#000;border-color:var(--w)}
 .bsm.pri:hover{background:#e4e4e4;border-color:#e4e4e4}
 .burger{display:none}
-
-/* ── VIEWS ────────────────────────────────────── */
 .view{display:none;flex:1;flex-direction:column;overflow:hidden}
 .view.on{display:flex}
 
-/* ── CHAT ─────────────────────────────────────── */
+/* ── CHAT BODY ────────────────────────────────── */
 .chat-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
 .chat-body::-webkit-scrollbar{width:3px}
 .chat-body::-webkit-scrollbar-thumb{background:var(--line2);border-radius:4px}
+
+/* ── WELCOME ──────────────────────────────────── */
 .welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;gap:28px;padding:36px 20px}
-.wt{font-size:21px;font-weight:600;color:var(--white);letter-spacing:-.04em;text-align:center;margin-bottom:4px}
+.wt{font-size:21px;font-weight:600;color:var(--w);letter-spacing:-.04em;text-align:center;margin-bottom:4px}
 .ws{font-size:13px;color:var(--text3);text-align:center}
 .prompts{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;width:100%;max-width:500px}
 .pc{padding:12px 14px;background:var(--bg1);border:1px solid var(--line);border-radius:8px;cursor:pointer;transition:border-color .15s,background .15s}
@@ -126,28 +124,31 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
 .mtxt pre code{background:none;padding:0;font-size:12px;line-height:1.6;color:var(--text2)}
 .mtxt p{margin-bottom:8px}.mtxt p:last-child{margin-bottom:0}
 .mtxt ul,.mtxt ol{padding-left:20px;margin:6px 0}.mtxt li{margin-bottom:4px}
-.mtxt h1,.mtxt h2,.mtxt h3{color:var(--white);font-weight:600;margin:12px 0 6px}
-.mtxt strong{color:var(--white);font-weight:600}
+.mtxt h1,.mtxt h2,.mtxt h3{color:var(--w);font-weight:600;margin:12px 0 6px}
+.mtxt strong{color:var(--w);font-weight:600}
 .macts{display:flex;gap:4px;margin-top:6px}
 .msg.user .macts{justify-content:flex-end}
-.abt{display:flex;align-items:center;gap:4px;padding:3px 7px;background:none;border:none;border-radius:4px;font-size:11px;color:var(--text3);cursor:pointer;font-family:'Geist',sans-serif;font-weight:500;transition:all .15s}
+.abt{display:flex;align-items:center;gap:4px;padding:3px 7px;background:none;border:none;border-radius:4px;font-size:11px;color:var(--text3);cursor:pointer;font-family:'Geist',sans-serif;transition:all .15s}
 .abt:hover{background:var(--bg2);color:var(--text2)}
 .merr{font-size:13px;color:#e05a5a;padding:10px 14px;background:rgba(224,90,90,.06);border:1px solid rgba(224,90,90,.15);border-radius:8px}
-
-/* ── TYPING ───────────────────────────────────── */
 .dots{display:flex;gap:4px;padding:8px 0}
 .dot{width:5px;height:5px;border-radius:50%;background:var(--text3);animation:db 1.2s infinite}
 .dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
 @keyframes db{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
 
-/* ── QUOTA ────────────────────────────────────── */
-.quota-bar{display:flex;align-items:center;gap:8px;padding:7px 16px;border-top:1px solid var(--line);font-size:11px;color:var(--text3);font-family:'Geist Mono',monospace;flex-shrink:0}
-.qtrack{flex:1;height:2px;background:var(--bg3);border-radius:2px;overflow:hidden}
-.qfill{height:100%;background:var(--white);border-radius:2px;transition:width .4s}
-.qfill.warn{background:#e0a44a}.qfill.danger{background:#e05a5a}
+/* ── QUOTA BAR ────────────────────────────────── */
+.quota-wrap{padding:0 16px 0;border-top:1px solid var(--line);flex-shrink:0;background:var(--bg)}
+.quota-inner{max-width:680px;margin:0 auto;padding:8px 0}
+.quota-row{display:flex;align-items:center;gap:10px}
+.quota-info{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.quota-nums{font-size:11px;font-family:'Geist Mono',monospace;color:var(--text3);min-width:52px}
+.quota-track{flex:1;height:3px;background:var(--bg3);border-radius:3px;overflow:hidden;cursor:pointer}
+.quota-fill{height:100%;border-radius:3px;transition:width .35s ease,background .35s}
+.quota-reset{font-size:10px;font-family:'Geist Mono',monospace;color:var(--text3);flex-shrink:0;min-width:42px;text-align:right}
+.quota-plan-badge{font-size:9px;font-weight:700;letter-spacing:.08em;font-family:'Geist Mono',monospace;text-transform:uppercase;padding:2px 5px;border-radius:3px;flex-shrink:0}
 
 /* ── INPUT ────────────────────────────────────── */
-.inp-wrap{padding:10px 16px;padding-bottom:calc(10px + var(--safe-b));border-top:1px solid var(--line);flex-shrink:0}
+.inp-wrap{padding:8px 16px;padding-bottom:calc(8px + var(--safe-b));border-top:1px solid var(--line);flex-shrink:0}
 .inp-inner{max-width:680px;margin:0 auto}
 .inp-box{background:var(--bg1);border:1px solid var(--line2);border-radius:10px;transition:border-color .15s;overflow:hidden}
 .inp-box:focus-within{border-color:#333}
@@ -155,10 +156,10 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
 #mi{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:'Geist',sans-serif;font-size:14px;line-height:1.5;resize:none;max-height:160px;min-height:22px;overflow-y:auto}
 #mi::placeholder{color:var(--text3)}
 #mi::-webkit-scrollbar{display:none}
-.sbtn{width:30px;height:30px;background:var(--white);border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s;color:#000}
+.sbtn{width:30px;height:30px;background:var(--w);border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s;color:#000}
 .sbtn:disabled{opacity:.2;cursor:not-allowed}
 .sbtn:not(:disabled):hover{opacity:.8}
-.inp-foot{display:flex;align-items:center;justify-content:space-between;padding:6px 12px 10px;border-top:1px solid var(--line)}
+.inp-foot{display:flex;align-items:center;justify-content:space-between;padding:5px 12px 9px;border-top:1px solid var(--line)}
 .tbtn{display:flex;align-items:center;gap:5px;padding:4px 7px;background:none;border:none;border-radius:5px;font-size:12px;color:var(--text3);font-family:'Geist',sans-serif;cursor:pointer;transition:all .15s}
 .tbtn:hover{background:var(--bg2);color:var(--text2)}
 .ihint{font-size:11px;font-family:'Geist Mono',monospace;color:var(--text3)}
@@ -166,41 +167,38 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
 /* ── PLANS PAGE ───────────────────────────────── */
 .pv{flex:1;overflow-y:auto;padding:32px 16px;-webkit-overflow-scrolling:touch}
 .pinner{max-width:760px;margin:0 auto}
+.ph{margin-bottom:24px}
+.pt{font-size:18px;font-weight:600;color:var(--w);letter-spacing:-.03em;margin-bottom:4px}
+.ps{font-size:13px;color:var(--text3)}
 .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:24px}
 .pcard{background:var(--bg1);border:1px solid var(--line);border-radius:12px;padding:24px;position:relative;transition:border-color .2s}
 .pcard:hover{border-color:var(--line2)}
 .pcard.cur{border-color:rgba(255,255,255,.22)}
 .pcbadge{position:absolute;top:16px;right:16px;font-size:9px;font-weight:700;letter-spacing:.08em;font-family:'Geist Mono',monospace;text-transform:uppercase;padding:3px 7px;border-radius:4px}
-.pcard-name{font-size:16px;font-weight:700;color:var(--white);letter-spacing:-.03em;margin-bottom:4px}
-.pcard-price{font-size:24px;font-weight:700;color:var(--white);letter-spacing:-.04em;font-family:'Geist Mono',monospace;margin-bottom:16px}
+.pcard-name{font-size:16px;font-weight:700;color:var(--w);letter-spacing:-.03em;margin-bottom:4px}
+.pcard-price{font-size:22px;font-weight:700;color:var(--w);letter-spacing:-.04em;font-family:'Geist Mono',monospace;margin-bottom:4px}
 .pcard-price span{font-size:13px;font-weight:400;color:var(--text3)}
+.pcard-tg{font-size:12px;color:var(--text3);margin-bottom:14px;font-family:'Geist Mono',monospace}
 .pfeat{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2);margin-bottom:7px}
 .fdot{width:4px;height:4px;border-radius:50%;background:var(--text3);flex-shrink:0}
 .pcard.pro .fdot{background:#52c974}
-.pcard.ultra .fdot{background:var(--white)}
-.pcbtn{width:100%;height:36px;margin-top:20px;border-radius:7px;border:1px solid var(--line2);background:none;color:var(--text2);font-family:'Geist',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
+.pcard.ultra .fdot{background:var(--w)}
+.pcbtn{width:100%;height:36px;margin-top:18px;border-radius:7px;border:1px solid var(--line2);background:none;color:var(--text2);font-family:'Geist',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
 .pcbtn:hover{background:var(--bg2);color:var(--text)}
-.pcbtn.cur-btn{border-color:rgba(255,255,255,.2);color:var(--white);cursor:default}
-.pcbtn.up-btn{background:var(--white);color:#000;border-color:var(--white)}
+.pcbtn.cur-btn{border-color:rgba(255,255,255,.2);color:var(--w);cursor:default}
+.pcbtn.up-btn{background:var(--w);color:#000;border-color:var(--w)}
 .pcbtn.up-btn:hover{background:#e4e4e4}
+.pcbtn.tg-btn{background:linear-gradient(135deg,#2481cc,#1a6aaa);color:#fff;border:none}
+.pcbtn.tg-btn:hover{opacity:.9}
 
-/* ── DEV CABINET ──────────────────────────────── */
+/* ── DEV ──────────────────────────────────────── */
 .dv{flex:1;overflow-y:auto;padding:32px 16px;-webkit-overflow-scrolling:touch}
 .din{max-width:880px;margin:0 auto}
-.ph{margin-bottom:24px}
-.pt{font-size:18px;font-weight:600;color:var(--white);letter-spacing:-.03em;margin-bottom:4px}
-.ps{font-size:13px;color:var(--text3)}
-.pbanner{background:var(--bg1);border:1px solid var(--line2);border-radius:10px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:16px;flex-wrap:wrap}
-.pbn{font-size:15px;font-weight:600;color:var(--white);letter-spacing:-.02em;margin-bottom:4px}
-.pbd{font-size:12px;color:var(--text3)}
-.pbs{display:flex;gap:24px;text-align:right;flex-shrink:0}
-.pbsv{font-size:20px;font-weight:600;color:var(--white);letter-spacing:-.03em;font-family:'Geist Mono',monospace}
-.pbsl{font-size:11px;color:var(--text3)}
-.sec{margin-bottom:24px}
 .slbl{font-size:11px;font-weight:600;letter-spacing:.07em;color:var(--text3);text-transform:uppercase;margin-bottom:10px}
+.sec{margin-bottom:24px}
 .sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .scard{background:var(--bg1);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
-.sv{font-size:18px;font-weight:600;color:var(--white);letter-spacing:-.03em;font-family:'Geist Mono',monospace;margin-bottom:3px}
+.sv{font-size:18px;font-weight:600;color:var(--w);letter-spacing:-.03em;font-family:'Geist Mono',monospace;margin-bottom:3px}
 .sl{font-size:12px;color:var(--text3)}
 .sd{font-size:11px;font-family:'Geist Mono',monospace;color:#52c974;margin-top:2px}
 .sd.neg{color:#e05b5b}
@@ -224,25 +222,28 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
 .b2{font-size:10px;font-weight:700;font-family:'Geist Mono',monospace;background:rgba(82,201,116,.1);color:#52c974;padding:2px 6px;border-radius:3px}
 .b4{font-size:10px;font-weight:700;font-family:'Geist Mono',monospace;background:rgba(224,90,90,.1);color:#e05a5a;padding:2px 6px;border-radius:3px}
 
-/* ── UPGRADE MODAL ────────────────────────────── */
-.moverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(8px)}
+/* ── MODALS ───────────────────────────────────── */
+.moverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:200;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(8px)}
 .moverlay.open{display:flex}
 .mcard{background:var(--bg1);border:1px solid var(--line2);border-radius:14px;padding:28px;width:100%;max-width:340px}
-.mt{font-size:16px;font-weight:600;color:var(--white);letter-spacing:-.03em;margin-bottom:6px}
+.mt{font-size:16px;font-weight:600;color:var(--w);letter-spacing:-.03em;margin-bottom:6px}
 .mst{font-size:13px;color:var(--text3);margin-bottom:20px}
 .mplans{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
 .mp{padding:12px 14px;border:1px solid var(--line);border-radius:8px;cursor:pointer;transition:all .15s}
 .mp:hover,.mp.sel{border-color:rgba(255,255,255,.22);background:var(--bg2)}
 .mprow{display:flex;align-items:center;justify-content:space-between}
-.mpn{font-size:13px;font-weight:600;color:var(--white)}
+.mpn{font-size:13px;font-weight:600;color:var(--w)}
 .mpd{font-size:12px;color:var(--text3);margin-top:3px}
 .mbtns{display:flex;gap:8px}
 .mbtn{flex:1;height:38px;border-radius:7px;border:1px solid var(--line2);background:none;color:var(--text2);font-family:'Geist',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
 .mbtn:hover{background:var(--bg2);color:var(--text)}
-.mbtn.ok{background:var(--white);color:#000;border-color:var(--white)}
+.mbtn.ok{background:var(--w);color:#000;border-color:var(--w)}
 .mbtn.ok:hover{background:#e4e4e4}
+.mbtn.tg{background:linear-gradient(135deg,#2481cc,#1a6aaa);color:#fff;border:none;flex:2}
+.mbtn.tg:hover{opacity:.9}
+.star-info{background:var(--bg2);border:1px solid var(--line2);border-radius:8px;padding:12px;margin-bottom:16px;font-size:12px;color:var(--text2);line-height:1.6}
+.star-info strong{color:var(--w)}
 
-/* ── MOBILE ───────────────────────────────────── */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:50;backdrop-filter:blur(3px)}
 .hidden{display:none!important}
 
@@ -253,25 +254,22 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
   .overlay.open{display:block}
   .model-lbl{display:none}
   .prompts{grid-template-columns:1fr}
-  .welcome{padding:24px 16px;gap:22px}
+  .welcome{padding:20px 16px;gap:20px}
   .wt{font-size:18px}
-  .mwrap{padding:20px 12px;gap:16px}
+  .mwrap{padding:18px 12px;gap:16px}
   .inp-wrap{padding:8px 10px;padding-bottom:calc(8px + var(--safe-b))}
   .pgrid{grid-template-columns:1fr}
   .sgrid{grid-template-columns:repeat(2,1fr)}
   .dv,.pv{padding:20px 12px}
-  .pbs{display:none}
   .ihint{display:none}
   .topbar{padding:0 12px}
 }
-@media(max-width:380px){
-  .tbar-r .bsm:not(.pri){display:none}
-}
+@media(max-width:380px){.tbar-r .bsm:not(.pri){display:none}}
 </style>
 </head>
 <body>
 
-<!-- ── AUTH SCREEN ─────────────────────────────── -->
+<!-- AUTH -->
 <div id="auth-screen">
   <div class="auth-logo">
     <svg width="26" height="26" viewBox="0 0 20 20" fill="none">
@@ -283,30 +281,14 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
   <div class="auth-card">
     <div>
       <div class="auth-title">Get started</div>
-      <div class="auth-sub">Choose a plan, then sign in with Google</div>
+      <div class="auth-sub">Войди и начни — план можно изменить позже</div>
     </div>
-    <div class="plans-pick" id="plan-picker">
-      <div class="plan-opt sel" data-plan="free" onclick="pickPlan('free',this)">
-        <div class="plan-opt-row">
-          <span class="plan-opt-name">Free</span>
-          <span class="pbadge pb-free">FREE</span>
-        </div>
-        <div class="plan-opt-desc">10 requests / day — standard model</div>
+    <div style="background:var(--bg2);border:1px solid var(--line2);border-radius:9px;padding:14px 16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span style="font-size:13px;font-weight:600;color:var(--w)">Начнёшь с Free</span>
+        <span class="pbadge pb-free">FREE</span>
       </div>
-      <div class="plan-opt" data-plan="pro" onclick="pickPlan('pro',this)">
-        <div class="plan-opt-row">
-          <span class="plan-opt-name">Pro</span>
-          <span class="pbadge pb-pro">PRO</span>
-        </div>
-        <div class="plan-opt-desc">100 requests / day — smarter & faster</div>
-      </div>
-      <div class="plan-opt" data-plan="ultra" onclick="pickPlan('ultra',this)">
-        <div class="plan-opt-row">
-          <span class="plan-opt-name">Ultra</span>
-          <span class="pbadge pb-ultra">ULTRA</span>
-        </div>
-        <div class="plan-opt-desc">1000 requests / day — maximum intelligence</div>
-      </div>
+      <div style="font-size:12px;color:var(--text3)">10 запросов / 5 часов · Апгрейд доступен внутри</div>
     </div>
     <button class="google-btn" id="g-btn" onclick="doGoogleSignIn()">
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -321,12 +303,11 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
   </div>
 </div>
 
-<!-- ── MAIN APP ─────────────────────────────────── -->
+<!-- APP -->
 <div id="app">
   <div class="overlay" id="overlay" onclick="closeSb()"></div>
   <div class="app-wrap">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar" id="sb">
       <div class="sb-top">
         <div class="logo" onclick="newChat()">
@@ -337,12 +318,8 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
           <span class="logo-name">crymiss</span>
         </div>
         <div style="display:flex;gap:3px">
-          <button class="ibt" onclick="newChat()" title="New chat">
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5v10M1.5 6.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-          </button>
-          <button class="ibt burger" onclick="closeSb()">
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 2l9 9M11 2l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-          </button>
+          <button class="ibt" onclick="newChat()"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5v10M1.5 6.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+          <button class="ibt burger" onclick="closeSb()"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 2l9 9M11 2l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
         </div>
       </div>
       <div class="sb-nav">
@@ -366,7 +343,7 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
         <button class="prof-btn" onclick="sw('plans',document.getElementById('n-plans'))">
           <div class="av" id="s-av">D</div>
           <div class="prof-info">
-            <div class="prof-name" id="s-name">Loading...</div>
+            <div class="prof-name" id="s-name">...</div>
             <div class="prof-plan" id="s-plan">FREE</div>
           </div>
           <svg width="11" height="11" viewBox="0 0 11 11" fill="none" style="color:var(--text3);flex-shrink:0"><path d="M2.5 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
@@ -374,17 +351,13 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
       </div>
     </aside>
 
-    <!-- MAIN -->
     <div class="main">
       <div class="topbar">
         <div style="display:flex;align-items:center;gap:10px">
-          <button class="ibt burger" onclick="openSb()">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M2 7h10M2 10.5h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </button>
-          <div class="model-lbl"><span class="mdot"></span>crymiss-ultra-v3</div>
+          <button class="ibt burger" onclick="openSb()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M2 7h10M2 10.5h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+          <div class="model-lbl"><span class="mdot"></span>crymiss · groq turbo</div>
         </div>
         <div class="tbar-r">
-          <div id="qlbl" style="font-size:11px;font-family:'Geist Mono',monospace;color:var(--text3)"></div>
           <button class="bsm pri" onclick="newChat()">New chat</button>
         </div>
       </div>
@@ -394,31 +367,40 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
         <div class="chat-body" id="cbody">
           <div class="welcome" id="welcome">
             <div>
-              <div class="wt" id="wt">What can I help with?</div>
+              <div class="wt">What can I help with?</div>
               <div class="ws">Powered by Crymiss AI</div>
             </div>
             <div class="prompts">
               <div class="pc" onclick="suggest('Напиши React хук для infinite scroll с IntersectionObserver')"><div class="pl">Write code</div><div class="pd">React, TypeScript, Python, Go</div></div>
-              <div class="pc" onclick="suggest('Найди баги и предложи улучшения для этого кода')"><div class="pl">Review & debug</div><div class="pd">Find bugs, optimize, refactor</div></div>
-              <div class="pc" onclick="suggest('Спроектируй REST API архитектуру для SaaS продукта')"><div class="pl">Architecture</div><div class="pd">APIs, databases, system design</div></div>
-              <div class="pc" onclick="suggest('Объясни как работают трансформеры в машинном обучении')"><div class="pl">Explain concepts</div><div class="pd">Docs, research, deep dives</div></div>
+              <div class="pc" onclick="suggest('Найди баги и предложи улучшения для кода')"><div class="pl">Review & debug</div><div class="pd">Find bugs, optimize, refactor</div></div>
+              <div class="pc" onclick="suggest('Спроектируй REST API архитектуру для SaaS')"><div class="pl">Architecture</div><div class="pd">APIs, databases, system design</div></div>
+              <div class="pc" onclick="suggest('Объясни как работают трансформеры в AI')"><div class="pl">Explain concepts</div><div class="pd">Docs, research, deep dives</div></div>
             </div>
           </div>
           <div class="hidden" id="msgs"><div class="mwrap" id="mi-inner"></div></div>
         </div>
 
-        <div class="quota-bar">
-          <span id="q-txt">0 / 10</span>
-          <div class="qtrack"><div class="qfill" id="q-fill" style="width:0%"></div></div>
-          <span id="q-plan" style="font-size:10px;letter-spacing:.06em;text-transform:uppercase">FREE</span>
+        <!-- QUOTA BAR -->
+        <div class="quota-wrap">
+          <div class="quota-inner">
+            <div class="quota-row">
+              <div class="quota-info">
+                <span class="quota-plan-badge" id="q-badge">FREE</span>
+                <span class="quota-nums" id="q-nums">0 / 10</span>
+              </div>
+              <div class="quota-track" onclick="sw('plans',document.getElementById('n-plans'))" title="Upgrade plan">
+                <div class="quota-fill" id="q-fill" style="width:0%"></div>
+              </div>
+              <span class="quota-reset" id="q-reset">5h 00m</span>
+            </div>
+          </div>
         </div>
 
         <div class="inp-wrap">
           <div class="inp-inner">
             <div class="inp-box">
               <div class="inp-row">
-                <textarea id="mi" placeholder="Message crymiss..." rows="1"
-                  onkeydown="onKey(event)" oninput="rsz(this)"></textarea>
+                <textarea id="mi" placeholder="Message crymiss..." rows="1" onkeydown="onKey(event)" oninput="rsz(this)"></textarea>
                 <button class="sbtn" id="sbtn" onclick="sendMsg()" disabled>
                   <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 11V2M3 5.5l3.5-3.5 3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
@@ -438,61 +420,56 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
 
       <!-- PLANS VIEW -->
       <div class="view" id="view-plans">
-        <div class="pv">
-          <div class="pinner">
-            <div class="ph"><div class="pt">Plans & Billing</div><div class="ps">Upgrade for more requests and smarter responses</div></div>
-            <div class="pgrid">
-              <div class="pcard free" id="pc-free">
-                <div class="pcbadge pb-free">FREE</div>
-                <div class="pcard-name">Free</div>
-                <div class="pcard-price">$0<span> / mo</span></div>
-                <div class="pfeat"><div class="fdot"></div>10 requests per day</div>
-                <div class="pfeat"><div class="fdot"></div>Standard model</div>
-                <div class="pfeat"><div class="fdot"></div>Basic speed</div>
-                <div class="pfeat"><div class="fdot"></div>Chat history</div>
-                <button class="pcbtn" id="pb-free" onclick="setPlan('free')">Current plan</button>
-              </div>
-              <div class="pcard pro" id="pc-pro">
-                <div class="pcbadge pb-pro">PRO</div>
-                <div class="pcard-name">Pro</div>
-                <div class="pcard-price">$12<span> / mo</span></div>
-                <div class="pfeat"><div class="fdot"></div>100 requests per day</div>
-                <div class="pfeat"><div class="fdot"></div>Smarter model (Pro tier)</div>
-                <div class="pfeat"><div class="fdot"></div>Faster responses</div>
-                <div class="pfeat"><div class="fdot"></div>Priority support</div>
-                <button class="pcbtn up-btn" id="pb-pro" onclick="setPlan('pro')">Upgrade to Pro</button>
-              </div>
-              <div class="pcard ultra" id="pc-ultra">
-                <div class="pcbadge pb-ultra">ULTRA</div>
-                <div class="pcard-name">Ultra</div>
-                <div class="pcard-price">$39<span> / mo</span></div>
-                <div class="pfeat"><div class="fdot"></div>1000 requests per day</div>
-                <div class="pfeat"><div class="fdot"></div>Maximum intelligence</div>
-                <div class="pfeat"><div class="fdot"></div>1M context window</div>
-                <div class="pfeat"><div class="fdot"></div>API access + Dev cabinet</div>
-                <button class="pcbtn up-btn" id="pb-ultra" onclick="setPlan('ultra')">Upgrade to Ultra</button>
-              </div>
+        <div class="pv"><div class="pinner">
+          <div class="ph"><div class="pt">Plans & Billing</div><div class="ps">Сброс лимита каждые 5 часов</div></div>
+          <div class="pgrid">
+            <div class="pcard free" id="pc-free">
+              <div class="pcbadge pb-free">FREE</div>
+              <div class="pcard-name">Free</div>
+              <div class="pcard-price">$0<span> / mo</span></div>
+              <div class="pcard-tg">без оплаты</div>
+              <div class="pfeat"><div class="fdot"></div>10 запросов / 5 часов</div>
+              <div class="pfeat"><div class="fdot"></div>Стандартная модель</div>
+              <div class="pfeat"><div class="fdot"></div>История чатов</div>
+              <button class="pcbtn cur-btn" id="pb-free">Текущий план</button>
+            </div>
+            <div class="pcard pro" id="pc-pro">
+              <div class="pcbadge pb-pro">PRO</div>
+              <div class="pcard-name">Pro</div>
+              <div class="pcard-price">100<span> ⭐</span></div>
+              <div class="pcard-tg">разово через Telegram</div>
+              <div class="pfeat"><div class="fdot"></div>100 запросов / 5 часов</div>
+              <div class="pfeat"><div class="fdot"></div>Умнее и быстрее</div>
+              <div class="pfeat"><div class="fdot"></div>Приоритетная обработка</div>
+              <button class="pcbtn tg-btn" id="pb-pro" onclick="buyWithStars('pro')">Купить за 100 ⭐</button>
+            </div>
+            <div class="pcard ultra" id="pc-ultra">
+              <div class="pcbadge pb-ultra">ULTRA</div>
+              <div class="pcard-name">Ultra</div>
+              <div class="pcard-price">350<span> ⭐</span></div>
+              <div class="pcard-tg">разово через Telegram</div>
+              <div class="pfeat"><div class="fdot"></div>1000 запросов / 5 часов</div>
+              <div class="pfeat"><div class="fdot"></div>Максимальный интеллект</div>
+              <div class="pfeat"><div class="fdot"></div>1M context window</div>
+              <button class="pcbtn tg-btn" id="pb-ultra" onclick="buyWithStars('ultra')">Купить за 350 ⭐</button>
             </div>
           </div>
-        </div>
+        </div></div>
       </div>
 
       <!-- DEV VIEW -->
       <div class="view" id="view-dev">
         <div class="dv"><div class="din">
           <div class="ph"><div class="pt">Developer cabinet</div><div class="ps">API keys, usage metrics, request logs</div></div>
-          <div class="pbanner">
+          <div style="background:var(--bg1);border:1px solid var(--line2);border-radius:10px;padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
             <div>
-              <div style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-family:'Geist Mono',monospace;background:var(--white);color:#000;padding:3px 8px;border-radius:4px;margin-bottom:8px">
-                <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M4 .5l.9 2.1H7.5L5.4 4.2l.7 2.1L4 5 1.9 6.3l.7-2.1L.5 2.6H3.1z" fill="currentColor"/></svg>Ultra plan
-              </div>
-              <div class="pbn">crymiss-ultra-v3</div>
-              <div class="pbd">Maximum context — unlimited requests — priority routing</div>
+              <div style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-family:'Geist Mono',monospace;background:var(--w);color:#000;padding:3px 8px;border-radius:4px;margin-bottom:8px">Ultra plan</div>
+              <div style="font-size:15px;font-weight:600;color:var(--w);margin-bottom:4px">crymiss · groq turbo</div>
+              <div style="font-size:12px;color:var(--text3)">Maximum context — priority routing</div>
             </div>
-            <div class="pbs">
-              <div><div class="pbsv">1M</div><div class="pbsl">ctx tokens</div></div>
-              <div><div class="pbsv">inf</div><div class="pbsl">req / day</div></div>
-              <div><div class="pbsv">12ms</div><div class="pbsl">avg latency</div></div>
+            <div style="display:flex;gap:24px;text-align:right">
+              <div><div style="font-size:20px;font-weight:600;color:var(--w);font-family:'Geist Mono',monospace">1M</div><div style="font-size:11px;color:var(--text3)">ctx tokens</div></div>
+              <div><div style="font-size:20px;font-weight:600;color:var(--w);font-family:'Geist Mono',monospace">5h</div><div style="font-size:11px;color:var(--text3)">reset cycle</div></div>
             </div>
           </div>
           <div class="sec">
@@ -511,11 +488,7 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
                 <div class="kico"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="4.5" cy="7" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M6.5 7h5M10 5.5V7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>
                 <div><div class="kn">Production</div><div class="kv">cry_live_••••••••4af2</div></div>
               </div>
-              <div class="kright">
-                <span class="slive"><span class="ldot"></span>Active</span>
-                <button class="bsm" onclick="cpKey(this)">Copy</button>
-                <button class="bsm">Rotate</button>
-              </div>
+              <div class="kright"><span class="slive"><span class="ldot"></span>Active</span><button class="bsm" onclick="cpKey(this)">Copy</button></div>
             </div>
           </div>
           <div class="sec">
@@ -525,12 +498,10 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
               <div class="rr"><div class="rc"><span class="b2">200</span></div><div class="rc">POST /v1/chat</div><div class="rc dim">ultra-v3</div><div class="rc dim">4,218</div><div class="rc dim">14ms</div></div>
               <div class="rr"><div class="rc"><span class="b2">200</span></div><div class="rc">POST /v1/chat</div><div class="rc dim">ultra-v3</div><div class="rc dim">1,042</div><div class="rc dim">9ms</div></div>
               <div class="rr"><div class="rc"><span class="b4">429</span></div><div class="rc">POST /v1/embed</div><div class="rc dim">embed-v2</div><div class="rc dim">—</div><div class="rc dim">2ms</div></div>
-              <div class="rr"><div class="rc"><span class="b2">200</span></div><div class="rc">GET /v1/models</div><div class="rc dim">—</div><div class="rc dim">—</div><div class="rc dim">3ms</div></div>
             </div>
           </div>
         </div></div>
       </div>
-
     </div>
   </div>
 </div>
@@ -538,15 +509,25 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
 <!-- UPGRADE MODAL -->
 <div class="moverlay" id="umodal">
   <div class="mcard">
-    <div class="mt">Upgrade your plan</div>
-    <div class="mst">You've reached your daily limit. Upgrade to continue.</div>
+    <div class="mt">Лимит исчерпан</div>
+    <div class="mst" id="u-reset-info">Сброс через 5h 00m</div>
+    <div class="star-info">
+      Купи план за Telegram Stars — оплата прямо в боте.<br>
+      <strong>Pro — 100 ⭐ &nbsp;|&nbsp; Ultra — 350 ⭐</strong>
+    </div>
     <div class="mplans">
-      <div class="mp sel" onclick="mpick('pro',this)"><div class="mprow"><span class="mpn">Pro — $12/mo</span><span class="pbadge pb-pro">PRO</span></div><div class="mpd">100 requests/day — smarter & faster</div></div>
-      <div class="mp" onclick="mpick('ultra',this)"><div class="mprow"><span class="mpn">Ultra — $39/mo</span><span class="pbadge pb-ultra">ULTRA</span></div><div class="mpd">1000 requests/day — maximum intelligence</div></div>
+      <div class="mp sel" id="mp-pro" onclick="mpick('pro',this)">
+        <div class="mprow"><span class="mpn">Pro — 100 ⭐</span><span class="pbadge pb-pro">PRO</span></div>
+        <div class="mpd">100 запросов / 5 часов — умнее и быстрее</div>
+      </div>
+      <div class="mp" id="mp-ultra" onclick="mpick('ultra',this)">
+        <div class="mprow"><span class="mpn">Ultra — 350 ⭐</span><span class="pbadge pb-ultra">ULTRA</span></div>
+        <div class="mpd">1000 запросов / 5 часов — максимальный интеллект</div>
+      </div>
     </div>
     <div class="mbtns">
-      <button class="mbtn" onclick="closeModal()">Cancel</button>
-      <button class="mbtn ok" onclick="doUpgrade()">Upgrade</button>
+      <button class="mbtn" onclick="closeModal()">Отмена</button>
+      <button class="mbtn tg" onclick="doUpgrade()">Купить в Telegram ⭐</button>
     </div>
   </div>
 </div>
@@ -554,6 +535,13 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
 'use strict';
+
+// ── CONFIG ────────────────────────────────────────
+const LIMITS      = { free:10, pro:100, ultra:1000 };
+const RESET_MS    = 5 * 60 * 60 * 1000; // 5 часов в мс
+const PLAN_COLORS = { free:'rgba(255,255,255,.08)', pro:'rgba(82,201,116,.14)', ultra:'rgba(255,255,255,.18)' };
+const PLAN_TEXT   = { free:'var(--text2)', pro:'#52c974', ultra:'var(--w)' };
+
 // ── STATE ─────────────────────────────────────────
 let G = {
   user: null,
@@ -563,71 +551,130 @@ let G = {
   activeId: null,
   busy: false,
   reqCount: 0,
+  windowStart: Date.now(), // когда начался текущий 5-часовой окно
   modalPlan: 'pro',
-  googleClientId: ''
+  googleClientId: '',
+  tgUser: null
 };
-const LIMITS = { free:10, pro:100, ultra:1000 };
 
 // ── BOOT ──────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', async () => {
-  // TG Mini App auto-login
+  // TG Mini App — автологин
   if (window.Telegram?.WebApp) {
     const tg = window.Telegram.WebApp;
     tg.expand();
     tg.enableClosingConfirmation();
     const u = tg.initDataUnsafe?.user;
     if (u) {
+      G.tgUser = u;
       login(`${u.first_name||''} ${u.last_name||''}`.trim()||'User',
             `tg_${u.id}@crymiss.tg`, u.photo_url||'');
       return;
     }
   }
-  // Fetch Google Client ID from our backend (safe, no secrets in HTML)
+  // Fetch Google Client ID
   try {
     const r = await fetch('/api/config');
-    if (r.ok) {
-      const d = await r.json();
-      G.googleClientId = d.googleClientId || '';
-    }
-  } catch(_) {}
+    if (r.ok) { const d = await r.json(); G.googleClientId = d.googleClientId||''; }
+  } catch(_){}
 });
 
-// ── AUTH ──────────────────────────────────────────
-function pickPlan(p, el) {
-  G.authPlan = p;
-  document.querySelectorAll('.plan-opt').forEach(e=>e.classList.remove('sel'));
-  el.classList.add('sel');
+// ── QUOTA TIMER ───────────────────────────────────
+// Обновляем счётчик и таймер каждую секунду
+setInterval(() => {
+  if (!G.user) return;
+  checkReset();
+  updQuotaUI();
+}, 1000);
+
+function checkReset() {
+  const elapsed = Date.now() - G.windowStart;
+  if (elapsed >= RESET_MS) {
+    G.reqCount = 0;
+    G.windowStart = Date.now();
+    save();
+    // Показать тост о сбросе
+    showToast('Лимит сброшен! Можно снова отправлять запросы.');
+  }
 }
 
+function timeUntilReset() {
+  const remaining = RESET_MS - (Date.now() - G.windowStart);
+  if (remaining <= 0) return '0m';
+  const h = Math.floor(remaining / 3600000);
+  const m = Math.floor((remaining % 3600000) / 60000);
+  const s = Math.floor((remaining % 60000) / 1000);
+  if (h > 0) return `${h}h ${String(m).padStart(2,'0')}m`;
+  if (m > 0) return `${m}m ${String(s).padStart(2,'0')}s`;
+  return `${s}s`;
+}
+
+function updQuotaUI() {
+  const lim = LIMITS[G.plan];
+  const pct = Math.min((G.reqCount / lim) * 100, 100);
+  const reset = timeUntilReset();
+
+  // Badge
+  const badge = document.getElementById('q-badge');
+  if (badge) {
+    badge.textContent = G.plan.toUpperCase();
+    badge.style.background = PLAN_COLORS[G.plan];
+    badge.style.color = PLAN_TEXT[G.plan];
+  }
+  // Numbers
+  const nums = document.getElementById('q-nums');
+  if (nums) nums.textContent = `${G.reqCount} / ${lim}`;
+
+  // Fill bar
+  const fill = document.getElementById('q-fill');
+  if (fill) {
+    fill.style.width = pct + '%';
+    fill.style.background = pct > 90 ? '#e05a5a' : pct > 70 ? '#e0a44a' : 'var(--w)';
+  }
+
+  // Reset countdown
+  const rst = document.getElementById('q-reset');
+  if (rst) rst.textContent = reset;
+
+  // Sidebar plan
+  const sp = document.getElementById('s-plan');
+  if (sp) sp.textContent = G.plan.toUpperCase();
+
+  // Upgrade modal reset info
+  const ui = document.getElementById('u-reset-info');
+  if (ui) ui.textContent = `Сброс через ${reset}`;
+}
+
+// ── TOAST ─────────────────────────────────────────
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1c1c1c;border:1px solid #2a2a2a;color:#ebebeb;padding:10px 16px;border-radius:8px;font-size:13px;z-index:300;white-space:nowrap;animation:fu .25s ease';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+// ── AUTH ──────────────────────────────────────────
 function doGoogleSignIn() {
   const btn = document.getElementById('g-btn');
   btn.disabled = true;
-  btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="animation:spin 1s linear infinite"><circle cx="12" cy="12" r="10" stroke="rgba(0,0,0,.2)" stroke-width="3"/><path d="M12 2a10 10 0 0110 10" stroke="#000" stroke-width="3" stroke-linecap="round"/></svg>&nbsp;Signing in...`;
-  const style = document.createElement('style');
-  style.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
-  document.head.appendChild(style);
+  btn.textContent = 'Signing in...';
 
   if (G.googleClientId && typeof google !== 'undefined') {
     try {
-      google.accounts.id.initialize({
-        client_id: G.googleClientId,
-        callback: onGoogleCred,
-        use_fedcm_for_prompt: false
-      });
-      google.accounts.id.prompt(n => {
-        if (n.isNotDisplayed() || n.isSkippedMoment()) demoLogin();
-      });
+      google.accounts.id.initialize({ client_id: G.googleClientId, callback: onGoogleCred, use_fedcm_for_prompt: false });
+      google.accounts.id.prompt(n => { if (n.isNotDisplayed()||n.isSkippedMoment()) demoLogin(); });
       return;
-    } catch(_) {}
+    } catch(_){}
   }
-  setTimeout(demoLogin, 900);
+  setTimeout(demoLogin, 800);
 }
 
 function onGoogleCred(resp) {
   try {
     const p = JSON.parse(atob(resp.credential.split('.')[1]));
     login(p.name||'User', p.email||'', p.picture||'');
-  } catch(_) { demoLogin(); }
+  } catch(_){ demoLogin(); }
 }
 
 function demoLogin() { login('dev_user', 'dev@crymiss.ai', ''); }
@@ -635,34 +682,52 @@ function demoLogin() { login('dev_user', 'dev@crymiss.ai', ''); }
 function login(name, email, pic) {
   const initials = name.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase()||'U';
   G.user = { name, email, pic, initials };
-  G.plan = G.authPlan;
+  G.plan = 'free'; // всегда начинаем с Free
 
-  // Load saved data
   try {
-    const raw = localStorage.getItem('cry_' + email);
+    const raw = localStorage.getItem('cry2_' + email);
     if (raw) {
       const d = JSON.parse(raw);
-      G.chats = d.chats || {};
-      G.plan  = d.plan  || G.plan;
-      G.reqCount = (d.date === new Date().toDateString()) ? (d.req||0) : 0;
+      G.chats      = d.chats      || {};
+      G.plan       = d.plan       || G.plan;
+      G.reqCount   = d.req        || 0;
+      G.windowStart = d.windowStart || Date.now();
+      // Проверяем не прошло ли 5 часов
+      if (Date.now() - G.windowStart >= RESET_MS) {
+        G.reqCount = 0;
+        G.windowStart = Date.now();
+      }
+    } else {
+      G.windowStart = Date.now();
     }
-  } catch(_) { G.chats = {}; G.reqCount = 0; }
+  } catch(_){ G.chats={}; G.reqCount=0; G.windowStart=Date.now(); }
 
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app').classList.add('on');
   updProfile();
-  updQuota();
+  updQuotaUI();
   renderChats();
+
+  // Регистрируем пользователя в БД (тихо, не блокируем UI)
+  fetch('/api/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email, name, pic,
+      plan: G.plan,
+      source: (window.Telegram?.WebApp && G.tgUser) ? 'telegram' : 'web'
+    })
+  }).catch(() => {});
 }
 
 function save() {
   if (!G.user) return;
   try {
-    localStorage.setItem('cry_' + G.user.email, JSON.stringify({
-      chats: G.chats, plan: G.plan, req: G.reqCount,
-      date: new Date().toDateString()
+    localStorage.setItem('cry2_' + G.user.email, JSON.stringify({
+      chats: G.chats, plan: G.plan,
+      req: G.reqCount, windowStart: G.windowStart
     }));
-  } catch(_) {}
+  } catch(_){}
 }
 
 // ── PROFILE ───────────────────────────────────────
@@ -670,47 +735,98 @@ function updProfile() {
   const av = document.getElementById('s-av');
   av.innerHTML = G.user.pic ? `<img src="${G.user.pic}" alt="">` : G.user.initials;
   document.getElementById('s-name').textContent = G.user.name;
-  document.getElementById('s-plan').textContent = G.plan.toUpperCase();
-  document.getElementById('q-plan').textContent = G.plan.toUpperCase();
   updPlanCards();
-}
-
-function updQuota() {
-  const lim = LIMITS[G.plan], pct = Math.min((G.reqCount/lim)*100,100);
-  document.getElementById('q-txt').textContent = `${G.reqCount} / ${lim}`;
-  document.getElementById('qlbl').textContent  = `${G.reqCount}/${lim}`;
-  const f = document.getElementById('q-fill');
-  f.style.width = pct + '%';
-  f.className = 'qfill' + (pct>90?' danger':pct>70?' warn':'');
 }
 
 function updPlanCards() {
   ['free','pro','ultra'].forEach(p => {
-    const card = document.getElementById('pc-'+p);
-    const btn  = document.getElementById('pb-'+p);
+    const card = document.getElementById('pc-' + p);
+    const btn  = document.getElementById('pb-' + p);
+    if (!card || !btn) return;
     card.classList.remove('cur');
     if (p === G.plan) {
       card.classList.add('cur');
-      btn.textContent = 'Current plan';
+      btn.textContent = p === 'free' ? 'Текущий план' : 'Активен ✓';
       btn.className = 'pcbtn cur-btn';
-    } else if ((p==='pro'&&G.plan==='free')||(p==='ultra'&&G.plan!=='ultra')) {
-      btn.textContent = `Upgrade to ${p[0].toUpperCase()+p.slice(1)}`;
-      btn.className = 'pcbtn up-btn';
+      btn.onclick = null;
+    } else if (p === 'free') {
+      // Нельзя даунгрейднуть обратно в free просто так
+      btn.textContent = G.plan === 'free' ? 'Текущий план' : 'Базовый план';
+      btn.className = 'pcbtn cur-btn';
+      btn.onclick = null;
     } else {
-      btn.textContent = `Switch to ${p[0].toUpperCase()+p.slice(1)}`;
-      btn.className = 'pcbtn';
+      const stars = p === 'pro' ? '100' : '350';
+      btn.textContent = 'Купить за ' + stars + ' ⭐';
+      btn.className = 'pcbtn tg-btn';
+      btn.onclick = () => buyWithStars(p);
     }
   });
 }
 
-function setPlan(p) {
-  G.plan = p; G.reqCount = 0;
-  updProfile(); updQuota(); save();
-  sw('chat', null); newChat();
+function setPlanFree() { /* Free is always default - no action needed */ }
+
+// ── TG STARS PAYMENT ──────────────────────────────
+async function buyWithStars(plan) {
+  const isTG = window.Telegram?.WebApp;
+
+  if (!isTG) {
+    // Не в TG — показываем инструкцию
+    showToast('Открой Crymiss в Telegram боте для оплаты Stars');
+    return;
+  }
+
+  const tgUserId = G.tgUser?.id;
+  if (!tgUserId) { showToast('Войди через Telegram для оплаты'); return; }
+
+  try {
+    // Просим бот отправить инвойс
+    const res = await fetch('/api/create-invoice', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ plan, tgUserId, tgUsername: G.tgUser?.username })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Error');
+
+    showToast('Инвойс отправлен в Telegram! Проверь бота.');
+    // Закрываем Mini App чтобы пользователь увидел инвойс
+    setTimeout(() => window.Telegram.WebApp.close(), 1500);
+
+  } catch(err) {
+    showToast('Ошибка: ' + err.message);
+  }
+}
+
+// После успешной оплаты бот присылает сообщение,
+// и при следующем открытии приложения нужно обновить план.
+// Для MVP — активируем план локально после подтверждения:
+function activatePlan(plan) {
+  G.plan = plan;
+  G.reqCount = 0;
+  G.windowStart = Date.now();
+  updProfile();
+  updQuotaUI();
+  updPlanCards();
+  save();
+  showToast(`План ${plan.toUpperCase()} активирован!`);
+}
+
+// ── PLANS ─────────────────────────────────────────
+function mpick(p, el) {
+  G.modalPlan = p;
+  document.querySelectorAll('.mp').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function closeModal() { document.getElementById('umodal').classList.remove('open'); }
+
+function doUpgrade() {
+  closeModal();
+  buyWithStars(G.modalPlan);
 }
 
 // ── CHATS ─────────────────────────────────────────
-function mkId() { return 'c'+Date.now(); }
+function mkId() { return 'c' + Date.now(); }
 
 function newChatEntry(firstMsg) {
   const id = mkId();
@@ -764,7 +880,7 @@ function newChat() {
   document.querySelectorAll('.ni[id]').forEach(i=>i.classList.remove('on'));
 }
 
-// ── DOM ───────────────────────────────────────────
+// ── DOM HELPERS ───────────────────────────────────
 function xe(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 function mdHTML(t) {
@@ -790,14 +906,11 @@ function addMsgDOM(text, isUser, anim=true) {
   const d = document.createElement('div');
   d.className = 'msg '+(isUser?'user':'ai');
   if (!anim) d.style.animation='none';
-
   const av = isUser
     ? (G.user?.pic ? `<div class="mav uav"><img src="${G.user.pic}" alt=""></div>` : `<div class="mav uav">${G.user?.initials||'U'}</div>`)
     : `<div class="mav aav"><svg width="11" height="11" viewBox="0 0 20 20" fill="none"><path d="M10 1.5L17.5 5.75V14.25L10 18.5L2.5 14.25V5.75Z" stroke="white" stroke-width="1.3" stroke-linejoin="round"/><circle cx="10" cy="10" r="2" fill="white"/></svg></div>`;
-
   const html = isUser ? `<p>${xe(text).replace(/\n/g,'<br>')}</p>` : mdHTML(text);
   const acts = isUser ? '' : `<div class="macts"><button class="abt" onclick="cp(this,${JSON.stringify(text)})"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="1" y="3" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.1"/><path d="M3 3V2a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H7" stroke="currentColor" stroke-width="1.1"/></svg> Copy</button></div>`;
-
   d.innerHTML = `${av}<div class="mbody"><div class="mwho">${isUser?'You':'Crymiss'}</div><div class="mtxt">${html}</div>${acts}</div>`;
   wrap.appendChild(d); scrollD();
 }
@@ -832,7 +945,13 @@ async function sendMsg() {
   const text = inp.value.trim();
   if (!text) return;
 
-  if (G.reqCount >= LIMITS[G.plan]) { showUpgrade(); return; }
+  // Check quota (с учётом возможного сброса)
+  checkReset();
+  if (G.reqCount >= LIMITS[G.plan]) {
+    document.getElementById('umodal').classList.add('open');
+    return;
+  }
+
   if (!G.activeId || !G.chats[G.activeId]) newChatEntry(text);
 
   G.chats[G.activeId].msgs.push({ role:'user', text });
@@ -842,14 +961,16 @@ async function sendMsg() {
   G.busy=true;
   addTyping();
 
+  // Сразу обновляем счётчик (оптимистично)
+  G.reqCount++;
+  updQuotaUI();
+
   try {
-    // Build Gemini-format messages
     const contents = G.chats[G.activeId].msgs.map(m=>({
       role: m.role==='user'?'user':'model',
       parts:[{ text: m.text }]
     }));
 
-    // POST to our backend — API key stays on server!
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -862,10 +983,13 @@ async function sendMsg() {
     document.getElementById('typing')?.remove();
     G.chats[G.activeId].msgs.push({ role:'model', text: data.reply });
     addMsgDOM(data.reply, false);
-    G.reqCount++;
-    updQuota(); save();
+    save();
 
   } catch(err) {
+    // Откатываем счётчик если запрос не прошёл
+    G.reqCount = Math.max(0, G.reqCount - 1);
+    updQuotaUI();
+
     document.getElementById('typing')?.remove();
     const wrap = document.getElementById('mi-inner');
     const d = document.createElement('div');
@@ -884,19 +1008,11 @@ function sw(name, el) {
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
   document.getElementById('view-'+name).classList.add('on');
   document.querySelectorAll('.ni[id]').forEach(i=>i.classList.remove('on'));
-  if (el?.id) el.classList.add('on');
+  if(el?.id) el.classList.add('on');
   closeSb();
 }
-
-// ── SIDEBAR ───────────────────────────────────────
 function openSb(){ document.getElementById('sb').classList.add('open'); document.getElementById('overlay').classList.add('open'); }
 function closeSb(){ document.getElementById('sb').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
-
-// ── MODAL ─────────────────────────────────────────
-function showUpgrade(){ document.getElementById('umodal').classList.add('open'); }
-function closeModal(){ document.getElementById('umodal').classList.remove('open'); }
-function mpick(p,el){ G.modalPlan=p; document.querySelectorAll('.mp').forEach(e=>e.classList.remove('sel')); el.classList.add('sel'); }
-function doUpgrade(){ closeModal(); setPlan(G.modalPlan); }
 
 document.getElementById('mi').addEventListener('input',function(){ document.getElementById('sbtn').disabled=!this.value.trim()||G.busy; });
 </script>

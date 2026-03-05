@@ -4,104 +4,82 @@
 ```
 crymiss/
 ├── api/
-│   ├── chat.js       ← бэкенд: прокси к Gemini (ключ скрыт)
-│   └── config.js     ← отдаёт Google Client ID фронтенду
+│   ├── chat.js            ← прокси к Gemini (ключ скрыт)
+│   ├── config.js          ← отдаёт Google Client ID фронтенду
+│   ├── register.js        ← регистрация юзеров в Vercel KV
+│   ├── admin.js           ← статистика для владельца
+│   ├── create-invoice.js  ← создание инвойса звёздами
+│   └── webhook.js         ← вебхук Telegram бота
 ├── public/
-│   └── index.html    ← весь фронтенд
-├── vercel.json       ← конфиг роутинга
-├── .env.example      ← шаблон переменных
-└── .gitignore        ← скрывает .env файлы
+│   ├── index.html         ← основное приложение
+│   └── admin.html         ← панель администратора
+├── vercel.json
+└── .env.example
 ```
 
 ---
 
-## Шаг 1 — Google OAuth Client ID
+## Переменные окружения (Vercel → Settings → Environment Variables)
 
-1. Иди на https://console.cloud.google.com
-2. Создай новый проект (или выбери существующий)
-3. Слева: **APIs & Services → OAuth consent screen**
-   - User Type: External → Create
-   - App name: Crymiss
-   - Support email: твой email
-   - Сохрани
-4. Слева: **APIs & Services → Credentials**
-   - Нажми **+ CREATE CREDENTIALS → OAuth 2.0 Client ID**
-   - Application type: **Web application**
-   - Name: Crymiss Web
-   - **Authorized JavaScript origins:**
-     ```
-     https://твой-домен.vercel.app
-     ```
-     (добавь после деплоя, сначала можно без него)
-   - **Authorized redirect URIs:** то же самое
-   - Нажми **Create**
-5. Скопируй **Client ID** — выглядит так:
-   ```
-   123456789-abcdefghijk.apps.googleusercontent.com
-   ```
+| Переменная | Где взять |
+|---|---|
+| `GROQ_API_KEY` | https://console.groq.com/keys |
+| `GOOGLE_CLIENT_ID` | console.cloud.google.com → OAuth 2.0 |
+| `TELEGRAM_BOT_TOKEN` | @BotFather → /newbot |
+| `APP_URL` | https://твой-домен.vercel.app |
+| `ADMIN_SECRET` | придумай любой пароль |
+| `KV_REST_API_URL` | Vercel → Storage → KV (автоматически) |
+| `KV_REST_API_TOKEN` | Vercel → Storage → KV (автоматически) |
 
 ---
 
-## Шаг 2 — Deploy на Vercel
+## Шаг 1 — Vercel KV (база данных)
 
-### Вариант А — через GitHub (рекомендую)
+1. Vercel Dashboard → **Storage** → **Create Database** → **KV**
+2. Название: `crymiss-kv` → Create
+3. **Connect to Project** → выбери свой проект
+4. Переменные `KV_REST_API_URL` и `KV_REST_API_TOKEN` добавятся **автоматически**
+5. В корне проекта выполни: `npm install @vercel/kv`
 
-1. Залей папку `crymiss/` в GitHub репозиторий
-2. Иди на https://vercel.com → **New Project**
-3. Импортируй свой репозиторий
-4. В разделе **Environment Variables** добавь:
+---
 
-   | Name | Value |
-   |------|-------|
-   | `GEMINI_API_KEY` | `AIzaSyCuoys5YPw0X3Fax3HNMv2ZAaTu4mDzp-4` |
-   | `GOOGLE_CLIENT_ID` | `123456789-xxxx.apps.googleusercontent.com` |
-
-5. Нажми **Deploy**
-6. После деплоя скопируй URL (например `crymiss.vercel.app`)
-7. Вернись в Google Console и добавь этот URL в Authorized origins
-
-### Вариант Б — через Vercel CLI
+## Шаг 2 — Деплой
 
 ```bash
+# Установить Vercel CLI
 npm i -g vercel
+
+# Деплой
 cd crymiss
-vercel
-# Следуй инструкциям
-
-# Добавь переменные:
-vercel env add GEMINI_API_KEY
-vercel env add GOOGLE_CLIENT_ID
-
-# Передеплой:
 vercel --prod
 ```
 
----
-
-## Шаг 3 — Telegram Mini App (опционально)
-
-1. Открой @BotFather в Telegram
-2. Напиши `/newbot` → создай бота
-3. Напиши `/mybots` → выбери бота → **Bot Settings → Menu Button**
-4. Введи URL твоего сайта: `https://crymiss.vercel.app`
-5. Готово! Пользователи открывают бота и видят Crymiss как Mini App
-
-Для авторизации через TG: приложение автоматически определяет
-что запущено в Telegram и логинит пользователя через его TG данные.
+Или через GitHub: импортируй репо в Vercel, добавь все переменные.
 
 ---
 
-## Важно
+## Шаг 3 — Вебхук Telegram бота
 
-- **Никогда не коммить `.env.local`** — он в `.gitignore`
-- Ключ Gemini хранится ТОЛЬКО в Vercel Environment Variables
-- Браузер никогда не видит ключ — все запросы идут через `/api/chat`
-- Google Client ID — не секрет, он виден в браузере (это нормально)
+После деплоя открой в браузере:
+```
+https://api.telegram.org/bot<ТВОЙ_ТОКЕН>/setWebhook?url=https://твой-сайт.vercel.app/api/webhook
+```
 
 ---
 
-## Проверка что всё работает
+## Шаг 4 — Админ панель
 
-После деплоя открой:
-- `https://твой-сайт.vercel.app/api/config` — должен вернуть `{"googleClientId":"..."}`
-- `https://твой-сайт.vercel.app` — должен открыться Crymiss
+Открой: `https://твой-сайт.vercel.app/admin.html`
+
+Введи свой `ADMIN_SECRET` токен → увидишь статистику.
+
+Или с токеном в URL: `https://твой-сайт.vercel.app/admin.html?token=твой_токен`
+
+---
+
+## Шаг 5 — Google OAuth (опционально)
+
+1. console.cloud.google.com → APIs & Services → Credentials
+2. Create OAuth 2.0 Client ID → Web application
+3. Authorized JavaScript origins: `https://твой-домен.vercel.app`
+4. Скопируй Client ID → добавь в `GOOGLE_CLIENT_ID`
