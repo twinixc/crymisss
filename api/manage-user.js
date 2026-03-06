@@ -1,5 +1,5 @@
-// api/manage-user.js — управление пользователями (выдать план, бан, удалить)
-import { kvGet, kvSet, kvDel, kvZRem, kvSAdd, kvSRem, kvDecr } from './_redis.js';
+// api/manage-user.js
+import { getRedis } from './_redis.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -15,35 +15,45 @@ export default async function handler(req, res) {
   if (!userId || !action) return res.status(400).json({ error: 'userId and action required' });
 
   try {
-    let user = null;
-    try { user = await kvGet('user:' + userId); } catch(_){}
-    if (!user) return res.status(404).json({ error: 'User not found' });
+    const r = await (await import('./_redis.js')).getRedis();
+
+    // Читаем юзера
+    const raw = await r.get('user:' + userId);
+    if (!raw) return res.status(404).json({ error: 'User not found' });
+    const user = typeof raw === 'string' ? JSON.parse(raw) : raw;
 
     switch (action) {
       case 'set_plan': {
-        const plan = value;
-        if (!['free','pro','ultra'].includes(plan)) return res.status(400).json({ error: 'Invalid plan' });
-        const updated = { ...user, plan, updatedAt: Date.now() };
-        await kvSet('user:' + userId, updated);
-        return res.status(200).json({ ok: true, user: updated });
+        if (!['free','pro','ultra'].includes(value)) {
+          return res.status(400).json({ error: 'Invalid plan' });
+        }
+        const updated = { ...user, plan: value, updatedAt: Date.now() };
+        await r.set('user:' + userId, JSON.stringify(updated));
+        return res.status(200).json({ ok: true, plan: value });
       }
+
       case 'ban': {
-        await kvSet('user:' + userId, { ...user, banned: true, bannedAt: Date.now() });
-        await kvSAdd('users:banned', userId);
+        const updated = { ...user, banned: true, bannedAt: Date.now() };
+        await r.set('user:' + userId, JSON.stringify(updated));
+        await r.sAdd('users:banned', userId);
         return res.status(200).json({ ok: true });
       }
+
       case 'unban': {
-        await kvSet('user:' + userId, { ...user, banned: false, bannedAt: null });
-        await kvSRem('users:banned', userId);
+        const updated = { ...user, banned: false, bannedAt: null };
+        await r.set('user:' + userId, JSON.stringify(updated));
+        await r.sRem('users:banned', userId);
         return res.status(200).json({ ok: true });
       }
+
       case 'delete': {
-        await kvDel('user:' + userId);
-        await kvZRem('users:all', userId);
-        await kvSRem('users:banned', userId);
-        try { await kvDecr('stats:total_users'); } catch(_){}
+        await r.del('user:' + userId);
+        await r.zRem('users:all', userId);
+        await r.sRem('users:banned', userId);
+        try { await r.decr('stats:total_users'); } catch(_){}
         return res.status(200).json({ ok: true });
       }
+
       default:
         return res.status(400).json({ error: 'Unknown action' });
     }

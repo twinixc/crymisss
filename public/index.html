@@ -726,7 +726,7 @@ function doTgLogin() {
   showToast('Открой бота в Telegram → нажми Start → зайди в приложение', 5000);
 }
 
-function login(name, email, pic, tgData) {
+async function login(name, email, pic, tgData) {
   const initials = name.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase()||'U';
   G.user = { name, email, pic, initials };
   G.plan = 'free';
@@ -745,15 +745,41 @@ function login(name, email, pic, tgData) {
   updProfile(); updQuotaUI(); renderChats();
   checkIfOwner(email);
 
-  fetch('/api/register', {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({
-      email, name, pic, plan: G.plan,
-      source: (G.tgUser ? 'telegram' : 'web'),
-      tgId:       tgData?.tgId       || G.tgUser?.id       || null,
-      tgUsername: tgData?.tgUsername || G.tgUser?.username  || '',
-    })
-  }).catch(()=>{});
+  // Регистрируем юзера на сервере
+  const userId = btoa(email).replace(/[^a-zA-Z0-9]/g,'').slice(0,24);
+  try {
+    await fetch('/api/register', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        email, name, pic, plan: G.plan,
+        source: (G.tgUser ? 'telegram' : 'web'),
+        tgId:       tgData?.tgId       || G.tgUser?.id       || null,
+        tgUsername: tgData?.tgUsername || G.tgUser?.username  || '',
+      })
+    });
+  } catch(_){}
+
+  // Проверяем план на сервере — вдруг админ выдал план пока юзер был оффлайн
+  try {
+    const r = await fetch('/api/check-plan?userId=' + userId);
+    if (r.ok) {
+      const d = await r.json();
+      if (d.banned) {
+        // Забаненный пользователь
+        document.getElementById('app').classList.remove('on');
+        document.getElementById('auth-screen').style.display = 'flex';
+        document.getElementById('auth-screen').innerHTML = '<div style="text-align:center;color:#e05a5a;padding:40px"><div style="font-size:40px;margin-bottom:16px">🚫</div><div style="font-size:18px;font-weight:600;margin-bottom:8px">Доступ заблокирован</div><div style="font-size:14px;color:#888">Обратись к администратору</div></div>';
+        return;
+      }
+      if (d.plan && d.plan !== G.plan) {
+        // Админ выдал другой план — применяем
+        G.plan = d.plan;
+        save();
+        updProfile(); updQuotaUI();
+        if (d.plan !== 'free') showToast('✓ Твой план: ' + d.plan.toUpperCase());
+      }
+    }
+  } catch(_){}
 }
 
 function save() {

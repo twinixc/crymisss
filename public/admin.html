@@ -584,33 +584,36 @@ function openUser(userId, userOrJson) {
 function closeDetail() { document.getElementById('detail-overlay').classList.remove('open'); currentUserId=null; }
 
 async function setPlan(plan) {
-  if (!currentUserId) { showToast('Нет ID пользователя — демо режим'); highlightPlanBtn(plan); return; }
+  if (!currentUserId) { showToast('Нет ID пользователя'); return; }
+  const btn = document.querySelector('.plan-btn.' + plan);
+  if (btn) { btn.textContent = '...'; btn.disabled = true; }
+
   try {
     const r = await fetch('/api/manage-user', {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ token: adminToken, userId: currentUserId, action:'set_plan', value: plan })
     });
     const d = await r.json();
-    if (!r.ok) throw new Error(d.error||'Error');
+    if (!r.ok) throw new Error(d.error || 'Ошибка сервера ' + r.status);
 
-    // Update local data
-    const idx = allUsers.findIndex(u=>(u.id||'')==currentUserId);
-    if (idx>=0) allUsers[idx].plan = plan;
+    // Обновляем локально
+    const idx = allUsers.findIndex(u => u.id === currentUserId);
+    if (idx >= 0) allUsers[idx].plan = plan;
+
     highlightPlanBtn(plan);
-    showDetailSuccess(`✓ План изменён на ${plan.toUpperCase()}`);
+    showDetailSuccess('✓ План ' + plan.toUpperCase() + ' выдан! Применится при следующем входе юзера.');
     renderUsers(allUsers);
-    showToast(`✓ ${plan.toUpperCase()} выдан`);
+    showToast('✓ ' + plan.toUpperCase() + ' выдан');
   } catch(err) {
-    // Demo mode — just show success visually
-    highlightPlanBtn(plan);
-    showDetailSuccess(`✓ План изменён на ${plan.toUpperCase()} (демо)`);
-    showToast('Демо: ' + plan.toUpperCase() + ' выдан');
+    showToast('❌ Ошибка: ' + err.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = plan === 'free' ? 'Free' : plan === 'pro' ? '⚡ Pro' : '🚀 Ultra'; }
   }
 }
 
 async function doAction(action) {
   if (action === 'delete' && !confirm('Удалить пользователя? Это нельзя отменить.')) return;
-  if (!currentUserId) { showToast('Нет ID — демо режим'); closeDetail(); return; }
+  if (!currentUserId) { showToast('Нет ID пользователя'); return; }
 
   try {
     const r = await fetch('/api/manage-user', {
@@ -618,20 +621,22 @@ async function doAction(action) {
       body: JSON.stringify({ token: adminToken, userId: currentUserId, action })
     });
     const d = await r.json();
-    if (!r.ok) throw new Error(d.error||'Error');
-  } catch(err) { /* demo mode */ }
+    if (!r.ok) throw new Error(d.error || 'Ошибка сервера ' + r.status);
 
-  const msgs = { ban:'🚫 Пользователь заблокирован', unban:'✓ Пользователь разблокирован', delete:'🗑 Пользователь удалён' };
-  showToast(msgs[action]||'Готово');
+    const msgs = { ban:'🚫 Заблокирован', unban:'✓ Разблокирован', delete:'🗑 Удалён' };
+    showToast(msgs[action] || 'Готово');
 
-  if (action === 'delete') {
-    allUsers = allUsers.filter(u=>(u.id||'')!==currentUserId);
-  } else {
-    const idx = allUsers.findIndex(u=>(u.id||'')==currentUserId);
-    if (idx>=0) { allUsers[idx].banned = action==='ban'; }
+    if (action === 'delete') {
+      allUsers = allUsers.filter(u => u.id !== currentUserId);
+    } else {
+      const idx = allUsers.findIndex(u => u.id === currentUserId);
+      if (idx >= 0) allUsers[idx].banned = (action === 'ban');
+    }
+    renderUsers(allUsers);
+    closeDetail();
+  } catch(err) {
+    showToast('❌ Ошибка: ' + err.message);
   }
-  renderUsers(allUsers);
-  closeDetail();
 }
 
 function highlightPlanBtn(plan) {
