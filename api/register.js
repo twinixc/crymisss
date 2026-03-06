@@ -1,8 +1,5 @@
-// api/register.js
-// Вызывается при каждом логине — сохраняет пользователя в Vercel KV (Redis)
-// Vercel KV бесплатно: 30k запросов/месяц, 256MB
-
-import { kv } from '@vercel/kv';
+// api/register.js — сохраняет пользователя в Redis при логине
+import { kvGet, kvSet, kvZAdd, kvIncr, kvSAdd } from './_redis.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -17,38 +14,31 @@ export default async function handler(req, res) {
   try {
     const now = Date.now();
     const userId = Buffer.from(email).toString('base64').replace(/[^a-zA-Z0-9]/g,'').slice(0,24);
-    const today = new Date().toISOString().slice(0,10); // YYYY-MM-DD
+    const today = new Date().toISOString().slice(0,10);
 
-    // Проверяем, новый ли пользователь
-    const existing = await kv.get(`user:${userId}`);
+    let existing = null;
+    try { existing = await kvGet('user:' + userId); } catch(_) {}
     const isNew = !existing;
 
-    // Сохраняем/обновляем пользователя
-    await kv.set(`user:${userId}`, {
-      email, name, pic: pic||'',
-      plan: plan||'free',
-      source: source||'web',   // 'web' или 'telegram'
+    await kvSet('user:' + userId, {
+      id: userId, email, name, pic: pic||'',
+      plan: plan||'free', source: source||'web',
       createdAt: existing?.createdAt || now,
       lastSeenAt: now,
       loginCount: (existing?.loginCount||0) + 1,
+      banned: existing?.banned || false,
     });
 
     if (isNew) {
-      // Добавляем в sorted set по времени регистрации (для сортировки)
-      await kv.zadd('users:all', { score: now, member: userId });
-      // Инкрементим счётчики
-      await kv.incr('stats:total_users');
-      await kv.incr(`stats:users_by_day:${today}`);
-      await kv.incr(`stats:users_by_source:${source||'web'}`);
+      await kvZAdd('users:all', now, userId);
+      await kvIncr('stats:total_users');
+      await kvIncr('stats:users_by_day:' + today);
+      await kvIncr('stats:users_by_source:' + (source||'web'));
     }
-
-    // Обновляем счётчик активных сегодня
-    await kv.sadd(`stats:active_today:${today}`, userId);
-
+    await kvSAdd('stats:active_today:' + today, userId);
     return res.status(200).json({ ok: true, isNew });
   } catch (err) {
     console.error('Register error:', err);
-    // Если KV не подключён — просто игнорируем (не ломаем приложение)
     return res.status(200).json({ ok: true, isNew: false, kvError: err.message });
   }
 }

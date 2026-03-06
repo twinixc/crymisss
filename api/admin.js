@@ -1,77 +1,58 @@
-// api/admin.js
-// Статистика для владельца — защищена ADMIN_SECRET токеном
-// Доступ: GET /api/admin?token=твой_секрет
-
-import { kv } from '@vercel/kv';
+// api/admin.js — статистика и список пользователей для владельца
+import { kvGet, kvSet, kvZRange, kvSCard, kvIncr } from './_redis.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Cache-Control', 'no-store');
 
-  // Проверка токена
   const token = req.query.token || req.headers['x-admin-token'];
-  const secret = process.env.ADMIN_SECRET;
-
-  if (!secret || token !== secret) {
+  if (!process.env.ADMIN_SECRET || token !== process.env.ADMIN_SECRET) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
   try {
     const today = new Date().toISOString().slice(0,10);
 
-    // Основные счётчики
-    const [totalUsers, activeToday] = await Promise.all([
-      kv.get('stats:total_users'),
-      kv.scard(`stats:active_today:${today}`),
-    ]);
+    // Счётчики
+    let totalUsers = 0, activeToday = 0, webUsers = 0, tgUsers = 0;
+    try {
+      const tv = await kvGet('stats:total_users'); totalUsers = Number(tv)||0;
+    } catch(_){}
+    try { activeToday = await kvSCard('stats:active_today:' + today); } catch(_){}
+    try { const w = await kvGet('stats:users_by_source:web'); webUsers = Number(w)||0; } catch(_){}
+    try { const t = await kvGet('stats:users_by_source:telegram'); tgUsers = Number(t)||0; } catch(_){}
 
-    // Пользователи по источнику
-    const [webUsers, tgUsers] = await Promise.all([
-      kv.get('stats:users_by_source:web'),
-      kv.get('stats:users_by_source:telegram'),
-    ]);
-
-    // Последние 7 дней регистраций
+    // Последние 7 дней
     const last7days = [];
     for (let i = 6; i >= 0; i--) {
-      const d = new Date(Date.now() - i * 86400000).toISOString().slice(0,10);
-      const count = await kv.get(`stats:users_by_day:${d}`) || 0;
-      last7days.push({ date: d, count: Number(count) });
+      const d = new Date(Date.now() - i*86400000).toISOString().slice(0,10);
+      let count = 0;
+      try { const v = await kvGet('stats:users_by_day:' + d); count = Number(v)||0; } catch(_){}
+      last7days.push({ date: d, count });
     }
 
-    // Последние 20 зарегистрированных пользователей
-    const recentIds = await kv.zrange('users:all', -20, -1, { rev: true });
-    const recentUsers = recentIds.length
-      ? await Promise.all(recentIds.map(id => kv.get(`user:${id}`)))
-      : [];
+    // Последние 50 пользователей
+    let recentIds = [];
+    try { recentIds = await kvZRange('users:all', 0, 49, true); } catch(_){}
 
-    // Пользователи по планам (считаем из последних)
-    const allIds = await kv.zrange('users:all', 0, -1);
-    const planCounts = { free: 0, pro: 0, ultra: 0 };
-    if (allIds.length) {
-      const allUsers = await Promise.all(allIds.map(id => kv.get(`user:${id}`)));
-      allUsers.forEach(u => { if (u?.plan) planCounts[u.plan] = (planCounts[u.plan]||0) + 1; });
+    const recentUsers = [];
+    for (const id of recentIds) {
+      try {
+        const u = await kvGet('user:' + id);
+        if (u) recentUsers.push({
+          ...u,
+          email: (u.email||'').replace(/(.{2}).+(@.+)/, '$1***$2'),
+        });
+      } catch(_){}
     }
 
-    return res.status(200).json({
-      totalUsers: Number(totalUsers) || 0,
-      activeToday: Number(activeToday) || 0,
-      webUsers: Number(webUsers) || 0,
-      tgUsers: Number(tgUsers) || 0,
-      planCounts,
-      last7days,
-      recentUsers: recentUsers.filter(Boolean).map(u => ({
-        name: u.name,
-        email: u.email?.replace(/(.{2}).+(@.+)/, '$1***$2'), // маскируем email
-        plan: u.plan,
-        source: u.source,
-        createdAt: u.createdAt,
-        lastSeenAt: u.lastSeenAt,
-        loginCount: u.loginCount,
-      }))
-    });
+    // Планы
+    const planCounts = { free:0, pro:0, ultra:0 };
+    recentUsers.forEach(u => { if(u.plan) planCounts[u.plan] = (planCounts[u.plan]||0)+1; });
 
+    return res.status(200).json({ totalUsers, activeToday, webUsers, tgUsers, last7days, recentUsers, planCounts });
   } catch (err) {
     console.error('Admin error:', err);
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message, kvError: true });
   }
 }
