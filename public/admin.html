@@ -472,43 +472,40 @@ function renderPlanChart(counts) {
 
 // ── RENDER USERS ──────────────────────────────────
 function renderUsers(users) {
+  // Store users globally so onclick can reference by index safely
+  window._usersCache = users;
+
   document.getElementById('users-count-lbl').textContent = `Пользователи (${users.length})`;
   const body = document.getElementById('users-body');
   if (!users.length) { body.innerHTML='<div class="empty">Пользователей нет</div>'; return; }
 
-  body.innerHTML = users.map(u => {
+  body.innerHTML = users.map((u, i) => {
     const initials = (u.name||'U').split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
-    // Avatar: pic > TG photo_url > initials
     let avHTML;
     if (u.pic) {
       avHTML = `<div class="mini-av"><img src="${u.pic}" alt="" onerror="this.parentElement.textContent='${initials}'"></div>`;
+    } else if (u.source==='telegram') {
+      avHTML = `<div class="mini-av" style="background:rgba(75,163,245,.1);border-color:rgba(75,163,245,.2)"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="color:#4ba3f5"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-2.012 9.478c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L6.26 14.4l-2.95-.924c-.64-.204-.654-.64.136-.948l11.526-4.445c.537-.194 1.006.131.59.165z"/></svg></div>`;
     } else {
-      // Show TG icon for telegram users, letter for web
-      const tgIcon = u.source==='telegram'
-        ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="color:#4ba3f5"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.012 9.478c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L6.26 14.4l-2.95-.924c-.64-.204-.654-.64.136-.948l11.526-4.445c.537-.194 1.006.131.59.165z"/></svg>`
-        : initials;
-      avHTML = `<div class="mini-av" style="${u.source==='telegram'?'background:rgba(75,163,245,.1);border-color:rgba(75,163,245,.2)':''}">${tgIcon}</div>`;
+      avHTML = `<div class="mini-av">${initials}</div>`;
     }
-
     const planBadge = u.banned ? `<span class="badge b-ban">BANNED</span>` : `<span class="badge b-${u.plan||'free'}">${(u.plan||'free').toUpperCase()}</span>`;
     const srcBadge = `<span class="badge b-${u.source||'web'}">${(u.source||'web').toUpperCase()}</span>`;
-    const reg = relTime(u.createdAt);
-
-    // Name line — show TG username if available
-    const nameLine = u.name || '—';
-    const subLine = u.tgUsername
-      ? `@${esc(u.tgUsername)}${u.tgId ? ' · #'+u.tgId : ''}`
-      : esc(u.email||'—');
-
-    const uJson = JSON.stringify(JSON.stringify(u));
-    return `<div class="ut-row ${u.banned?'banned-row':''}" onclick="openUser('${u.id||''}', ${uJson})">
-      <div class="td name-td">${avHTML}<div class="name-info"><div class="name-main">${esc(nameLine)}</div><div class="name-email">${subLine}</div></div></div>
+    const subLine = u.tgUsername ? `@${esc(u.tgUsername)}${u.tgId ? ' · #'+u.tgId : ''}` : esc(u.email||'—');
+    return `<div class="ut-row ${u.banned?'banned-row':''}" onclick="openUserByIndex(${i})">
+      <div class="td name-td">${avHTML}<div class="name-info"><div class="name-main">${esc(u.name||'—')}</div><div class="name-email">${subLine}</div></div></div>
       <div class="td">${planBadge}</div>
       <div class="td">${srcBadge}</div>
-      <div class="td dim">${reg}</div>
-      <div class="td"><button class="action-btn" onclick="event.stopPropagation();openUser('${u.id||''}', ${uJson})">Управление</button></div>
+      <div class="td dim">${relTime(u.createdAt)}</div>
+      <div class="td"><button class="action-btn" onclick="event.stopPropagation();openUserByIndex(${i})">Управление</button></div>
     </div>`;
   }).join('');
+}
+
+function openUserByIndex(i) {
+  const u = window._usersCache && window._usersCache[i];
+  if (!u) { showToast('Ошибка: юзер не найден'); return; }
+  openUser(u.id || '', u);
 }
 
 function filterUsers(q) {
@@ -518,9 +515,13 @@ function filterUsers(q) {
 }
 
 // ── USER DETAIL ───────────────────────────────────
-function openUser(userId, userJson) {
+function openUser(userId, userOrJson) {
   let u;
-  try { u = JSON.parse(userJson); } catch(_){ return; }
+  if (typeof userOrJson === 'object') {
+    u = userOrJson;
+  } else {
+    try { u = JSON.parse(userOrJson); } catch(_){ showToast('Ошибка данных'); return; }
+  }
   currentUserId = userId || u.id;
 
   const initials = (u.name||'U').split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
