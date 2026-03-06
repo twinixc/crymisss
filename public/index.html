@@ -323,13 +323,19 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
       </div>
       <div style="font-size:12px;color:var(--text3)">10 запросов / 5 часов · Апгрейд доступен внутри</div>
     </div>
-    <button class="google-btn" id="g-btn" onclick="doGoogleSignIn()">
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-        <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.703-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4"/>
-        <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/>
-        <path d="M3.964 10.707A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.039l3.007-2.332z" fill="#FBBC05"/>
-        <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.961L3.964 6.293C4.672 4.166 6.656 3.58 9 3.58z" fill="#EA4335"/>
-      </svg>
+    <!-- Главная кнопка — Telegram -->
+    <button style="display:flex;align-items:center;justify-content:center;gap:10px;height:44px;background:linear-gradient(135deg,#2481cc,#1a6aaa);color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:Geist,sans-serif;font-size:14px;font-weight:600;width:100%;transition:opacity .15s" onclick="doTgLogin()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-2.012 9.478c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L6.26 14.4l-2.95-.924c-.64-.204-.654-.64.136-.948l11.526-4.445c.537-.194 1.006.131.59.165z"/></svg>
+      Войти через Telegram
+    </button>
+    <!-- Google как запасной -->
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="flex:1;height:1px;background:var(--line)"></div>
+      <span style="font-size:11px;color:var(--text3)">или</span>
+      <div style="flex:1;height:1px;background:var(--line)"></div>
+    </div>
+    <button class="google-btn" id="g-btn" onclick="doGoogleSignIn()" style="background:none;border:1px solid var(--line2);color:var(--text2);height:38px;font-weight:400;font-size:13px">
+      <svg width="15" height="15" viewBox="0 0 18 18" fill="none"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.703-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/><path d="M3.964 10.707A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.039l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.961L3.964 6.293C4.672 4.166 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
       Continue with Google
     </button>
     <div class="auth-note">By continuing you accept the Terms of Service</div>
@@ -391,6 +397,10 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
           <div class="model-lbl"><span class="mdot"></span>crymiss · groq turbo</div>
         </div>
         <div class="tbar-r">
+          <a href="https://t.me/CryMissAI" target="_blank" style="display:flex;align-items:center;gap:5px;height:28px;padding:0 10px;background:rgba(36,129,204,.15);border:1px solid rgba(36,129,204,.3);border-radius:5px;color:#4ba3f5;font-size:12px;font-weight:500;text-decoration:none;transition:all .15s;flex-shrink:0" onmouseover="this.style.background='rgba(36,129,204,.25)'" onmouseout="this.style.background='rgba(36,129,204,.15)'">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-2.012 9.478c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L6.26 14.4l-2.95-.924c-.64-.204-.654-.64.136-.948l11.526-4.445c.537-.194 1.006.131.59.165z"/></svg>
+            Канал
+          </a>
           <button class="bsm pri" onclick="newChat()">New chat</button>
         </div>
       </div>
@@ -701,6 +711,20 @@ function onGoogleCred(resp) {
   catch(_){ demoLogin(); }
 }
 function demoLogin() { login('dev_user', 'dev@crymiss.ai', ''); }
+
+function doTgLogin() {
+  // Если уже в Telegram Mini App — авто-логин
+  if (window.Telegram?.WebApp?.initDataUnsafe?.user) {
+    const u = window.Telegram.WebApp.initDataUnsafe.user;
+    const tgName = (u.first_name||'' + ' ' + u.last_name||'').trim() || u.username || 'User';
+    login(tgName, 'tg_'+u.id+'@crymiss.tg', u.photo_url||'', { tgId:u.id, tgUsername:u.username||'' });
+    return;
+  }
+  // На сайте — открываем бота, он перенаправит обратно в Mini App
+  const botUrl = 'https://t.me/CryMissAI?start=login';
+  window.open(botUrl, '_blank');
+  showToast('Открой бота в Telegram → нажми Start → зайди в приложение', 5000);
+}
 
 function login(name, email, pic, tgData) {
   const initials = name.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase()||'U';
