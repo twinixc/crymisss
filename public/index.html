@@ -745,38 +745,34 @@ async function login(name, email, pic, tgData) {
   updProfile(); updQuotaUI(); renderChats();
   checkIfOwner(email);
 
-  // Регистрируем юзера на сервере
-  const userId = btoa(email).replace(/[^a-zA-Z0-9]/g,'').slice(0,24);
+  // Регистрируем юзера — сервер возвращает актуальный план из Redis
   try {
-    await fetch('/api/register', {
+    const regRes = await fetch('/api/register', {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
-        email, name, pic, plan: G.plan,
+        email, name, pic,
         source: (G.tgUser ? 'telegram' : 'web'),
         tgId:       tgData?.tgId       || G.tgUser?.id       || null,
         tgUsername: tgData?.tgUsername || G.tgUser?.username  || '',
       })
     });
-  } catch(_){}
+    if (regRes.ok) {
+      const regData = await regRes.json();
 
-  // Проверяем план на сервере — вдруг админ выдал план пока юзер был оффлайн
-  try {
-    const r = await fetch('/api/check-plan?userId=' + userId);
-    if (r.ok) {
-      const d = await r.json();
-      if (d.banned) {
-        // Забаненный пользователь
+      // Бан
+      if (regData.banned) {
         document.getElementById('app').classList.remove('on');
         document.getElementById('auth-screen').style.display = 'flex';
         document.getElementById('auth-screen').innerHTML = '<div style="text-align:center;color:#e05a5a;padding:40px"><div style="font-size:40px;margin-bottom:16px">🚫</div><div style="font-size:18px;font-weight:600;margin-bottom:8px">Доступ заблокирован</div><div style="font-size:14px;color:#888">Обратись к администратору</div></div>';
         return;
       }
-      if (d.plan && d.plan !== G.plan) {
-        // Админ выдал другой план — применяем
-        G.plan = d.plan;
+
+      // Применяем план из сервера (всегда актуальный)
+      if (regData.plan && regData.plan !== G.plan) {
+        G.plan = regData.plan;
         save();
         updProfile(); updQuotaUI();
-        if (d.plan !== 'free') showToast('✓ Твой план: ' + d.plan.toUpperCase());
+        if (regData.plan !== 'free') showToast('✓ Твой план: ' + regData.plan.toUpperCase());
       }
     }
   } catch(_){}
