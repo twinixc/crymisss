@@ -635,7 +635,10 @@ window.addEventListener('DOMContentLoaded', async () => {
     const u = tg.initDataUnsafe?.user;
     if (u) {
       G.tgUser = u;
-      login(`${u.first_name||''} ${u.last_name||''}`.trim()||'User', `tg_${u.id}@crymiss.tg`, u.photo_url||'');
+      const tgName = `${u.first_name||''} ${u.last_name||''}`.trim() || u.username || 'User';
+      const tgEmail = `tg_${u.id}@crymiss.tg`;
+      // photo_url доступна не всегда — передаём отдельно tgId для аватарки
+      login(tgName, tgEmail, u.photo_url||'', { tgId: u.id, tgUsername: u.username||'' });
       return;
     }
   }
@@ -699,7 +702,7 @@ function onGoogleCred(resp) {
 }
 function demoLogin() { login('dev_user', 'dev@crymiss.ai', ''); }
 
-function login(name, email, pic) {
+function login(name, email, pic, tgData) {
   const initials = name.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase()||'U';
   G.user = { name, email, pic, initials };
   G.plan = 'free';
@@ -720,7 +723,12 @@ function login(name, email, pic) {
 
   fetch('/api/register', {
     method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ email, name, pic, plan: G.plan, source: (G.tgUser?'telegram':'web') })
+    body: JSON.stringify({
+      email, name, pic, plan: G.plan,
+      source: (G.tgUser ? 'telegram' : 'web'),
+      tgId:       tgData?.tgId       || G.tgUser?.id       || null,
+      tgUsername: tgData?.tgUsername || G.tgUser?.username  || '',
+    })
   }).catch(()=>{});
 }
 
