@@ -403,12 +403,7 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
               <div class="wt">What can I help with?</div>
               <div class="ws">Отправь текст, фото или файл</div>
             </div>
-            <div class="prompts">
-              <div class="pc" onclick="suggest('Напиши React хук для infinite scroll')"><div class="pl">Write code</div><div class="pd">React, TypeScript, Python</div></div>
-              <div class="pc" onclick="suggest('Найди баги и улучшения в этом коде')"><div class="pl">Review code</div><div class="pd">Find bugs, optimize</div></div>
-              <div class="pc" onclick="suggest('Что на этом изображении?')"><div class="pl">Analyze image</div><div class="pd">Описание, текст, детали</div></div>
-              <div class="pc" onclick="suggest('Объясни как работают трансформеры в AI')"><div class="pl">Explain concepts</div><div class="pd">Docs, research, deep dives</div></div>
-            </div>
+
           </div>
           <div class="hidden" id="msgs"><div class="mwrap" id="mi-inner"></div></div>
         </div>
@@ -611,7 +606,7 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
 'use strict';
 
 // ── CONFIG ────────────────────────────────────────
-const LIMITS       = { free:10, pro:100, ultra:1000 };
+const LIMITS       = { free:15, pro:100, ultra:1000 };
 const RESET_MS     = 5 * 60 * 60 * 1000;
 const PLAN_COLORS  = { free:'rgba(255,255,255,.08)', pro:'rgba(82,201,116,.14)', ultra:'rgba(255,255,255,.18)' };
 const PLAN_TEXT    = { free:'var(--text2)', pro:'#52c974', ultra:'var(--w)' };
@@ -941,7 +936,29 @@ function addTyping() {
 }
 
 function scrollD() { requestAnimationFrame(()=>{ const b=document.getElementById('cbody'); b.scrollTop=b.scrollHeight; }); }
-function cp(btn,text) { navigator.clipboard.writeText(text).then(()=>{ btn.textContent='Copied'; setTimeout(()=>{ btn.innerHTML=`<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="1" y="3" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.1"/><path d="M3 3V2a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H7" stroke="currentColor" stroke-width="1.1"/></svg> Copy`; },2000); }); }
+function cp(btn, text) {
+  const ico = `<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="1" y="3" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.1"/><path d="M3 3V2a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H7" stroke="currentColor" stroke-width="1.1"/></svg> Copy`;
+  const ok = () => { btn.textContent='✓ Copied'; btn.style.color='#52c974'; setTimeout(()=>{ btn.innerHTML=ico; btn.style.color=''; },2000); };
+  // Modern clipboard API
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(ok).catch(() => fallbackCopy(text, ok));
+  } else {
+    fallbackCopy(text, ok);
+  }
+}
+function fallbackCopy(text, cb) {
+  // Works on mobile Safari and old browsers
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0';
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  // Mobile: select all text
+  ta.setSelectionRange(0, 99999);
+  try { document.execCommand('copy'); cb && cb(); }
+  catch(_) { showToast('Не удалось скопировать'); }
+  document.body.removeChild(ta);
+}
 function cpKey(btn){ btn.textContent='Copied'; setTimeout(()=>btn.textContent='Copy',2000); }
 
 // ── FILE HANDLING ─────────────────────────────────

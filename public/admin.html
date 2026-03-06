@@ -241,8 +241,9 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ge
 
   <div class="content">
     <div class="kv-note" id="kv-note">
-      <strong style="color:var(--blue)">Vercel KV не подключён</strong> — показываются демо-данные.<br>
-      Vercel Dashboard → Storage → <strong>Create KV Database</strong> → Connect to Project → Redeploy
+      <strong style="color:var(--blue)">Демо-режим</strong> — Vercel KV не подключён, реальных пользователей пока нет.<br>
+      Чтобы видеть реальных юзеров: Vercel → Storage → <strong>Create KV Database</strong> → Connect to Project → Redeploy.<br>
+      Пока KV не подключён — пользователи всё равно могут юзать приложение, просто статистика не собирается.
     </div>
 
     <!-- USERS TAB -->
@@ -377,19 +378,28 @@ async function loadAll() {
   ico.classList.add('spin');
   try {
     const r = await fetch(`/api/admin?token=${encodeURIComponent(adminToken)}`);
-    if (!r.ok) { showToast('Ошибка загрузки данных'); return; }
+    if (!r.ok) {
+      // Not authorized or server error - show demo
+      loadDemoData(); ico.classList.remove('spin'); return;
+    }
     const d = await r.json();
+    const hasRealData = !d.kvError && (d.totalUsers > 0 || (d.recentUsers && d.recentUsers.length > 0));
 
-    if (d.kvError || (d.totalUsers === 0 && !d.recentUsers?.length)) {
-      document.getElementById('kv-note').style.display = 'block';
-      loadDemoData();
-    } else {
+    if (hasRealData) {
       document.getElementById('kv-note').style.display = 'none';
       allUsers = d.recentUsers || [];
       renderStats(d);
       renderUsers(allUsers);
+    } else {
+      // KV not connected - show info banner + demo data
+      document.getElementById('kv-note').style.display = 'block';
+      loadDemoData();
     }
-  } catch(err) { showToast('Ошибка: ' + err.message); }
+  } catch(err) {
+    // Network error - show demo
+    document.getElementById('kv-note').style.display = 'block';
+    loadDemoData();
+  }
   ico.classList.remove('spin');
 }
 
