@@ -442,32 +442,23 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
               <div class="attach-bar" id="attach-bar"></div>
               <div class="inp-row">
                 <textarea id="mi" placeholder="Message crymiss..." rows="1" onkeydown="onKey(event)" oninput="rsz(this)"></textarea>
-                <div style="display:flex;align-items:center;gap:4px">
-                  <button class="model-pick-btn" id="model-pick-btn" onclick="toggleModelPicker(event)">
-                    <span id="model-pick-label">Auto</span>
+                <div style="display:flex;align-items:center;gap:4px;position:relative">
+                  <button class="mode-pick-btn" id="mode-pick-btn" onclick="toggleModePicker(event)">
+                    <span id="mode-pick-icon">⚡</span>
+                    <span id="mode-pick-label">Fast</span>
                     <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M2 3.5l2.5 2.5 2.5-2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
                   </button>
                   <button class="sbtn" id="sbtn" onclick="sendMsg()" disabled>
                     <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 11V2M3 5.5l3.5-3.5 3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                   </button>
                 </div>
-                <!-- Model picker dropdown -->
-                <div class="model-dropdown" id="model-dropdown">
-                  <div class="md-title">Выбор модели</div>
-                  <div id="md-list"></div>
+                <!-- Mode picker popup -->
+                <div class="mode-popup" id="mode-popup" onclick="event.stopPropagation()">
+                  <div class="mp-title">Режим</div>
+                  <div id="mp-list"></div>
                 </div>
               </div>
-              <div class="mode-bar" id="mode-bar">
-                <button class="mbtn active" id="mb-fast"  onclick="setMode('fast')" >⚡ Fast</button>
-                <button class="mbtn"        id="mb-think" onclick="setMode('think')">🧠 Think</button>
-                <button class="mbtn"        id="mb-code"  onclick="setMode('code')" >💻 Code</button>
-                <!-- Ultra-only -->
-                <button class="mbtn ultra-mode" id="mb-search" onclick="setMode('search')">🌐 Search</button>
-                <button class="mbtn ultra-mode" id="mb-imagine" onclick="setMode('imagine')">🎨 Image</button>
-                <button class="mbtn ultra-mode" id="mb-data"   onclick="setMode('data')"  >📊 Data</button>
-                <button class="mbtn ultra-mode" id="mb-voice"  onclick="setMode('voice')" >🔊 Voice</button>
-                <span class="mode-info" id="mode-info"></span>
-              </div>
+              <div class="mode-bar" id="mode-bar" style="display:none"></div>
               <div class="inp-foot">
                 <div style="display:flex;gap:2px;align-items:center">
                   <!-- File attach -->
@@ -796,10 +787,7 @@ async function login(name, email, pic, tgData) {
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app').classList.add('on');
   updProfile(); updQuotaUI(); updModeUI(); renderChats();
-  // Restore model picker label
-  const savedModel = AVAIL_MODELS.find(x => x.id === G.model);
-  const lbl = document.getElementById('model-pick-label');
-  if (lbl) lbl.textContent = savedModel ? savedModel.label : 'Auto';
+  // mode btn restored by updModeUI above
   checkIfOwner(email);
 
   // Регистрируем юзера — сервер возвращает актуальный план из Redis
@@ -919,64 +907,91 @@ function updModeUI() {
     }
   });
 
-  const info = document.getElementById('mode-info');
-  if (info && MODES[mode]) {
-    const lim = MODE_LIMITS[G.plan]?.[mode];
-    const used = G.modeCounts?.[mode] ?? 0;
+  // Update mode picker button
+  const m = MODES[mode];
+  if (m) {
+    const icon = document.getElementById('mode-pick-icon');
+    const lbl  = document.getElementById('mode-pick-label');
+    if (icon) icon.textContent = m.icon;
+    if (lbl)  lbl.textContent  = m.label;
+    const btn = document.getElementById('mode-pick-btn');
+    const col = MODE_COLORS?.[mode];
+    if (btn && col) { btn.style.borderColor = col.hex+'66'; btn.style.color = col.hex; }
+  }
+}
+
+// ── MODE PICKER POPUP ─────────────────────────────────────────
+// Color map for mode picker items
+const MODE_COLORS = {
+  fast:   { hex:'#52c974', rgb:'82,201,116'  },
+  think:  { hex:'#8888ff', rgb:'136,136,255' },
+  code:   { hex:'#e0a44a', rgb:'224,164,74'  },
+  search: { hex:'#4ba3f5', rgb:'75,163,245'  },
+  imagine:{ hex:'#c864ff', rgb:'200,100,255' },
+  data:   { hex:'#50dcb4', rgb:'80,220,180'  },
+  voice:  { hex:'#ff7850', rgb:'255,120,80'  },
+};
+
+function renderModePopup() {
+  const list = document.getElementById('mp-list');
+  if (!list) return;
+  const plan = G.plan || 'free';
+  list.innerHTML = '<div class="mp-grid">' + Object.values(MODES).map(m => {
+    const lim = MODE_LIMITS[plan]?.[m.id] ?? 0;
+    const used = G.modeCounts?.[m.id] ?? 0;
     const left = Math.max(0, lim - used);
-    const isVoice = mode === 'voice';
-    if (isUltra || isVoice) {
-      info.textContent = (isUltra && lim >= 999 ? '∞ ' : '') + MODES[mode].desc;
-      info.style.color = MODES[mode].color;
-    } else {
-      info.textContent = left + ' / ' + lim + ' · ' + MODES[mode].desc;
-      info.style.color = left <= 1 ? '#e05a5a' : 'var(--text3)';
+    const isActive = G.mode === m.id;
+    const col = MODE_COLORS[m.id] || { hex:'#888', rgb:'136,136,136' };
+    const limText = m.id === 'voice' ? '∞' :
+                    plan === 'ultra' && lim >= 999 ? '∞' :
+                    `${left}/${lim}`;
+    const limColor = left <= 1 && lim < 999 ? '#e05a5a' : col.hex;
+    return `<div class="mp-item${isActive?' active':''}"
+      style="${isActive ? `--mp-color:${col.hex};--mp-rgb:${col.rgb}` : ''}"
+      onclick="selectModeFromPopup('${m.id}')">
+      <div class="mp-icon">${m.icon}</div>
+      <div class="mp-name">${m.label}</div>
+      <div class="mp-sub">${m.desc}</div>
+      <div class="mp-lim" style="color:${limColor}">${limText} осталось</div>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+function toggleModePicker(e) {
+  e.stopPropagation();
+  const popup = document.getElementById('mode-popup');
+  if (!popup) return;
+  const isOpen = popup.classList.contains('open');
+  closeAllPopups();
+  if (!isOpen) { renderModePopup(); popup.classList.add('open'); }
+}
+
+function selectModeFromPopup(modeId) {
+  setMode(modeId);
+  closeAllPopups();
+  // Update button label
+  const m = MODES[modeId];
+  if (m) {
+    const icon = document.getElementById('mode-pick-icon');
+    const lbl  = document.getElementById('mode-pick-label');
+    if (icon) icon.textContent = m.icon;
+    if (lbl)  lbl.textContent  = m.label;
+    // Update button accent color
+    const btn = document.getElementById('mode-pick-btn');
+    if (btn) {
+      const col = MODE_COLORS[modeId];
+      btn.style.borderColor = col ? col.hex + '66' : '';
+      btn.style.color = col ? col.hex : '';
     }
   }
 }
 
-// ── MODEL PICKER ──────────────────────────────────────────────
-function renderModelList() {
-  const list = document.getElementById('md-list');
-  if (!list) return;
-  list.innerHTML = AVAIL_MODELS.map(m => {
-    const locked = !m.plans.includes(G.plan||'free');
-    const active = (G.model === m.id);
-    return `<div class="md-item${active?' active':''}${locked?' locked':''}"
-      onclick="${locked ? '' : `selectModel(${JSON.stringify(m.id)})`}">
-      <div class="md-left">
-        <div class="md-name">${m.label}</div>
-        <div class="md-sub">${m.sub}</div>
-      </div>
-      ${active ? '<div class="md-check">✓</div>' : ''}
-      ${locked ? '<div class="md-lock">🔒 Ultra</div>' : ''}
-    </div>`;
-  }).join('');
+function closeAllPopups() {
+  document.querySelectorAll('.mode-popup').forEach(d => d.classList.remove('open'));
 }
 
-function toggleModelPicker(e) {
-  e.stopPropagation();
-  const dd = document.getElementById('model-dropdown');
-  if (!dd) return;
-  const isOpen = dd.classList.contains('open');
-  // close all dropdowns first
-  document.querySelectorAll('.model-dropdown').forEach(d => d.classList.remove('open'));
-  if (!isOpen) { renderModelList(); dd.classList.add('open'); }
-}
-
-function selectModel(modelId) {
-  G.model = modelId;
-  const m = AVAIL_MODELS.find(x => x.id === modelId);
-  const lbl = document.getElementById('model-pick-label');
-  if (lbl) lbl.textContent = m ? m.label : 'Auto';
-  document.getElementById('model-dropdown')?.classList.remove('open');
-  save();
-}
-
-// Close dropdown on outside click
-document.addEventListener('click', () => {
-  document.querySelectorAll('.model-dropdown').forEach(d => d.classList.remove('open'));
-});
+// Close popup on outside click
+document.addEventListener('click', closeAllPopups);
 
 // ── VOICE (Web Speech API) ─────────────────────────────────────
 function speakText(text) {
