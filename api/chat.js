@@ -27,6 +27,25 @@ export default async function handler(req, res) {
   const safePlan = ['free','pro','ultra'].includes(plan) ? plan : 'free';
   const safeMode = ['fast','think','code','search','data','voice'].includes(mode) ? mode : 'fast';
 
+  // Model override — client can select specific model
+  // Validate against allowed list (security: no arbitrary model strings)
+  const ALLOWED_MODELS = [
+    'llama-3.1-8b-instant',
+    'llama3-70b-8192',
+    'llama-3.3-70b-versatile',
+    'deepseek-r1-distill-llama-70b',
+    'meta-llama/llama-4-scout-17b-16e-instruct',
+    'meta-llama/llama-4-maverick-17b-128e-instruct',
+  ];
+  // Llama 4 Maverick restricted to Ultra
+  const ULTRA_ONLY_MODELS = ['meta-llama/llama-4-maverick-17b-128e-instruct'];
+  let modelOverride = null;
+  if (req.body.model && ALLOWED_MODELS.includes(req.body.model)) {
+    if (!ULTRA_ONLY_MODELS.includes(req.body.model) || safePlan === 'ultra') {
+      modelOverride = req.body.model;
+    }
+  }
+
 
   const hasImages = messages.some(m =>
     Array.isArray(m.parts) ? m.parts.some(p => p.image_data) : m.image_data

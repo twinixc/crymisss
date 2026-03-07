@@ -442,9 +442,20 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
               <div class="attach-bar" id="attach-bar"></div>
               <div class="inp-row">
                 <textarea id="mi" placeholder="Message crymiss..." rows="1" onkeydown="onKey(event)" oninput="rsz(this)"></textarea>
-                <button class="sbtn" id="sbtn" onclick="sendMsg()" disabled>
-                  <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 11V2M3 5.5l3.5-3.5 3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
+                <div style="display:flex;align-items:center;gap:4px">
+                  <button class="model-pick-btn" id="model-pick-btn" onclick="toggleModelPicker(event)">
+                    <span id="model-pick-label">Auto</span>
+                    <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M2 3.5l2.5 2.5 2.5-2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <button class="sbtn" id="sbtn" onclick="sendMsg()" disabled>
+                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 11V2M3 5.5l3.5-3.5 3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                </div>
+                <!-- Model picker dropdown -->
+                <div class="model-dropdown" id="model-dropdown">
+                  <div class="md-title">Выбор модели</div>
+                  <div id="md-list"></div>
+                </div>
               </div>
               <div class="mode-bar" id="mode-bar">
                 <button class="mbtn active" id="mb-fast"  onclick="setMode('fast')" >⚡ Fast</button>
@@ -650,13 +661,24 @@ const MODE_LIMITS = {
   ultra: { fast: 1000, think: 1000, code: 1000,search: 1000, imagine: 100,  data: 1000, voice: 999  },
 };
 const MAX_FILE_MB  = 10;
+
+// ── МОДЕЛИ (выбор пользователем) ──────────────────
+const AVAIL_MODELS = [
+  { id: null,                                    label: 'Auto',          sub: 'Выбирается по режиму',           plans: ['free','pro','ultra'] },
+  { id: 'llama-3.1-8b-instant',                 label: 'Llama 3.1 8B',  sub: 'Самый быстрый',                  plans: ['free','pro','ultra'] },
+  { id: 'llama3-70b-8192',                      label: 'Llama 3 70B',   sub: 'Умнее, чуть медленнее',          plans: ['free','pro','ultra'] },
+  { id: 'llama-3.3-70b-versatile',              label: 'Llama 3.3 70B', sub: 'Лучший баланс',                  plans: ['pro','ultra'] },
+  { id: 'deepseek-r1-distill-llama-70b',        label: 'DeepSeek R1',   sub: 'Думает пошагово',                plans: ['free','pro','ultra'] },
+  { id: 'meta-llama/llama-4-scout-17b-16e-instruct',   label: 'Llama 4 Scout',  sub: 'Vision + текст',         plans: ['free','pro','ultra'] },
+  { id: 'meta-llama/llama-4-maverick-17b-128e-instruct','label': 'Llama 4 Maverick','sub': '1M context, лучший', plans: ['ultra'] },
+];
 const IMAGE_EXTS   = ['jpg','jpeg','png','gif','webp','bmp','svg'];
 
 // ── STATE ─────────────────────────────────────────
 let G = {
   user: null, plan: 'free',
   chats: {}, activeId: null,
-  busy: false, reqCount: 0, mode: 'fast',
+  busy: false, reqCount: 0, mode: 'fast', model: null,
   windowStart: Date.now(),
   modalPlan: 'pro',
   googleClientId: '',
@@ -766,6 +788,7 @@ async function login(name, email, pic, tgData) {
       G.chats = d.chats||{}; G.plan = d.plan||'free';
       G.reqCount = d.req||0; G.windowStart = d.windowStart||Date.now();
       G.modeCounts = d.modeCounts || { fast:0, think:0, code:0 };
+      G.model = d.model || null; G.mode = d.mode || 'fast';
       if (Date.now() - G.windowStart >= RESET_MS) { G.reqCount=0; G.windowStart=Date.now(); }
     } else { G.windowStart = Date.now(); G.modeCounts = { fast:0, think:0, code:0 }; }
   } catch(_){ G.chats={}; G.reqCount=0; G.windowStart=Date.now(); G.modeCounts={fast:0,think:0,code:0}; }
@@ -773,6 +796,10 @@ async function login(name, email, pic, tgData) {
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app').classList.add('on');
   updProfile(); updQuotaUI(); updModeUI(); renderChats();
+  // Restore model picker label
+  const savedModel = AVAIL_MODELS.find(x => x.id === G.model);
+  const lbl = document.getElementById('model-pick-label');
+  if (lbl) lbl.textContent = savedModel ? savedModel.label : 'Auto';
   checkIfOwner(email);
 
   // Регистрируем юзера — сервер возвращает актуальный план из Redis
@@ -810,7 +837,7 @@ async function login(name, email, pic, tgData) {
 
 function save() {
   if (!G.user) return;
-  try { localStorage.setItem('cry3_'+G.user.email, JSON.stringify({ chats:G.chats, plan:G.plan, req:G.reqCount, windowStart:G.windowStart, modeCounts:G.modeCounts||{} })); } catch(_){}
+  try { localStorage.setItem('cry3_'+G.user.email, JSON.stringify({ chats:G.chats, plan:G.plan, req:G.reqCount, windowStart:G.windowStart, modeCounts:G.modeCounts||{}, model:G.model||null, mode:G.mode||'fast' })); } catch(_){}
 }
 
 // ── PROFILE ───────────────────────────────────────
@@ -907,6 +934,49 @@ function updModeUI() {
     }
   }
 }
+
+// ── MODEL PICKER ──────────────────────────────────────────────
+function renderModelList() {
+  const list = document.getElementById('md-list');
+  if (!list) return;
+  list.innerHTML = AVAIL_MODELS.map(m => {
+    const locked = !m.plans.includes(G.plan||'free');
+    const active = (G.model === m.id);
+    return `<div class="md-item${active?' active':''}${locked?' locked':''}"
+      onclick="${locked ? '' : `selectModel(${JSON.stringify(m.id)})`}">
+      <div class="md-left">
+        <div class="md-name">${m.label}</div>
+        <div class="md-sub">${m.sub}</div>
+      </div>
+      ${active ? '<div class="md-check">✓</div>' : ''}
+      ${locked ? '<div class="md-lock">🔒 Ultra</div>' : ''}
+    </div>`;
+  }).join('');
+}
+
+function toggleModelPicker(e) {
+  e.stopPropagation();
+  const dd = document.getElementById('model-dropdown');
+  if (!dd) return;
+  const isOpen = dd.classList.contains('open');
+  // close all dropdowns first
+  document.querySelectorAll('.model-dropdown').forEach(d => d.classList.remove('open'));
+  if (!isOpen) { renderModelList(); dd.classList.add('open'); }
+}
+
+function selectModel(modelId) {
+  G.model = modelId;
+  const m = AVAIL_MODELS.find(x => x.id === modelId);
+  const lbl = document.getElementById('model-pick-label');
+  if (lbl) lbl.textContent = m ? m.label : 'Auto';
+  document.getElementById('model-dropdown')?.classList.remove('open');
+  save();
+}
+
+// Close dropdown on outside click
+document.addEventListener('click', () => {
+  document.querySelectorAll('.model-dropdown').forEach(d => d.classList.remove('open'));
+});
 
 // ── VOICE (Web Speech API) ─────────────────────────────────────
 function speakText(text) {
@@ -1251,18 +1321,15 @@ async function sendMsg() {
   const curMode = G.mode || 'fast';
 
   // Check mode-specific limits
-  if (curMode !== 'fast' || G.plan === 'free') {
-    const modeLim = MODE_LIMITS[G.plan]?.[curMode] ?? 0;
-    const modeUsed = G.modeCounts?.[curMode] ?? 0;
-    if (modeUsed >= modeLim) {
-      showToast(`Лимит режима ${MODES[curMode].label} исчерпан (${modeLim}). Сбросится через 5ч.`);
-      return;
-    }
+  const modeLim = MODE_LIMITS[G.plan]?.[curMode] ?? 0;
+  const modeUsed = G.modeCounts?.[curMode] ?? 0;
+  if (modeLim > 0 && modeUsed >= modeLim) {
+    showToast(`Лимит режима ${MODES[curMode]?.label||curMode} исчерпан (${modeLim}). Сбросится через 5ч.`);
+    return;
   }
   if (G.reqCount >= LIMITS[G.plan]) { document.getElementById('umodal').classList.add('open'); return; }
-  // [SEC] Проверяем размер сообщения перед отправкой
-  const inputEl = document.getElementById('inp');
-  if (inputEl && inputEl.value.length > 32000) { showToast('Сообщение слишком длинное (макс 32000 символов)'); return; }
+  // [SEC] message size
+  if (inp.value.length > 32000) { showToast('Сообщение слишком длинное (макс 32000 символов)'); return; }
 
   const title = text || (attachments[0]?.name) || 'Attachment';
   if (!G.activeId || !G.chats[G.activeId]) newChatEntry(title);
@@ -1282,9 +1349,8 @@ async function sendMsg() {
   G.modeCounts[curMode] = (G.modeCounts[curMode] || 0) + 1;
   updQuotaUI(); updModeUI();
 
-  // ── ULTRA MODE HANDLERS (no API call needed) ──────────────────
+  // ── SPECIAL HANDLERS ────────────────────────────────────────
   if (curMode === 'imagine') {
-    G.busy = true; addTyping();
     try {
       const prompt = encodeURIComponent(text + ' high quality, detailed, artistic');
       const seed = Math.floor(Math.random() * 999999);
@@ -1341,7 +1407,7 @@ async function sendMsg() {
 
     const res = await fetch('/api/chat', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ messages: contents, plan: G.plan, mode: G.mode || 'fast' })
+      body: JSON.stringify({ messages: contents, plan: G.plan, mode: G.mode || 'fast', model: G.model || null })
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error||`HTTP ${res.status}`);
