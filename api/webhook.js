@@ -3,31 +3,13 @@
 // Получает pre_checkout_query (нужно подтвердить) и successful_payment (активировать план)
 // Установить вебхук: https://api.telegram.org/bot<TOKEN>/setWebhook?url=https://твой-сайт.vercel.app/api/webhook
 
-// Verify Telegram webhook signature
-async function verifyTelegramRequest(req, botToken) {
-  const secret = process.env.WEBHOOK_SECRET;
-  if (!secret) return true; // skip if not configured
-  const provided = req.headers['x-telegram-bot-api-secret-token'];
-  return provided === secret;
-}
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(200).end();
 
   const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
   if (!BOT_TOKEN) return res.status(500).end();
 
-  // [SEC] Verify webhook secret token if configured
-  if (!(await verifyTelegramRequest(req, BOT_TOKEN))) {
-    return res.status(401).end();
-  }
-
-  // [SEC] Validate content-type and body size
-  const contentType = req.headers['content-type'] || '';
-  if (!contentType.includes('application/json')) return res.status(400).end();
-
   const update = req.body;
-  if (!update || typeof update !== 'object') return res.status(400).end();
 
   try {
     // ── Подтверждение оплаты (ОБЯЗАТЕЛЬНО в течение 10 сек) ──
@@ -65,7 +47,7 @@ export default async function handler(req, res) {
     // ── Команда /start ──
     if (update.message?.text?.startsWith('/start')) {
       const userId = update.message.from.id;
-      const firstName = String(update.message.from.first_name || 'User').replace(/[<>&"]/g, '').slice(0, 64);
+      const firstName = update.message.from.first_name || 'User';
       await tgApi(BOT_TOKEN, 'sendMessage', {
         chat_id: userId,
         text: `Привет, <b>${firstName}</b>! 👋\n\nЯ Crymiss Bot — открой приложение для чата с AI.\n\n<b>Планы:</b>\n⚡ Pro — 100 запросов/день за 100 ⭐\n🚀 Ultra — 1000 запросов/день за 350 ⭐`,
