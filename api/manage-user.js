@@ -8,11 +8,25 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
+  // [SEC] Rate limit — не более 30 запросов в минуту на IP
+  const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket?.remoteAddress || 'unknown';
+  const now_rl = Date.now();
+  if (!global._adminRateLimit) global._adminRateLimit = {};
+  const rl = global._adminRateLimit;
+  if (!rl[ip]) rl[ip] = { count: 0, reset: now_rl + 60000 };
+  if (now_rl > rl[ip].reset) { rl[ip] = { count: 0, reset: now_rl + 60000 }; }
+  rl[ip].count++;
+  if (rl[ip].count > 30) return res.status(429).json({ error: 'Too many requests' });
+
   const { token, userId, action, value } = req.body;
   if (!process.env.ADMIN_SECRET || token !== process.env.ADMIN_SECRET) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
   if (!userId || !action) return res.status(400).json({ error: 'userId and action required' });
+  // [SEC] userId должен быть безопасным — только буквы и цифры
+  if (!/^[a-zA-Z0-9]{8,30}$/.test(userId)) return res.status(400).json({ error: 'Invalid userId' });
+  // [SEC] action whitelist
+  if (!['set_plan','ban','unban','delete'].includes(action)) return res.status(400).json({ error: 'Invalid action' });
 
   try {
     const r = await (await import('./_redis.js')).getRedis();

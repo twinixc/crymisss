@@ -446,6 +446,17 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sa
                   <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 11V2M3 5.5l3.5-3.5 3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
               </div>
+              <div class="mode-bar" id="mode-bar">
+                <button class="mbtn active" id="mb-fast"  onclick="setMode('fast')" >⚡ Fast</button>
+                <button class="mbtn"        id="mb-think" onclick="setMode('think')">🧠 Think</button>
+                <button class="mbtn"        id="mb-code"  onclick="setMode('code')" >💻 Code</button>
+                <!-- Ultra-only -->
+                <button class="mbtn ultra-mode" id="mb-search" onclick="setMode('search')">🌐 Search</button>
+                <button class="mbtn ultra-mode" id="mb-imagine" onclick="setMode('imagine')">🎨 Image</button>
+                <button class="mbtn ultra-mode" id="mb-data"   onclick="setMode('data')"  >📊 Data</button>
+                <button class="mbtn ultra-mode" id="mb-voice"  onclick="setMode('voice')" >🔊 Voice</button>
+                <span class="mode-info" id="mode-info"></span>
+              </div>
               <div class="inp-foot">
                 <div style="display:flex;gap:2px;align-items:center">
                   <!-- File attach -->
@@ -620,6 +631,24 @@ const LIMITS       = { free:15, pro:100, ultra:1000 };
 const RESET_MS     = 5 * 60 * 60 * 1000;
 const PLAN_COLORS  = { free:'rgba(255,255,255,.08)', pro:'rgba(82,201,116,.14)', ultra:'rgba(255,255,255,.18)' };
 const PLAN_TEXT    = { free:'var(--text2)', pro:'#52c974', ultra:'var(--w)' };
+
+// ── РЕЖИМЫ ─────────────────────────────────────────
+const MODES = {
+  fast:   { id:'fast',   label:'Fast',   icon:'⚡', desc:'Быстрые ответы',     color:'#52c974' },
+  think:  { id:'think',  label:'Think',  icon:'🧠', desc:'Задачи, математика', color:'#8888ff' },
+  code:   { id:'code',   label:'Code',   icon:'💻', desc:'Код, дебаг, разбор', color:'#e0a44a' },
+  search: { id:'search', label:'Search', icon:'🌐', desc:'Поиск в интернете',  color:'#4ba3f5' },
+  imagine:{ id:'imagine',label:'Image',  icon:'🎨', desc:'Генерация картинок', color:'#c864ff' },
+  data:   { id:'data',   label:'Data',   icon:'📊', desc:'Анализ файлов/CSV',  color:'#50dcb4' },
+  voice:  { id:'voice',  label:'Voice',  icon:'🔊', desc:'Голосовые ответы',   color:'#ff7850' },
+};
+// Лимиты по режимам (отдельные счётчики)
+const MODE_LIMITS = {
+  //              fast   think  code  search  imagine  data   voice
+  free:  { fast: 15,   think: 5,    code: 3,   search: 3,    imagine: 3,    data: 2,    voice: 999  },
+  pro:   { fast: 100,  think: 20,   code: 10,  search: 20,   imagine: 15,   data: 20,   voice: 999  },
+  ultra: { fast: 1000, think: 1000, code: 1000,search: 1000, imagine: 100,  data: 1000, voice: 999  },
+};
 const MAX_FILE_MB  = 10;
 const IMAGE_EXTS   = ['jpg','jpeg','png','gif','webp','bmp','svg'];
 
@@ -627,7 +656,7 @@ const IMAGE_EXTS   = ['jpg','jpeg','png','gif','webp','bmp','svg'];
 let G = {
   user: null, plan: 'free',
   chats: {}, activeId: null,
-  busy: false, reqCount: 0,
+  busy: false, reqCount: 0, mode: 'fast',
   windowStart: Date.now(),
   modalPlan: 'pro',
   googleClientId: '',
@@ -736,13 +765,14 @@ async function login(name, email, pic, tgData) {
       const d = JSON.parse(raw);
       G.chats = d.chats||{}; G.plan = d.plan||'free';
       G.reqCount = d.req||0; G.windowStart = d.windowStart||Date.now();
+      G.modeCounts = d.modeCounts || { fast:0, think:0, code:0 };
       if (Date.now() - G.windowStart >= RESET_MS) { G.reqCount=0; G.windowStart=Date.now(); }
-    } else { G.windowStart = Date.now(); }
-  } catch(_){ G.chats={}; G.reqCount=0; G.windowStart=Date.now(); }
+    } else { G.windowStart = Date.now(); G.modeCounts = { fast:0, think:0, code:0 }; }
+  } catch(_){ G.chats={}; G.reqCount=0; G.windowStart=Date.now(); G.modeCounts={fast:0,think:0,code:0}; }
 
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app').classList.add('on');
-  updProfile(); updQuotaUI(); renderChats();
+  updProfile(); updQuotaUI(); updModeUI(); renderChats();
   checkIfOwner(email);
 
   // Регистрируем юзера — сервер возвращает актуальный план из Redis
@@ -780,13 +810,15 @@ async function login(name, email, pic, tgData) {
 
 function save() {
   if (!G.user) return;
-  try { localStorage.setItem('cry3_'+G.user.email, JSON.stringify({ chats:G.chats, plan:G.plan, req:G.reqCount, windowStart:G.windowStart })); } catch(_){}
+  try { localStorage.setItem('cry3_'+G.user.email, JSON.stringify({ chats:G.chats, plan:G.plan, req:G.reqCount, windowStart:G.windowStart, modeCounts:G.modeCounts||{} })); } catch(_){}
 }
 
 // ── PROFILE ───────────────────────────────────────
 function updProfile() {
   const av = document.getElementById('s-av');
-  av.innerHTML = G.user.pic ? `<img src="${G.user.pic}" alt="">` : G.user.initials;
+  // [SEC] Only allow safe https:// URLs in avatar src
+  const safePic = G.user.pic && G.user.pic.startsWith('https://') ? G.user.pic : '';
+  av.innerHTML = safePic ? `<img src="${safePic}" alt="" onerror="this.parentElement.textContent=G.user.initials">` : G.user.initials;
   document.getElementById('s-name').textContent = G.user.name;
   updPlanCards();
 }
@@ -830,6 +862,83 @@ function updPlanCards() {
 }
 
 // ── OWNER CHECK ───────────────────────────────────────
+function setMode(mode) {
+  if (!MODES[mode]) return;
+  G.mode = mode;
+  updModeUI();
+  save();
+}
+
+function updModeUI() {
+  const mode = G.mode || 'fast';
+  const isUltra = G.plan === 'ultra';
+
+  // All modes always visible
+
+  Object.keys(MODES).forEach(m => {
+    const btn = document.getElementById('mb-' + m);
+    if (!btn) return;
+    const isActive = (m === mode);
+    btn.className = 'mbtn' + (isActive ? ' active ' + m + '-active' : '');
+    const lim = MODE_LIMITS[G.plan]?.[m] ?? 0;
+    const used = G.modeCounts?.[m] ?? 0;
+    const left = Math.max(0, lim - used);
+    if (!isUltra && lim > 0) {
+      btn.disabled = (left <= 0 && m !== 'fast');
+      btn.title = '';
+    } else {
+      btn.disabled = false;
+      btn.title = '';
+    }
+  });
+
+  const info = document.getElementById('mode-info');
+  if (info && MODES[mode]) {
+    const lim = MODE_LIMITS[G.plan]?.[mode];
+    const used = G.modeCounts?.[mode] ?? 0;
+    const left = Math.max(0, lim - used);
+    const isVoice = mode === 'voice';
+    if (isUltra || isVoice) {
+      info.textContent = (isUltra && lim >= 999 ? '∞ ' : '') + MODES[mode].desc;
+      info.style.color = MODES[mode].color;
+    } else {
+      info.textContent = left + ' / ' + lim + ' · ' + MODES[mode].desc;
+      info.style.color = left <= 1 ? '#e05a5a' : 'var(--text3)';
+    }
+  }
+}
+
+// ── VOICE (Web Speech API) ─────────────────────────────────────
+function speakText(text) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const clean = text.replace(/```[\s\S]*?```/g,'').replace(/[#*_`>]/g,'').slice(0,1000);
+  const utt = new SpeechSynthesisUtterance(clean);
+  utt.lang = 'ru-RU';
+  utt.rate = 1.05;
+  // Try to find a good voice
+  const voices = window.speechSynthesis.getVoices();
+  const ruVoice = voices.find(v => v.lang.startsWith('ru'));
+  if (ruVoice) utt.voice = ruVoice;
+  window.speechSynthesis.speak(utt);
+}
+
+function stopSpeak() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+}
+
+// ── DATA MODE: parse CSV/JSON and pass to AI ────────────────────
+function extractDataContent(attachments) {
+  if (!attachments?.length) return null;
+  for (const a of attachments) {
+    if (a.mime === 'text/csv' || a.name?.endsWith('.csv') || a.name?.endsWith('.json')) {
+      // Return the text content if available
+      return a.textContent || null;
+    }
+  }
+  return null;
+}
+
 function checkIfOwner(email) {
   if (!G.ownerIdentity) return;
   const norm = s => (s||'').replace('@','').replace(/\s/g,'').toLowerCase();
@@ -957,7 +1066,7 @@ function addMsgDOM(msg, anim=true) {
   if (!anim) d.style.animation='none';
 
   const av = isUser
-    ? (G.user?.pic ? `<div class="mav uav"><img src="${G.user.pic}" alt=""></div>` : `<div class="mav uav">${G.user?.initials||'U'}</div>`)
+    ? (G.user?.pic && G.user.pic.startsWith('https://') ? `<div class="mav uav"><img src="${G.user.pic}" alt="" onerror="this.style.display='none'"></div>` : `<div class="mav uav">${G.user?.initials||'U'}</div>`)
     : `<div class="mav aav"><svg width="11" height="11" viewBox="0 0 20 20" fill="none"><path d="M10 1.5L17.5 5.75V14.25L10 18.5L2.5 14.25V5.75Z" stroke="white" stroke-width="1.3" stroke-linejoin="round"/><circle cx="10" cy="10" r="2" fill="white"/></svg></div>`;
 
   // Build attachment HTML
@@ -973,11 +1082,23 @@ function addMsgDOM(msg, anim=true) {
     });
   }
 
+  // Image generation result
+  if (msg.imageUrl) {
+    const d = document.createElement('div');
+    d.className = 'msg ai';
+    d.innerHTML = `<div class="mav aav"><svg width="11" height="11" viewBox="0 0 20 20" fill="none"><path d="M10 1.5L17.5 5.75V14.25L10 18.5L2.5 14.25V5.75Z" stroke="white" stroke-width="1.3" stroke-linejoin="round"/><circle cx="10" cy="10" r="2" fill="white"/></svg></div><div class="mbody"><div class="mwho">Crymiss <span style="font-size:10px;padding:1px 6px;border-radius:3px;background:rgba(200,100,255,.12);color:#c864ff">🎨 Image</span></div><div class="mtxt"><div class="ai-img-wrap"><img src="${msg.imageUrl}" alt="generated" onclick="openLightbox('${msg.imageUrl}')"></div><div style="font-size:11px;color:var(--text3);margin-top:4px">🎨 Сгенерировано по запросу</div></div></div>`;
+    document.getElementById('mi-inner').appendChild(d);
+    if (scroll) d.scrollIntoView({ behavior:'smooth', block:'end' });
+    return;
+  }
   const textHTML = msg.text ? (isUser ? `<p>${xe(msg.text).replace(/\n/g,'<br>')}</p>` : mdHTML(msg.text)) : '';
+  const sourcesHTML = (msg.sources?.length && msg.mode === 'search')
+    ? `<div class="search-sources">${msg.sources.map(s=>`<a class="src-chip" href="${xe(s.url)}" target="_blank" rel="noopener">${xe(s.domain||s.url)}</a>`).join('')}</div>`
+    : '';
   const acts = isUser ? '' : `<div class="macts"><button class="abt" onclick="cp(this,${JSON.stringify(msg.text||'')})"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="1" y="3" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.1"/><path d="M3 3V2a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H7" stroke="currentColor" stroke-width="1.1"/></svg> Copy</button></div>`;
 
   const hasContent = attHTML || textHTML;
-  d.innerHTML = `${av}<div class="mbody"><div class="mwho">${isUser?'You':'Crymiss'}</div>${hasContent?`<div class="mtxt">${attHTML}${textHTML}</div>`:''} ${acts}</div>`;
+  d.innerHTML = `${av}<div class="mbody"><div class="mwho">${isUser?'You':'Crymiss'}${modeTag}</div>${hasContent?`<div class="mtxt">${attHTML}${textHTML}${sourcesHTML||''}</div>`:''} ${acts}</div>`;
   wrap.appendChild(d); scrollD();
 }
 
@@ -1127,12 +1248,26 @@ async function sendMsg() {
   if (!text && !attachments.length) return;
 
   checkReset();
+  const curMode = G.mode || 'fast';
+
+  // Check mode-specific limits
+  if (curMode !== 'fast' || G.plan === 'free') {
+    const modeLim = MODE_LIMITS[G.plan]?.[curMode] ?? 0;
+    const modeUsed = G.modeCounts?.[curMode] ?? 0;
+    if (modeUsed >= modeLim) {
+      showToast(`Лимит режима ${MODES[curMode].label} исчерпан (${modeLim}). Сбросится через 5ч.`);
+      return;
+    }
+  }
   if (G.reqCount >= LIMITS[G.plan]) { document.getElementById('umodal').classList.add('open'); return; }
+  // [SEC] Проверяем размер сообщения перед отправкой
+  const inputEl = document.getElementById('inp');
+  if (inputEl && inputEl.value.length > 32000) { showToast('Сообщение слишком длинное (макс 32000 символов)'); return; }
 
   const title = text || (attachments[0]?.name) || 'Attachment';
   if (!G.activeId || !G.chats[G.activeId]) newChatEntry(title);
 
-  const userMsg = { role:'user', text, attachments: attachments.map(a=>({ type:a.type, name:a.name, size:a.size, dataUrl:a.dataUrl, mime:a.mime })) };
+  const userMsg = { role:'user', text, mode: curMode, attachments: attachments.map(a=>({ type:a.type, name:a.name, size:a.size, dataUrl:a.dataUrl, mime:a.mime })) };
   G.chats[G.activeId].msgs.push(userMsg);
   addMsgDOM(userMsg, true);
 
@@ -1143,7 +1278,49 @@ async function sendMsg() {
   G.busy=true;
   addTyping();
   G.reqCount++;
-  updQuotaUI();
+  if (!G.modeCounts) G.modeCounts = { fast:0, think:0, code:0 };
+  G.modeCounts[curMode] = (G.modeCounts[curMode] || 0) + 1;
+  updQuotaUI(); updModeUI();
+
+  // ── ULTRA MODE HANDLERS (no API call needed) ──────────────────
+  if (curMode === 'imagine') {
+    G.busy = true; addTyping();
+    try {
+      const prompt = encodeURIComponent(text + ' high quality, detailed, artistic');
+      const seed = Math.floor(Math.random() * 999999);
+      const imgUrl = `https://image.pollinations.ai/prompt/${prompt}?seed=${seed}&width=768&height=512&nologo=true`;
+      // Pre-load image then show
+      const imgEl = new Image();
+      imgEl.onload = () => {
+        document.getElementById('typing')?.remove();
+        const aiMsg = { role:'model', mode:'imagine', imageUrl: imgUrl, text:'', attachments:[] };
+        G.chats[G.activeId].msgs.push(aiMsg);
+        addMsgDOM(aiMsg, true);
+        G.busy = false; save();
+      };
+      imgEl.onerror = () => {
+        document.getElementById('typing')?.remove();
+        const aiMsg = { role:'model', text:'Не удалось сгенерировать изображение. Попробуй ещё раз.', attachments:[] };
+        G.chats[G.activeId].msgs.push(aiMsg);
+        addMsgDOM(aiMsg, true);
+        G.busy = false; G.reqCount = Math.max(0, G.reqCount-1);
+        G.modeCounts[curMode] = Math.max(0, (G.modeCounts[curMode]||1)-1);
+        updQuotaUI(); updModeUI();
+      };
+      imgEl.src = imgUrl;
+    } catch(e) {
+      document.getElementById('typing')?.remove();
+      G.busy = false;
+    }
+    return;
+  }
+
+  if (curMode === 'voice') {
+    // Voice = normal AI answer but speak it aloud via Web Speech API
+    G.voiceMode = true;
+  } else {
+    G.voiceMode = false;
+  }
 
   try {
     // Build messages for API — include attachments as image_data parts
@@ -1154,6 +1331,7 @@ async function sendMsg() {
       if (m.attachments?.length) {
         m.attachments.forEach(a => {
           if (a.type==='image') parts.push({ image_data: a.dataUrl?.split(',')[1]||'', mime_type: a.mime });
+          else if (a.textContent && curMode === 'data') parts.push({ text: `[Данные из файла ${a.name}]:\n${a.textContent.slice(0,8000)}` });
           else parts.push({ text: `[Файл: ${a.name}]` });
         });
       }
@@ -1163,20 +1341,23 @@ async function sendMsg() {
 
     const res = await fetch('/api/chat', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ messages: contents, plan: G.plan })
+      body: JSON.stringify({ messages: contents, plan: G.plan, mode: G.mode || 'fast' })
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error||`HTTP ${res.status}`);
 
     document.getElementById('typing')?.remove();
-    const aiMsg = { role:'model', text: data.reply, attachments:[] };
+    const aiMsg = { role:'model', text: data.reply, mode: data.mode || curMode, sources: data.sources||[], attachments:[] };
     G.chats[G.activeId].msgs.push(aiMsg);
     addMsgDOM(aiMsg, true);
     save();
+    // Voice mode — speak the response
+    if (G.voiceMode && data.reply) speakText(data.reply);
 
   } catch(err) {
     G.reqCount = Math.max(0, G.reqCount-1);
-    updQuotaUI();
+    if (G.modeCounts?.[curMode]) G.modeCounts[curMode] = Math.max(0, G.modeCounts[curMode]-1);
+    updQuotaUI(); updModeUI();
     document.getElementById('typing')?.remove();
     const wrap = document.getElementById('mi-inner');
     const d = document.createElement('div');
